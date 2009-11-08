@@ -28,7 +28,7 @@ class BasicActor(Sprite):
         self.rect=pygame.Rect(initial_position, (0,0))
         self.image=simple_sprite
         
-        pygame.draw.circle(self.image, (0,0,0), (3,3), 3)
+        pygame.draw.circle(self.image, (0,0,0), (3,3), 3.0)
         
     def setTarget(self, target, behaviorClass):
         '''
