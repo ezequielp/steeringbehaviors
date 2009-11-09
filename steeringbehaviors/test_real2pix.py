@@ -6,18 +6,20 @@ v=np.array([1,1])
 print 'The input'
 print v
 # doesn't work, why?
-#camera.transform(v)
+vt=camera.transform(v)
 
 # The intended functionanlity
-vt=np.round(np.dot(camera.T,np.transpose(np.concatenate((v,[1]))))[:2])
+#vt=np.round(np.dot(camera.T,np.transpose(np.concatenate((v,[1]))))[:2])
 print 'The transformed input without setting the transform'
 print vt
 
 camera._set_transform(rotate=np.array([45]),scale=np.array([10,10]),
                       move=np.array([1,0]))
-print camera.T
+vt=camera.transform(v)
 
-vt=np.round(np.dot(camera.T,np.transpose(np.concatenate((v,[1]))))[:2])
+#print camera.T
+
+#vt=np.round(np.dot(camera.T,np.transpose(np.concatenate((v,[1]))))[:2])
 print 'The transformed input'
 print 'Rotated 45deg, moved [1,0], Scaled x10'
 print vt
