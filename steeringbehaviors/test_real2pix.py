@@ -17,7 +17,7 @@ camera._set_transform(rotate=np.array([45]),scale=np.array([10,10]),
                       move=np.array([1,0]))
 vt=camera.transform(v)
 
-#print camera.T
+print camera.T
 
 #vt=np.round(np.dot(camera.T,np.transpose(np.concatenate((v,[1]))))[:2])
 print 'The transformed input'

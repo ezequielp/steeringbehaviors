@@ -16,13 +16,17 @@ class transformation:
         Constructor
         '''
         self.T=eye(3)
-        self.A=array([0,0])
+        #self.A=array([0,0])
         
     def transform(self,Rcoord):
         #Why all the 2D to 3D and back?
+        # JPi: Is not 2D 3D is homogenous coordinates. You have to append a
+        # one to the end (or beginning, depending on convention) so that 
+        # translations are linear transformations (and not affine). If the 
+        # vectors were 3D here we woudl have a 4D vector.
         v=concatenate((Rcoord,[1.0]))  
         
-        return np.round(np.dot(self.T,np.transpose(v))[:2]+self.A)
+        return np.round(np.dot(self.T,np.transpose(v)))[:2]
         
     def _set_transform(self,move=array([0,0]), rotate=array([0]),scale=array([1,1])):
         # Works only in 2D for the moment                                 
@@ -33,14 +37,11 @@ class transformation:
         S = diag(concatenate([scale,[1]]))
         
         # Translation
-        self.A = move
-        '''zeros([3,3])
+        A = zeros([3,3])
         for i in xrange(0,2):
-            A[i,-1]=move[i]*scale[i]'''
-        
+            A[i,-1]=move[i]*scale[i]
 
-        # total->This wasn't right... Rotation+Translation is not homogeneous: vt=RS*v+A
-        self.T=dot(R,S)#+A
+        self.T=dot(R,S)+A
         
     
 def rotv(v,ang):
