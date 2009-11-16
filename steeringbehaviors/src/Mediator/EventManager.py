@@ -2,11 +2,12 @@
 Created on 14/11/2009
 
 @author: Ezequiel N. Pozzo
+TODO: create some events.
 '''
 
 class EventManager(object):
     '''This object will mediate most communication between model, view and controller
-    TODO:
+   
     
     '''
 
