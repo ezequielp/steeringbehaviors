@@ -1,7 +1,7 @@
 import real2pix as rp
 import numpy as np
 
-camera=rp.transformation()
+camera=rp.Transformation()
 v=np.array([1,1])
 print 'The input'
 print v
@@ -13,7 +13,7 @@ vt=camera.transform(v)
 print 'The transformed input without setting the transform'
 print vt
 
-camera._set_transform(rotate=np.array([45]),scale=np.array([10,10]),
+camera.set_transform(rotate=np.array([45]),scale=np.array([10,10]),
                       move=np.array([1,0]))
 vt=camera.transform(v)
 
