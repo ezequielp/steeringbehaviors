@@ -1,7 +1,8 @@
 '''
 Created on 08/11/2009
 
-@author: Guille
+@author: Ezequiel N. Pozzo
+TODO: This should be reimplemented, as an actor it should be on the Model, and as a graphical entity on the View
 '''
 
 from  GUI.config import *
