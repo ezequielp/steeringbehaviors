@@ -4,8 +4,8 @@ Created on Sunday, November 08 2009
 @author JuanPi Carbajal
 '''
 from __future__ import division
-from numpy import * #reduce at the end
 import numpy as np
+from numpy import array, diag, eye, concatenate, dot, pi, sqrt, ones, sin, transpose, kron, cos, zeros, vstack
 
 class Transformation:
     '''
@@ -48,19 +48,19 @@ class Transformation:
 def rotv(v,ang):
     # Based on the Octave implementation of Etienne Grossmann
 
-      a = ang*pi/180.0
-      v = v/sqrt(dot(v,v))
-      r = transpose( vstack((v,v,v)) ) * kron(v,ones([3,1])) 
-      r = r + cos(a)*ones([3,3]) * (eye(3)-r) 
+    a = ang*pi/180.0
+    v = v/sqrt(dot(v,v))
+    r = transpose( vstack((v,v,v)) ) * kron(v,ones([3,1])) 
+    r = r + cos(a)*ones([3,3]) * (eye(3)-r) 
 
-      tmp = zeros([3,3]) 
-      tmp[1,0] =  v[2] 
-      tmp[0,1] = -v[2] 
-      tmp[2,0] = -v[1]
-      tmp[0,2] =  v[1]
-      tmp[1,2] = -v[0]
-      tmp[2,1] =  v[0]
+    tmp = zeros([3,3]) 
+    tmp[1,0] =  v[2] 
+    tmp[0,1] = -v[2] 
+    tmp[2,0] = -v[1]
+    tmp[0,2] =  v[1]
+    tmp[1,2] = -v[0]
+    tmp[2,1] =  v[0]
   
-      r = r + sin(a)*ones([3,3]) * tmp ;
+    r = r + sin(a)*ones([3,3]) * tmp ;
 
-      return r
+    return r

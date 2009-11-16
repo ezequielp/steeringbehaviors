@@ -1,6 +1,6 @@
-import real2pix as rp
+from Tools import real2pix as rp
 import numpy as np
-
+#TODO: Set as unit test
 camera=rp.Transformation()
 v=np.array([1,1])
 print 'The input'
