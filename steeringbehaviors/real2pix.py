@@ -7,7 +7,7 @@ from __future__ import division
 from numpy import * #reduce at the end
 import numpy as np
 
-class transformation:
+class Transformation:
     '''
       A class that stores and applies the transformation
     '''   
@@ -24,11 +24,12 @@ class transformation:
         # one to the end (or beginning, depending on convention) so that 
         # translations are linear transformations (and not affine). If the 
         # vectors were 3D here we woudl have a 4D vector.
+        # Ezeq: gotcha
         v=concatenate((Rcoord,[1.0]))  
         
         return np.round(np.dot(self.T,np.transpose(v)))[:2]
         
-    def _set_transform(self,move=array([0,0]), rotate=array([0]),scale=array([1,1])):
+    def set_transform(self,move=array([0,0]), rotate=array([0]),scale=array([1,1])):
         # Works only in 2D for the moment                                 
                     
         # Rotation
