@@ -94,6 +94,9 @@ class PhysicsModel(Model):
             '''
             v_2=ent.velocity+ent.total_force*dt/2
             ent.position=ent.position+v_2*dt
+            '''
+            Forces should be updated at this point, not needed for constant forces.
+            '''
             ent.velocity=v_2+ent.total_force*dt/2
             
 
