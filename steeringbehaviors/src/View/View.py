@@ -61,7 +61,6 @@ class PygameViewer(View2D):
     '''
     A class rendering the actors of the Model into a Pygame window
     '''        
-    import pygame
     from pygame.sprite import Sprite as SpriteParent
     
     class Sprite(SpriteParent):
@@ -87,7 +86,7 @@ class PygameViewer(View2D):
             
             
         def update(self):
-            self.rect.center=self.__project.transform(self.model_position[0])
+            self.rect.center=self.__project.transform(self.model.position)
         
         
     def __init__(self, Model):
@@ -96,6 +95,11 @@ class PygameViewer(View2D):
         pygame.init()
         self.Sprite.__project=self.__project
         self.sprites=self.pygame.sprite.RenderUpdates()
+        
+        
+    
+        from weakref import WeakKeyDictionary
+        self.sprite_from_model=WeakKeyDictionary()
         
         '''
         Starts a simple black screen.
@@ -115,9 +119,9 @@ class PygameViewer(View2D):
         self.pygame.display.update(self.sprites.draw())
         
     def add_new_entity(self, model_entity):
-        new_sprite=self.Sprite(self, [model_entity.getPosition()])
+        new_sprite=self.Sprite(self, model_entity)
         self.sprite_from_model[model_entity]=new_sprite
-        self.sprites.add()
+        self.sprites.add(new_sprite)
         
     def delete_entity(self, model_entity):
         delete_sprite=self.sprite_from_model[model_entity]
