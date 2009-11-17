@@ -64,15 +64,15 @@ class PygameViewer(View2D):
     from pygame.sprite import Sprite as SpriteParent
     
     class Sprite(SpriteParent):
-        def __init__(self, model_entity_position):
+        def __init__(self, model_entity):
             '''
             @model_entity_position: the position of the model object. Use [position] to get reference!!!
             '''
             pygame=PygameViewer.pygame
             self.SpriteParent.__init__(self)
-            self.model_position=model_entity_position
+            self.model=model_entity
             
-            self.rect=pygame.Rect(self.__project(model_entity_position), (0,0))
+            self.rect=pygame.Rect(self.__project(model_entity.position), (0,0))
             
             '''
             TODO: implement better and more versatile method to set sprite image

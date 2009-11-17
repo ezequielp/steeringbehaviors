@@ -5,18 +5,9 @@ Created on 07/11/2009
 '''
 
 if __name__ == '__main__':
-    from steering import behaviors
-    from GUI import actors
-    from GUI.clients import Client
+    from Model.Model import PhysicsModel
+    from View.View import PygameViewer
     
-    client=Client()
+    view=PygameViewer()
+    model=PhysicsModel()
     
-    #Defines a simple npc and a sprite controled by the mouse
-    actorA=actors.BasicActor((300,300))
-    actorB=actors.MouseActor()
-    
-    #The npc follows the mouse with a seek behavior
-    actorA.setTarget(actorB, behaviors.steerForSeek)
-    
-    client.add_actors([actorA, actorB])
-    client.run()
