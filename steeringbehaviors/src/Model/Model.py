@@ -38,6 +38,7 @@ class Model_Entity(object):
     def apply_force(self, force):
         '''
         Adds a force to the entity, can be deleted by calling remove_force with return id as parameter
+        TODO: Allow variable forces.
         '''
         self.forces.append(force)
         self.total_force=np.add(self.total_force, force)
@@ -45,11 +46,13 @@ class Model_Entity(object):
         return len(self.forces)-1
         
     def remove_force(self, force_id):
+        '''
+        Removes a force previously applied.
+        '''
         del self.forces[force_id]
         self.total_force=reduce(np.add, self.forces)
 
-        
-    def calculate_total_force
+    
     
 class PhysicsModel(Model):
     def __init__(self):
@@ -83,7 +86,16 @@ class PhysicsModel(Model):
         3. actualize acclereacion a(t+1)=f(x(t+1))/m
         4. actualize velocidad v(t+1)=v(t+1/2)+a(t+1)*dt/2
         '''
-        for entity in self.entities:
-            entity.position=
+        for ent in self.entities:
+            '''
+            Thinking out loud: This is not efficient, I think we could use matrices to store all velocities
+            positions and forces, and do this without any loop. Requires model redesign but should have mayor
+            performance improvement.
+            '''
+            v_2=ent.velocity+ent.total_force*dt/2
+            ent.position=ent.position+v_2*dt
+            ent.velocity=v_2+ent.total_force*dt/2
+            
+
 
         
