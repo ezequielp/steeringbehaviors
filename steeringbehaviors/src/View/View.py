@@ -7,14 +7,14 @@ Edited by JuanPi Carbajal
 from __future__ import division
 import numpy as np
 from Tools import real2pix as rp
-from View import config
+import config
 
 class View(object):
     '''
     An abstract class for Viewers
     '''
     def __init__(self, Model):
-        self._model=Model
+        self.model=Model
         
     
     def update(self):
@@ -43,8 +43,8 @@ class View2D(View):
         View.__init__(self, Model)
        
         # JPi: How do we define private variables and methods?
-        self.__sprites=np.array([])
-        self.__project=rp.Transformation()
+        self.sprites=np.array([])
+        self.project=rp.Transformation()
     
     def update(self):
         View.update(self)
@@ -61,6 +61,7 @@ class PygameViewer(View2D):
     '''
     A class rendering the actors of the Model into a Pygame window
     '''        
+    import pygame
     from pygame.sprite import Sprite as SpriteParent
     
     class Sprite(SpriteParent):
@@ -93,7 +94,7 @@ class PygameViewer(View2D):
         View2D.__init__(self, Model)
         pygame=self.pygame
         pygame.init()
-        self.Sprite.__project=self.__project
+        self.Sprite.__project=self.project
         self.sprites=self.pygame.sprite.RenderUpdates()
         
         
@@ -116,14 +117,16 @@ class PygameViewer(View2D):
     def update(self):
         self.sprites.clear(self.screen, self.background)
         self.sprites.update()
-        self.pygame.display.update(self.sprites.draw())
+        self.pygame.display.update(self.sprites.draw(self.screen))
         
-    def add_new_entity(self, model_entity):
+    def add_entity(self, model_entity_id):
+        model_entity=self.model.get_entity(model_entity_id)
         new_sprite=self.Sprite(self, model_entity)
         self.sprite_from_model[model_entity]=new_sprite
         self.sprites.add(new_sprite)
         
-    def delete_entity(self, model_entity):
+    def delete_entity(self, model_entity_id):
+        model_entity=self.model.get_entity(model_entity_id)
         delete_sprite=self.sprite_from_model[model_entity]
         del self.sprite_from_model[model_entity]
         self.sprites.remove(delete_sprite)

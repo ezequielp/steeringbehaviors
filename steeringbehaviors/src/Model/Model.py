@@ -69,6 +69,9 @@ class PhysicsModel(Model):
     def delete_entity(self, entity_id):
         del self.entities[entity_id]
         
+    def get_entity(self, id):
+        return self.entities[id]
+    
     def apply_force(self, entity_id, force):
         force_id=self.entities[entity_id].apply_force(np.array(force))
                 
