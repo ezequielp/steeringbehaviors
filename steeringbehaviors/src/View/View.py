@@ -22,8 +22,15 @@ class View(object):
        
     def add_new_entity(self, model_entity):
         ''' 
-        Ugly hack that will be solved when using events 
+        Ugly hack that will be solved when using events. Implement in concrete class
         TODO: implement as a event handler function add_new_entity(self, event)
+        '''
+        assert False, "Not implemented"
+        
+    def delete_entity(self, model_entity):
+        '''
+        Must be implemented in concrete class
+        TODO: implement as event handler
         '''
         assert False, "Not implemented"
 
@@ -108,6 +115,13 @@ class PygameViewer(View2D):
         self.pygame.display.update(self.sprites.draw())
         
     def add_new_entity(self, model_entity):
-        self.sprites.add(self.Sprite(self, [model_entity.getPosition()]))
+        new_sprite=self.Sprite(self, [model_entity.getPosition()])
+        self.sprite_from_model[model_entity]=new_sprite
+        self.sprites.add()
+        
+    def delete_entity(self, model_entity):
+        delete_sprite=self.sprite_from_model[model_entity]
+        del self.sprite_from_model[model_entity]
+        self.sprites.remove(delete_sprite)
 
         
