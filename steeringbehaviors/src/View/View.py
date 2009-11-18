@@ -16,10 +16,6 @@ class View(object):
     def __init__(self, Model):
         self.model=Model
         
-    
-    def update(self):
-        pass
-       
     def add_new_entity(self, model_entity):
         ''' 
         Ugly hack that will be solved when using events. Implement in concrete class
@@ -43,18 +39,20 @@ class View2D(View):
         View.__init__(self, Model)
        
         # JPi: How do we define private variables and methods?
-        self.sprites=np.array([])
-        self.project=rp.Transformation()
+        # 18.11.09 : Prefix "_" means private
+        self._sprites=np.array([])
+        self._project=rp.Transformation()
     
     def update(self):
-        View.update(self)
         # Here sprites are updated. How? Idea: apply the transformation
         # self._project.transformation(Model.actors) or something like that.
         # 
         pass
     
-    def set_transform(self,move=np.array([0,0]), rotate=np.array([0]),scale=np.array([1,1])):
-        self.__project.set_transform(move, rotate, scale)
+    def set_transform(self,move=np.array([0,0]), 
+                           rotate=np.array([0]),
+                           scale=np.array([1,1])):
+        self._project.set_transform(move, rotate, scale)
         
 
 class PygameViewer(View2D):
@@ -63,14 +61,14 @@ class PygameViewer(View2D):
     '''        
     import pygame
     from pygame.sprite import Sprite as SpriteParent
-    
+
     class Sprite(SpriteParent):
         def __init__(self, model_entity):
             '''
             @model_entity_position: the position of the model object. Use [position] to get reference!!!
             '''
             pygame=PygameViewer.pygame
-            self.SpriteParent.__init__(self)
+          #  SpriteParent.__init__(self)
             self.model=model_entity
             
             self.rect=pygame.Rect(self.__project(model_entity.position), (0,0))
@@ -121,7 +119,7 @@ class PygameViewer(View2D):
         
     def add_entity(self, model_entity_id):
         model_entity=self.model.get_entity(model_entity_id)
-        new_sprite=self.Sprite(self, model_entity)
+        new_sprite=self.Sprite(model_entity)
         self.sprite_from_model[model_entity]=new_sprite
         self.sprites.add(new_sprite)
         
