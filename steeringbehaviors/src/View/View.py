@@ -111,17 +111,18 @@ class PygameViewer(View2D):
             pygame.draw.circle(self.image, (0,0,0), (3,3), 3)
             
             
-        def update(self,dt=30):
-            PygameViewer.SpriteParent.update(self,dt)
+        def update(self,fps=30):
+            PygameViewer.SpriteParent.update(self,fps)
             self.rect.center=self._project.transform(self.model.position)
         
         
         
-    def update(self,dt=30):
-        self._clock.tick(dt)
+    def update(self,fps=30):
+        dt=self._clock.tick(fps)
         self._sprites.clear(self.screen, self.background)
-        self._sprites.update(dt)
+        self._sprites.update(fps)
         self.pygame.display.update(self._sprites.draw(self.screen))
+        return dt
         
     def add_entity(self, model_entity_id):
         model_entity=self.model.get_entity(model_entity_id)

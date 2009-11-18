@@ -16,10 +16,11 @@ if __name__ == '__main__':
     entitylist=[model.add_entity((400*(i/20.0),200*(i%3)), (10,1)) for i in xrange(0,20)]
     [view.add_entity(entity) for entity in entitylist]
     timer=0.0
-    dt=10
+    fps=20
+    dt=0.0
     idpop=[]
     while True:
-        view.update(dt)
+        dt=view.update(fps)
         
         # add and delete entities
         if timer>=1.0 and len(entitylist)>0:
