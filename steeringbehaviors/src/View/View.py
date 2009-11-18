@@ -67,8 +67,12 @@ class PygameViewer(View2D):
         View2D.__init__(self, Model)
         pygame=self.pygame
         pygame.init()
+        
         self.Sprite._project=self._project
-        self._sprites=self.pygame.sprite.RenderUpdates()
+        
+        self._sprites=pygame.sprite.RenderUpdates()
+        
+        self._clock=pygame.time.Clock()
         
         from weakref import WeakKeyDictionary
         self.sprite_from_model=WeakKeyDictionary()
@@ -107,14 +111,16 @@ class PygameViewer(View2D):
             pygame.draw.circle(self.image, (0,0,0), (3,3), 3)
             
             
-        def update(self):
+        def update(self,dt=30):
+            PygameViewer.SpriteParent.update(self,dt)
             self.rect.center=self._project.transform(self.model.position)
         
         
         
-    def update(self):
+    def update(self,dt=30):
+        self._clock.tick(dt)
         self._sprites.clear(self.screen, self.background)
-        self._sprites.update()
+        self._sprites.update(dt)
         self.pygame.display.update(self._sprites.draw(self.screen))
         
     def add_entity(self, model_entity_id):
@@ -127,6 +133,6 @@ class PygameViewer(View2D):
         model_entity=self.model.get_entity(model_entity_id)
         delete_sprite=self.sprite_from_model[model_entity]
         del self.sprite_from_model[model_entity]
-        self.sprites.remove(delete_sprite)
+        self._sprites.remove(delete_sprite)
 
         

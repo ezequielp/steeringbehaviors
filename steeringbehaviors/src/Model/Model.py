@@ -1,7 +1,8 @@
 '''
 Created on 16/11/2009
 
-@author: Ezequiel N. Pozzo
+@author: Ezequiel N. Pozzo, JuanPi Carbajal
+Last edit: Wednesday, November 18 2009
 '''
 from weakref import WeakKeyDictionary
 import numpy as np
@@ -70,6 +71,9 @@ class PhysicsModel(Model):
         del self.entities[entity_id]
         
     def get_entity(self, id):
+        '''
+        Returns the list of entities
+        '''
         return self.entities[id]
     
     def apply_force(self, entity_id, force):
