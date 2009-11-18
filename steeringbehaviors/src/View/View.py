@@ -62,7 +62,7 @@ class PygameViewer(View2D):
     import pygame
     from pygame.sprite import Sprite as SpriteParent
 
-    class Sprite(PygameViewer.SpriteParent):
+    class Sprite(SpriteParent):
         def __init__(self, model_entity):
             '''
             @model_entity_position: the position of the model object. Use [position] to get reference!!!
