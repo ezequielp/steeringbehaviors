@@ -3,6 +3,7 @@ Created on 16/11/2009
 
 @author: Ezequiel N. Pozzo
 Edited by JuanPi Carbajal
+Last edit: Wednesday, November 18 2009
 '''
 from __future__ import division
 import numpy as np
@@ -62,6 +63,27 @@ class PygameViewer(View2D):
     import pygame
     from pygame.sprite import Sprite as SpriteParent
 
+    def __init__(self, Model):
+        View2D.__init__(self, Model)
+        pygame=self.pygame
+        pygame.init()
+        self.Sprite._project=self._project
+        self._sprites=self.pygame.sprite.RenderUpdates()
+        
+        from weakref import WeakKeyDictionary
+        self.sprite_from_model=WeakKeyDictionary()
+        
+        '''
+        Starts a simple black screen.        TODO: improve to be configurable        '''
+        self.screen=pygame.display.set_mode(config.screen_size)
+        background = pygame.Surface(self.screen.get_size())
+        background = background.convert()
+        background.fill((250, 250, 250))
+        self.background=background
+        self.screen.blit(background, (0,0))
+        pygame.display.flip()
+
+
     class Sprite(SpriteParent):
         def __init__(self, model_entity):
             '''
@@ -71,7 +93,8 @@ class PygameViewer(View2D):
             PygameViewer.SpriteParent.__init__(self)
             self.model=model_entity
             
-            self.rect=pygame.Rect(self.__project(model_entity.position), (0,0))
+            self.rect=pygame.Rect(self._project.transform(model_entity.position)
+                                  , (0,0))
             
             '''
             TODO: implement better and more versatile method to set sprite image
@@ -81,47 +104,24 @@ class PygameViewer(View2D):
             simple_sprite.set_colorkey((255,255,255), pygame.RLEACCEL)
             self.image=simple_sprite
         
-            pygame.draw.circle(self.image, (0,0,0), (3,3), 3.0)
+            pygame.draw.circle(self.image, (0,0,0), (3,3), 3)
             
             
         def update(self):
-            self.rect.center=self.__project.transform(self.model.position)
+            self.rect.center=self._project.transform(self.model.position)
         
         
-    def __init__(self, Model):
-        View2D.__init__(self, Model)
-        pygame=self.pygame
-        pygame.init()
-        self.Sprite.__project=self.project
-        self.sprites=self.pygame.sprite.RenderUpdates()
-        
-        
-    
-        from weakref import WeakKeyDictionary
-        self.sprite_from_model=WeakKeyDictionary()
-        
-        '''
-        Starts a simple black screen.
-        TODO: improve to be configurable
-        '''
-        self.screen=pygame.display.set_mode(config.screen_size)
-        background = pygame.Surface(self.screen.get_size())
-        background = background.convert()
-        background.fill((250, 250, 250))
-        self.background=background
-        self.screen.blit(background, (0,0))
-        pygame.display.flip()
         
     def update(self):
-        self.sprites.clear(self.screen, self.background)
-        self.sprites.update()
-        self.pygame.display.update(self.sprites.draw(self.screen))
+        self._sprites.clear(self.screen, self.background)
+        self._sprites.update()
+        self.pygame.display.update(self._sprites.draw(self.screen))
         
     def add_entity(self, model_entity_id):
         model_entity=self.model.get_entity(model_entity_id)
         new_sprite=self.Sprite(model_entity)
         self.sprite_from_model[model_entity]=new_sprite
-        self.sprites.add(new_sprite)
+        self._sprites.add(new_sprite)
         
     def delete_entity(self, model_entity_id):
         model_entity=self.model.get_entity(model_entity_id)

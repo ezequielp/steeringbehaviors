@@ -1,7 +1,8 @@
 '''
 Created on Sunday, November 08 2009
 
-@author JuanPi Carbajal
+@author JuanPi Carbajal, Eze Pozzo
+Last edit: Wednesday, November 18 2009
 '''
 from __future__ import division
 import numpy as np
@@ -16,7 +17,6 @@ class Transformation:
         Constructor
         '''
         self.T=eye(3)
-        #self.A=array([0,0])
         
     def transform(self,Rcoord):
         #Why all the 2D to 3D and back?
