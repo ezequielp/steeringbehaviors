@@ -121,8 +121,9 @@ class PygameViewer(View2D):
         
     def update(self, fps=30):
         '''tick forces the whole program to run at the given fps. It should be replaced'''
+        self.pygame.event.pump()
         dt=self._clock.tick(fps)
-        cleared=self._untraced_sprites.clear(self.screen, self.background)
+        self._untraced_sprites.clear(self.screen, self.background)
         
         self._sprites.update(fps)
         

@@ -20,7 +20,7 @@ if __name__ == '__main__':
     
     model=PhysicsModel()     # Model
     view=PygameViewer(model) # Viewer
-    eventM=EventManager()    # Event Manager
+    eh=EventManager()    # Event Manager
     
     entitylist=[model.add_entity((400*(i/20.0),200*(i%3)), (0,0)) for i in xrange(0,20)]
     [view.add_entity(entity) for entity in entitylist]
@@ -63,7 +63,7 @@ if __name__ == '__main__':
     entity_list=[model.add_entity((random.randint(160,480),random.randint(120, 360)),(random.randint(-100,100), random.randint(-100, 100) )) for i in xrange(20) ]
     [view.add_entity(entity, trace=True) for entity in entitylist]
     
-    loop(model, view, 10000)
+    loop(model, view, 1000)
     
     print "...OK"
             
@@ -78,20 +78,28 @@ if __name__ == '__main__':
     [view.add_entity(entity, trace=True) for entity in entitylist]
     [model.apply_force(entity, (random.randint(-50, 50), random.randint(-50, 50))) for entity in entitylist]
         
-    loop(model, view, 10000)
+    loop(model, view, 1000)
     print "...OK"
 
     print "Testing Mouse control: Move the mouse and press the buttons"
     def mousePos(pos):
-       print pos
+        print pos
        
-    mouse=PygameMouseController(eventM)
+    mouse=PygameMouseController(eh)
     eh.bind(mousePos,mouse.MOUSE_MOVE)
+    eh.bind(mousePos,mouse.MOUSE_BTN1_DOWN)
+    eh.bind(mousePos,mouse.MOUSE_BTN1_UP)
+
     eventcount=0
-    while eventcount < 20:
+    
+    while eventcount<30:
         if mouse.update():
-          eventcount+=1
+            eventcount+=1
+        dt=view.update(20)
+        model.update(dt)
           
     print "...OK"
+    print "Remaining queue:"
+    print '\n'.join([mouse.pygame.event.event_name(event.type) for event in mouse.pygame.event.get()])
    
     print "All test OK, be happy!"    
