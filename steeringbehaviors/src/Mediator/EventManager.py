@@ -60,7 +60,7 @@ class EventManager(object):
             for listener in self.listeners[type]:
                 listener(event)
         else:
-            for ev in events:
+            for ev in event:
                 type=ev['Type']
                 for listener in self.listeners[type]:
                     listener(ev)
