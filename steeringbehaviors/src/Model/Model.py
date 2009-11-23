@@ -35,6 +35,7 @@ class Model_Entity(object):
         TODO: Emit event when the model is created.
         '''
         self.forces=[]
+        self.total_force=np.array((0.0, 0.0))
         
     def apply_force(self, force):
         '''
@@ -58,6 +59,7 @@ class Model_Entity(object):
 class PhysicsModel(Model):
     def __init__(self):
         self.entities = []#WeakKeyDictionary()
+        
           
     def add_entity(self, position, velocity):
         entity=Model_Entity()
@@ -87,6 +89,7 @@ class PhysicsModel(Model):
         
     def update(self, dt):
         '''
+        dt in miliseconds
         Using:
         1. actualize velocidad con aceleracion actual dt/2 -> v(t+1/2)=v(t)+a(t)*dt/2
         2. actualize posicion x(t+1)=x(t)+v(t+1/2)*dt
@@ -99,12 +102,12 @@ class PhysicsModel(Model):
             positions and forces, and do this without any loop. Requires model redesign but should have mayor
             performance improvement.
             '''
-            v_2=ent.velocity+ent.total_force*dt/2
-            ent.position=ent.position+v_2*dt
+            v_2=ent.velocity+ent.total_force*(dt*1.0/1000)/2
+            ent.position=ent.position+v_2*dt*(1.0/1000)
             '''
             Forces should be updated at this point, not needed for constant forces.
             '''
-            ent.velocity=v_2+ent.total_force*dt/2
+            ent.velocity=v_2+ent.total_force*dt/2*(1.0/1000)
             
 
 

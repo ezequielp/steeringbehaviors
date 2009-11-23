@@ -71,7 +71,9 @@ class PygameViewer(View2D):
         self.Sprite._project=self._project
         
         self._sprites=pygame.sprite.RenderUpdates()
-        
+        self._untraced_sprites=pygame.sprite.RenderUpdates()
+        self._traced_sprites=pygame.sprite.RenderUpdates()
+
         self._clock=pygame.time.Clock()
         
         from weakref import WeakKeyDictionary
@@ -117,23 +119,36 @@ class PygameViewer(View2D):
         
         
         
-    def update(self,fps=30):
+    def update(self, fps=30):
+        '''tick forces the whole program to run at the given fps. It should be replaced'''
         dt=self._clock.tick(fps)
-        self._sprites.clear(self.screen, self.background)
+        cleared=self._untraced_sprites.clear(self.screen, self.background)
+        
         self._sprites.update(fps)
-        self.pygame.display.update(self._sprites.draw(self.screen))
+        
+        self.pygame.display.update(self._traced_sprites.draw(self.screen))
+
+        self.pygame.display.update(self._untraced_sprites.draw(self.screen))
         return dt
         
-    def add_entity(self, model_entity_id):
+    def add_entity(self, model_entity_id, trace=False):
         model_entity=self.model.get_entity(model_entity_id)
         new_sprite=self.Sprite(model_entity)
         self.sprite_from_model[model_entity]=new_sprite
         self._sprites.add(new_sprite)
+        if trace:
+            self._traced_sprites.add(new_sprite)
+        else:
+            self._untraced_sprites.add(new_sprite)
         
     def delete_entity(self, model_entity_id):
         model_entity=self.model.get_entity(model_entity_id)
+        
         delete_sprite=self.sprite_from_model[model_entity]
         del self.sprite_from_model[model_entity]
         self._sprites.remove(delete_sprite)
+        if delete_sprite in self._untraced_sprites:
+            self._untraced_sprites.remove(delete_sprite)
 
+        
         
