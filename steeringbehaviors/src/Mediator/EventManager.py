@@ -10,6 +10,7 @@ class EventManager(object):
    
     
     '''
+    import weakref
 
 
     def __init__(self):
@@ -17,26 +18,42 @@ class EventManager(object):
         WeakKeyDictionary allows the Garbage collector to delete the listener objects if 
         all other references are lost.
         '''
-        from weakref import WeakKeyDictionary
-        self.listeners = WeakKeyDictionary()
+        self._registered_events=0
+        self.listeners = dict()
+        self.ALL_EVENTS=self.new_event_type()
         
+    def new_event_type(self):
+        self.listeners[self._registered_events]=self.weakref.WeakSet()
+        self._registered_events+=1
+        return self._registered_events-1
+    
     def bind(self, listener, event_type=None):
         '''
         Registers an event listener. 
-        @listener Object who will receive events. Must implement notify function.
+        @listener Function that will receive events. Must have one parameter (event).
         @event_type The type of events the listener will hear, default: Hears all.
-        
-        TODO: implement listening to type of events. Assert notify in listener.
         '''
-        self.listeners[listener]=True
-        
-    def unbind(self, listener):
-        if listener in self.listeners.keys():
-            del self.listeners[listener]
+        if event_type==None:
+            event_type=self.ALL_EVENTS
             
+        self.listeners[type].add(event_type)
+       
+    def unbind(self, listener, type=None):
+        '''
+        Detaches listener from all types of events or from a specific type or from all types
+        '''
+        if type!=None:
+            self.listeners[type].remove(listener)
+            return
+            
+        for type in self.get_type():
+            self.listeners[type].remove(listener)
+        
     def post(self, event):
         '''
         Sends event to all listeners
         '''
-        for listener in self.listeners.keys():
-            listener.notify(event)
+        type=event['Type']
+        for listener in self.listeners[type]:
+            listener(event)
+        
