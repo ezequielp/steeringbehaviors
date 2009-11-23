@@ -2,7 +2,7 @@
 Created on 07/11/2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal
-Last edit: Wednesday, November 18 2009
+Last edit: Monday, November 23 2009
 '''
 def loop(model, view, time):
     timer=0
@@ -15,9 +15,12 @@ def loop(model, view, time):
 if __name__ == '__main__':
     from Model.Model import PhysicsModel
     from View.View import PygameViewer
+    from Mediator.EventManager import EventManager
+    from Controller.MouseController import PygameMouseController
     
-    model=PhysicsModel()
-    view=PygameViewer(model)
+    model=PhysicsModel()     # Model
+    view=PygameViewer(model) # Viewer
+    eventM=EventManager()    # Event Manager
     
     entitylist=[model.add_entity((400*(i/20.0),200*(i%3)), (0,0)) for i in xrange(0,20)]
     [view.add_entity(entity) for entity in entitylist]
@@ -26,6 +29,8 @@ if __name__ == '__main__':
     fps=30
     dt=0.0
     idpop=[]
+    
+    
     print "Testing dynamic add/remove entities from view"
     while timer<3000:
         dt=view.update(fps)
@@ -43,13 +48,15 @@ if __name__ == '__main__':
       
       
         timer+=dt
-       
+    print "...OK"   
+    
     print "Restarting model and view"
     for entity_id in entitylist:
         view.delete_entity(entity_id)
         model.delete_entity(entity_id)
 
-        
+    print "...OK"
+            
     print "Testing random free movement"
     import random
     
@@ -58,17 +65,33 @@ if __name__ == '__main__':
     
     loop(model, view, 10000)
     
-        
+    print "...OK"
+            
     print "Restarting model and view"
     for entity_id in entitylist:
         view.delete_entity(entity_id)
         model.delete_entity(entity_id)
-        
+    print "...OK"
+            
     print "Testing random forced movement"
     entity_list=[model.add_entity((random.randint(160,480),random.randint(120, 360)),(random.randint(-100,100), random.randint(-100, 100) )) for i in xrange(20) ]
     [view.add_entity(entity, trace=True) for entity in entitylist]
     [model.apply_force(entity, (random.randint(-50, 50), random.randint(-50, 50))) for entity in entitylist]
         
     loop(model, view, 10000)
-    
-    
+    print "...OK"
+
+    print "Testing Mouse control: Move the mouse and press the buttons"
+    def mousePos(pos):
+       print pos
+       
+    mouse=PygameMouseController(eventM)
+    eh.bind(mousePos,mouse.MOUSE_MOVE)
+    eventcount=0
+    while eventcount < 20:
+        if mouse.update():
+          eventcount+=1
+          
+    print "...OK"
+   
+    print "All test OK, be happy!"    
