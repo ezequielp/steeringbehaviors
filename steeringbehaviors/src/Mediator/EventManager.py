@@ -52,8 +52,16 @@ class EventManager(object):
     def post(self, event):
         '''
         Sends event to all listeners
+        
+        Event must be an event or a list
         '''
-        type=event['Type']
-        for listener in self.listeners[type]:
-            listener(event)
+        if not isinstance(event, list):
+            type=event['Type']
+            for listener in self.listeners[type]:
+                listener(event)
+        else:
+            for ev in events:
+                type=ev['Type']
+                for listener in self.listeners[type]:
+                    listener(ev)
         
