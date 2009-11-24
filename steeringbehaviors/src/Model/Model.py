@@ -101,7 +101,7 @@ class PhysicsModel(Model):
         TODO: Make orientation independent of velocity?
         '''
         self.relative_forces[entity_id].add((relative_angle, magnitude))
-        self.total_relative_forces[entity_id]+=
+        #self.total_relative_forces[entity_id]+=
         
     def detach_force(self, entity_id, force_id):
         self.entities[entity_id].remove_force(force_id)
