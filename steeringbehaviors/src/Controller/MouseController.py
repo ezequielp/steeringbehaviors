@@ -3,7 +3,7 @@ Created on Monday, November 23 2009
 
 @author: JuanPi Carbajal
 Edited by Ezequiel N. Pozzo
-Last edit: Monday, November 23 2009
+Last edit: Tuesday, November 24 2009
 '''
 from __future__ import division
 import numpy as np
@@ -40,7 +40,6 @@ class PygameMouseController(Controller):
         
         self.pygame.init()        
         self.pygame.mouse.set_visible(True)
-        #self._events=[]
         self._EH=EventManager
         self.last_btn=[False, False, False]
         
@@ -52,7 +51,8 @@ class PygameMouseController(Controller):
         btn=self.last_btn
 
         # get events that happened in this frame
-        for event in pygame.event.get([pygame.MOUSEMOTION, pygame.MOUSEBUTTONUP, pygame.MOUSEBUTTONDOWN]):
+        for event in pygame.event.get([pygame.MOUSEMOTION, 
+                                pygame.MOUSEBUTTONUP, pygame.MOUSEBUTTONDOWN]):
             int_event=dict()
             # Mouse
             if pygame.mouse.get_focused(): 
