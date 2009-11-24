@@ -2,10 +2,11 @@
 Created on 16/11/2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal
-Last edit: Wednesday, November 18 2009
+Last edit: Tuesday, November 24 2009
 '''
 from weakref import WeakKeyDictionary
 import numpy as np
+from Tools.LinAlgebra_extra import rotv
 
 class Model(object):
     '''
