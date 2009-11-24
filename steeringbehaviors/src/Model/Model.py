@@ -117,6 +117,7 @@ class PhysicsModel(Model):
         3. actualize acclereacion a(t+1)=f(x(t+1))/m
         4. actualize velocidad v(t+1)=v(t+1/2)+a(t+1)*dt/2
         '''
+        rel2global_f=np.array([0,0])
         for ID , ent in enumerate(self.entities):
             '''
             Thinking out loud: This is not efficient, I think we could use matrices to store all velocities
@@ -128,8 +129,8 @@ class PhysicsModel(Model):
             # the direction of the velocity.
             # TODO: generalize this
             
-            ang=vector2angle(ent.velocity)          #TODO: vector2angle
-            rel2global_f=np.dot(rotv(ang,[0,0,-1]),relative_force[ID])
+            #ang=vector2angle(ent.velocity)          #TODO: vector2angle
+            #rel2global_f=np.dot(rotv(ang,[0,0,-1]),relative_force[ID])
             
             # Update vel(t+1/2) and position pos(t+1)
             v_2=ent.velocity+(ent.total_force+rel2global_f)*(dt*1.0/1000)/2
@@ -140,6 +141,7 @@ class PhysicsModel(Model):
             '''
             # Update accelerations a(t+1) and vel(t+1)
             # JPI: Do we have to update the entities somehow?
+            # TODO
             
             ent.velocity=v_2+(ent.total_force+rel2global_f)*dt/2*(1.0/1000)
             
