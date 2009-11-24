@@ -82,8 +82,8 @@ if __name__ == '__main__':
     print "...OK"
 
     print "Testing Mouse control: Move the mouse and press the buttons"
-    def mousePos(pos):
-        print pos
+    def mousePos(event):
+        print event["Pos"]
        
     mouse=PygameMouseController(eh)
     eh.bind(mousePos,mouse.MOUSE_MOVE)
