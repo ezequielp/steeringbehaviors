@@ -79,9 +79,29 @@ class PhysicsModel(Model):
         return self.entities[id]
     
     def apply_force(self, entity_id, force):
+        '''
+        Applies a force relative to an inertial frame. You
+        can think about a frame fixed to the floor.
+        You can also think of this as a more efficient way of doing the
+        more teleologically correct "apply this force relative to my *current*
+        system of reference"
+        
+        returns None
+        '''
         force_id=self.entities[entity_id].apply_force(np.array(force))
                 
         return force_id
+        
+    def apply_relative_force(self, entity_id, relative_angle, magnitude):
+        '''
+        Applies a force relative to the entity's frame of reference.
+        The force will always be oriented relative_angle degrees from the 
+        entity's orientation.
+        The entity's orientation is the last non 0 velocity's direction.
+        TODO: Make orientation independent of velocity?
+        '''
+        self.relative_forces[entity_id].add((relative_angle, magnitude))
+        self.total_relative_forces[entity_id]+=
         
     def detach_force(self, entity_id, force_id):
         self.entities[entity_id].remove_force(force_id)
