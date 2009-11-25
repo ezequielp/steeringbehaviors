@@ -30,7 +30,7 @@ class DragAndDropApp():
 		self.grabbed=None
 		
 	def on_mouse_down(self, event):
-		entity=screen.get_entity_at(event['Pos'])
+		entity=self.screen.get_entity_at(event['Pos'])
 		if entity!=None:
 			self.grabbed=entity.id
 			self.world.grab_entity(entity.id)

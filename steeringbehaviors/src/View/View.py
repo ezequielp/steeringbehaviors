@@ -143,6 +143,7 @@ class PygameViewer(View2D):
         
     def update(self):
         '''tick forces the whole program to run at the given fps. It should be replaced'''
+        ''' JPI: as used in test View.update has to return the dt'''
         self.pygame.event.pump()
         #dt=self._clock.tick()
         self._untraced_sprites.clear(self.screen, self.background)
