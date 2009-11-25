@@ -27,3 +27,12 @@ def rotv(v,ang):
     r = r + sin(a)*ones([3,3]) * tmp ;
 
     return r
+    
+def vector2angle(v)
+    '''
+       Get the angle between the X axis and the direction defined by v.
+       The angle is in [-pi, pi] range
+    '''
+    #TODO
+    return 0.0
+    

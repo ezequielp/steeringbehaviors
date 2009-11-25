@@ -6,7 +6,7 @@ Last edit: Tuesday, November 24 2009
 '''
 from weakref import WeakKeyDictionary
 import numpy as np
-from Tools.LinAlgebra_extra import rotv
+from Tools.LinAlgebra_extra import rotv, vector2angle
 
 class Model(object):
     '''
@@ -153,8 +153,8 @@ class PhysicsModel(Model):
             # the direction of the velocity.
             # TODO: generalize this
             
-            #ang=vector2angle(ent.velocity)          #TODO: vector2angle
-            #rel2global_f=np.dot(rotv(ang,[0,0,-1]),relative_force[ID])
+            ang=vector2angle(ent.velocity)          #TODO: vector2angle
+            rel2global_f=np.dot(rotv(ang,[0,0,-1]),relative_force[ID])
             
             # Update vel(t+1/2) and position pos(t+1)
             if ent in grabbed:
