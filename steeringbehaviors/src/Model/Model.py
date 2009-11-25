@@ -159,8 +159,7 @@ class PhysicsModel(Model):
             # Update vel(t+1/2) and position pos(t+1)
             if ent in grabbed:
                 continue
-            print dt.__class__
-            v_2=ent.velocity+np.multiply(ent.total_force+rel2global_f,(dt*1.0/1000)/2)
+            v_2=ent.velocity+(ent.total_force+rel2global_f)*(dt*1.0/1000)/2)
             ent.position=ent.position+v_2*dt*(1.0/1000)
             
             '''
