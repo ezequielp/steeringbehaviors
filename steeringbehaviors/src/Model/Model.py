@@ -23,8 +23,19 @@ class Model(object):
         '''
         Updates state
         '''
-        assert False, "Must implement"
+        assert False, "Not implemented"
 
+    def grab_entity(self, entity_id):
+        '''
+        Makes the entity fixed and unable to react to the environment
+        '''
+        assert False, "Not implemented"
+        
+    def drop_entity(self, entity_id):
+        '''
+        Returns the entity to its normal behavior
+        '''
+        assert False, "Note implemented"
 
 class Model_Entity(object):
     '''
@@ -60,18 +71,27 @@ class Model_Entity(object):
 class PhysicsModel(Model):
     def __init__(self):
         self.entities = []#WeakKeyDictionary()
-        
+        self.grabbed=set()
           
     def add_entity(self, position, velocity):
         entity=Model_Entity()
         self.entities.append(entity)
         entity.position=np.array(position)
         entity.velocity=np.array(velocity)
-        
+        entity.id=len(self.entities)-1
         return len(self.entities) -1
         
     def delete_entity(self, entity_id):
         del self.entities[entity_id]
+        
+    def grab_entity(self, entity_id):
+        self.grabbed.add(entity_id)
+        
+    def drop_entity(self, entity_id):
+        self.grabbed.remove(entity_id)
+        
+    def move_entity(self, entity_id, position):
+        self.get_entity(entity_id).position=position
         
     def get_entity(self, id):
         '''
@@ -108,6 +128,9 @@ class PhysicsModel(Model):
         self.entities[entity_id].remove_force(force_id)
         
         
+    def on_update(self, event):
+        self.update(event['dt'])
+        
     def update(self, dt):
         '''
         dt in miliseconds
@@ -118,6 +141,7 @@ class PhysicsModel(Model):
         4. actualize velocidad v(t+1)=v(t+1/2)+a(t+1)*dt/2
         '''
         rel2global_f=np.array([0,0])
+        grabbed=self.grabbed
         for ID , ent in enumerate(self.entities):
             '''
             Thinking out loud: This is not efficient, I think we could use matrices to store all velocities
@@ -133,6 +157,8 @@ class PhysicsModel(Model):
             #rel2global_f=np.dot(rotv(ang,[0,0,-1]),relative_force[ID])
             
             # Update vel(t+1/2) and position pos(t+1)
+            if ent in grabbed:
+                continue
             v_2=ent.velocity+(ent.total_force+rel2global_f)*(dt*1.0/1000)/2
             ent.position=ent.position+v_2*dt*(1.0/1000)
             

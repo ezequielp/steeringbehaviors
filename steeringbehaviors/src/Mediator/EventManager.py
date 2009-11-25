@@ -10,7 +10,7 @@ class EventManager(object):
    
     
     '''
-    from Tools.WeakRefSet import WeakSet
+    from Tools.WeakRefSet import WeakSet, WeakMethod
 
 
     def __init__(self):
@@ -23,7 +23,7 @@ class EventManager(object):
         self.ALL_EVENTS=self.new_event_type()
         
     def new_event_type(self):
-        self.listeners[self._registered_events]=self.WeakSet()
+        self.listeners[self._registered_events]=set()
         self._registered_events+=1
         return self._registered_events-1
     
@@ -36,7 +36,9 @@ class EventManager(object):
         if event_type==None:
             event_type=self.ALL_EVENTS
             
-        self.listeners[event_type].add(listener)
+        
+        self.listeners[event_type].add(self.WeakMethod(listener))
+        
        
     def unbind(self, listener, type=None):
         '''
@@ -55,13 +57,16 @@ class EventManager(object):
         
         Event must be an event or a list
         '''
+        
         if not isinstance(event, list):
             type=event['Type']
+            
             for listener in self.listeners[type]:
                 listener(event)
         else:
             for ev in event:
                 type=ev['Type']
+                
                 for listener in self.listeners[type]:
                     listener(ev)
         

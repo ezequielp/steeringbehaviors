@@ -18,19 +18,22 @@ class Transformation:
         '''
         Constructor
         '''
-        self.T=eye(3)
+        self.T=self.T_inv=eye(3)
         
     def transform(self,Rcoord):
-        #Why all the 2D to 3D and back?
-        # JPi: Is not 2D 3D is homogenous coordinates. You have to append a
-        # one to the end (or beginning, depending on convention) so that 
-        # translations are linear transformations (and not affine). If the 
-        # vectors were 3D here we woudl have a 4D vector.
-        # Ezeq: gotcha
+        
         v=concatenate((Rcoord,[1.0]))  
         
         return np.round(np.dot(self.T,np.transpose(v)))[:2]
-        
+       
+    def inverse_transform(self, Scoord):
+        '''
+        returns approximate inverse of transform. transform(inverse_transform(X))!=X, 
+        because transform is a projection
+        '''
+        v=concatenate((Scoord,[1.0]))
+        return np.dot(self.T_inv, np.transpose(v))[:2]
+     
     def set_transform(self,move=array([0,0]), rotate=array([0]),scale=array([1,1])):
         # Works only in 2D for the moment                                 
                     
@@ -45,6 +48,6 @@ class Transformation:
             A[i,-1]=move[i]*scale[i]
 
         self.T=dot(R,S)+A
-        
+        self.T_inv=self.T.getI()
     
 

@@ -30,6 +30,19 @@ class View(object):
         TODO: implement as event handler
         '''
         assert False, "Not implemented"
+        
+    def get_world_position(self, view_position):
+        '''
+        Returns the position in world coordinates for the 
+        point view_position
+        '''
+        assert False, "Not implemented"
+
+    def get_entity_at(self, view_position):
+        '''
+        Returns the entity id at the requested position or None if there isn't any.
+        '''
+        assert False, "Not implemented"
 
 class View2D(View):
     '''
@@ -55,17 +68,23 @@ class View2D(View):
                            scale=np.array([1,1])):
         self._project.set_transform(move, rotate, scale)
         
+    def get_world_position(self, view_position):
+        return self._project.inverse_transform(view_position)
+
 
 class PygameViewer(View2D):
     '''
     A class rendering the actors of the Model into a Pygame window
     '''        
-    import pygame
     from pygame.sprite import Sprite as SpriteParent
-
+    import pygame
+    
     def __init__(self, Model):
         View2D.__init__(self, Model)
+
         pygame=self.pygame
+        self.pygsprites=pygame.sprite
+        
         pygame.init()
         
         self.Sprite._project=self._project
@@ -113,24 +132,27 @@ class PygameViewer(View2D):
             pygame.draw.circle(self.image, (0,0,0), (3,3), 3)
             
             
-        def update(self,fps=30):
-            PygameViewer.SpriteParent.update(self,fps)
+        def update(self):
+            PygameViewer.SpriteParent.update(self)
             self.rect.center=self._project.transform(self.model.position)
         
         
         
-    def update(self, fps=30):
+    def on_update(self, event):
+        self.update()
+        
+    def update(self):
         '''tick forces the whole program to run at the given fps. It should be replaced'''
         self.pygame.event.pump()
-        dt=self._clock.tick(fps)
+        #dt=self._clock.tick()
         self._untraced_sprites.clear(self.screen, self.background)
         
-        self._sprites.update(fps)
+        self._sprites.update()
         
         self.pygame.display.update(self._traced_sprites.draw(self.screen))
 
         self.pygame.display.update(self._untraced_sprites.draw(self.screen))
-        return dt
+        
         
     def add_entity(self, model_entity_id, trace=False):
         model_entity=self.model.get_entity(model_entity_id)
@@ -151,5 +173,14 @@ class PygameViewer(View2D):
         if delete_sprite in self._untraced_sprites:
             self._untraced_sprites.remove(delete_sprite)
 
-        
-        
+    def get_entity_at(self, view_position, size=(10,10)):
+        pygsprites=self.pygsprites
+        pos_sprite=pygsprites.Sprite()
+        pos_sprite.rect=self.pygame.Rect(view_position, size)
+        pos_sprite.rect.center=view_position
+        try:
+            
+            return pygsprites.spritecollide(pos_sprite, self._sprites, False)[0].model
+        except IndexError:
+            return None
+    

@@ -43,6 +43,9 @@ class PygameMouseController(Controller):
         self._EH=EventManager
         self.last_btn=[False, False, False]
         
+    def on_update(self, event):
+        self.update()
+        
     def update(self): 
         #Pygame - Event handling
         #int_event={"Type":[], "Pos":[],"BTN":[]}
@@ -59,6 +62,7 @@ class PygameMouseController(Controller):
                 # Buttons
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos=event.pos
+                    
                     if event.button == 1:
                         typ=self.MOUSE_BTN1_DOWN
                         btn[0]=True
@@ -68,8 +72,7 @@ class PygameMouseController(Controller):
                     elif event.button == 3:
                         typ=self.MOUSE_BTN3_DOWN
                         btn[2]=True 
-                    else:
-                        assert False, str(event.button)   
+                      
                 elif event.type == pygame.MOUSEBUTTONUP:
                     pos=event.pos
                     if event.button == 1:
@@ -79,7 +82,7 @@ class PygameMouseController(Controller):
                         typ=self.MOUSE_BTN2_UP
                         btn[1]=False                                      
                     elif event.button == 3:
-                        typ=self.MOUSE_BTN3_DOWN
+                        typ=self.MOUSE_BTN3_UP
                         btn[2]=False    
                     else:
                         assert False, str(event.button)   

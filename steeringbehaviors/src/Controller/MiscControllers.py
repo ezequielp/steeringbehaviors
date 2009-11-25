@@ -40,8 +40,10 @@ class PygCPUSpinner(CPUSpinner):
         TICK=self.TICK
         self.running=True
         while self.running:
-            self.clock.tick(self.fps)
-            eh.post({'Type': TICK})
+            dt=self.clock.tick(self.fps)
+            eh.post({'Type': TICK, 'dt': dt})
+            
+            
             
     def stop(self):
         self.running=False

@@ -7,7 +7,7 @@ Last edit: Monday, November 23 2009
 def loop(model, view, time):
     timer=0
     while timer<time:
-            dt=view.update(fps)
+            dt=view.update()
             model.update(dt)        
             timer+=dt
             
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     
     print "Testing dynamic add/remove entities from view"
     while timer<3000:
-        dt=view.update(fps)
+        dt=view.update()
         model.update(dt)
         # add and delete entities
         if timer>=last_done+100 and len(entitylist)>0:
@@ -95,7 +95,7 @@ if __name__ == '__main__':
     while eventcount<30:
         if mouse.update():
             eventcount+=1
-        dt=view.update(20)
+        dt=view.update()
         model.update(dt)
           
     print "...OK"
