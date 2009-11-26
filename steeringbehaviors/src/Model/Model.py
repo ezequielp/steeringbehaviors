@@ -43,6 +43,8 @@ class Model(object):
         '''
         assert False, "Note implemented"
 
+    
+
 class Model_Entity(object):
     '''
     An abstract entity on the model.

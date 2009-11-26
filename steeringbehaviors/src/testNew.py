@@ -42,6 +42,8 @@ class Test():
         [view.add_entity(entity, trace=True) for entity in entity_list]
         [model.apply_relative_force(entity, pi/2, 100) for entity in entity_list]
         
+    def SeekEntity(self):
+        from Con
         
     def AddRemoveEntities(self):
         print "Testing dynamic add/remove entities from view"
@@ -90,9 +92,11 @@ class Test():
         '''
         Test mouse for Drag and Drop
         '''
-        from drag_and_drop import DragAndDropApp
+        from Apps.drag_and_drop import DragAndDropApp
         test=DragAndDropApp(event_handler, world, screen, mouse, spinner)	
         test.run()
+        
+    
  
 if __name__ == '__main__':
     event_handler=EventManager()
