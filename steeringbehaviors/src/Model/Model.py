@@ -208,12 +208,6 @@ class PhysicsModel(Model):
                 # JPI: Do we have to update the entities somehow?
                 # Eze: Yes, Forces depend on velocity. Which means we can't use Verlet Velocity :(
                 # TODO
-                #Add:
-                #ang=ent.ang=vector2angle(v_2)*360.0/2/pi
-                #rel2global_f=np.dot(rotv(array((0,0,1)), ang), np.concatenate((ent.total_relative_force, [1])))[0:2]
-                #force=(ent.total_force + rel2global_f)
-                #To calculate the new f(v) force... less error but still
-                #Didn't find any simplectic algorithm to solve H(x,v) yet...
                 #Maybe  http://adsabs.harvard.edu/abs/1994AmJPh..62..259G
                 # The usal election is Adam-Dashforth which is like a 
                 # Runge-Kutta http://mymathlib.webtrellis.net/diffeq/adams_top.html
@@ -225,6 +219,8 @@ class PhysicsModel(Model):
                 ang=ent.ang=vector2angle(v_2)
                 rel2global_f=np.dot(rotv(array((0,0,1)), ang)[0:2,0:2], ent.total_relative_force)
                 force=(ent.total_force + rel2global_f)
+                #To calculate the new f(v) force... less error but still
+                #Didn't find any simplectic algorithm to solve H(x,v) yet...
                 
                 ent.velocity=v_2+force*dt_2
             else:
