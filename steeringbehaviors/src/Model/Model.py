@@ -11,7 +11,8 @@ from math import sin,cos,pi
 from Tools.LinAlgebra_extra import rotv, vector2angle
 
 np.seterr(all='raise')
-verlet_v_integrator=True
+verlet_v_integrator=False
+Heun_f_integrator=True
 
 class Model(object):
     '''
@@ -230,6 +231,7 @@ class PhysicsModel(Model):
                 '''
             The so-call "Improved Euler" method, also known as the trapezoidal or bilinear or predictor/corrector or Heun Formula method, is a second order integrator.
 
+                ppos=
  STATE predictor(state);
  predictor.x += state.v * dt;
  predictor.v += system.GetAcceleration(state) * dt;
@@ -241,6 +243,23 @@ class PhysicsModel(Model):
  state.x = (predictor.x + corrector.x)*0.5;
  state.v = (predictor.v + corrector.v)*0.5;
 '''
+                # I don't think is the algorithm above, but lets see.
+                # I think the algorithm is keeping track of the predictor and
+                # the corrector, while I am just doing it for one time step.
+                ppos=ent.position+ent.velocity*dt*(1.0/1e3)
+                pvel=ent.velocity+force*dt*(1.0/1e3)
+                cpos=ent.position+pvel*dt*(1.0/1e3)
+                
+                ang=vector2angle(pvel)
+                R=rotv(array((0,0,1)), ang)[0:2,0:2]
+                rel2global_f=np.dot(R, ent.total_relative_force)
+                force=(ent.total_force + rel2global_f)
+                
+                cvel=ent.velocity+force*dt*(1.0/1e3)
+
+                ent.position=(ppos + cpos)*0.5
+                ent.velocity=(pvel + cvel)*0.5
+                ent.ang=vector2angle(ent.velocity)
             else:
                 '''
                 verlet normal
