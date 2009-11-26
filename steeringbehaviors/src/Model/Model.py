@@ -191,7 +191,7 @@ class PhysicsModel(Model):
             # concatenate and then slice.
             
            # rel2global_f=np.dot(rotv(array((0,0,1)), ang), np.concatenate((ent.total_relative_force, [1])))[0:2]
-            R=rotv(array((0,0,1), ang)[0:2,0:2]
+            R=rotv(array((0,0,1)), ang)[0:2,0:2]
             rel2global_f=np.dot(R, ent.total_relative_force)                
                     
             force=(ent.total_force + rel2global_f)
@@ -218,12 +218,29 @@ class PhysicsModel(Model):
                 # but is order 4.
                 
                 ang=ent.ang=vector2angle(v_2)
+                R=rotv(array((0,0,1)), ang)[0:2,0:2]
                 rel2global_f=np.dot(R, ent.total_relative_force)
                 force=(ent.total_force + rel2global_f)
                 #To calculate the new f(v) force... less error but still
                 #Didn't find any simplectic algorithm to solve H(x,v) yet...
                 
                 ent.velocity=v_2+force*dt_2
+                
+            elif Heun_f_integrator:
+                '''
+            The so-call "Improved Euler" method, also known as the trapezoidal or bilinear or predictor/corrector or Heun Formula method, is a second order integrator.
+
+ STATE predictor(state);
+ predictor.x += state.v * dt;
+ predictor.v += system.GetAcceleration(state) * dt;
+ 
+ STATE corrector(state);
+ corrector.x += predictor.v * dt;
+ corrector.v += system.GetAcceleration(predictor) * dt;
+ 
+ state.x = (predictor.x + corrector.x)*0.5;
+ state.v = (predictor.v + corrector.v)*0.5;
+'''
             else:
                 '''
                 verlet normal
