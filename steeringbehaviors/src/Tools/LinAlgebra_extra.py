@@ -2,7 +2,7 @@
 Created on Tuesday, November 24 2009
 
 @author JuanPi Carbajal, Eze Pozzo
-Last edit: Tuesday, November 24 2009
+Last edit: Thursday, November 26 2009
 '''
 from math import pi, sqrt, cos, sin
 from numpy import transpose, dot, vstack, kron, ones, zeros, eye, arctan2
@@ -11,10 +11,10 @@ def rotv(v,ang):
     # Based on the Octave implementation of Etienne Grossmann
     '''
      Generates the rotation matrix of angle around the vector v
-     Angle is in degrees
+     Angle is in radias
     '''
 
-    a = ang*pi/180.0
+    a = ang
     v = v/sqrt(dot(v,v))
     r = transpose( vstack((v,v,v)) ) * kron(v,ones([3,1])) 
     r = r + cos(a)*ones([3,3]) * (eye(3)-r) 

@@ -2,7 +2,7 @@
 Created on 16/11/2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal
-Last edit: Tuesday, November 24 2009
+Last edit: Thursday, November 26 2009
 '''
 import numpy as np
 from numpy import add, dot, array
@@ -182,10 +182,16 @@ class PhysicsModel(Model):
             if ent.id in grabbed:
                 continue
             
-            ang=ent.ang=vector2angle(ent.velocity)*360.0/2/pi
+            ang=ent.ang=vector2angle(ent.velocity)
 
-            rel2global_f=np.dot(rotv(array((0,0,1)), ang), np.concatenate((ent.total_relative_force, [1])))[0:2]
-                       
+            # JPi: I thought the model was 3D, i.e. all forces arrays had 3 
+            # elements. I guess that is the best way of doing it.
+            # As a workaround I prefer to slice the rotation matrix rather than,
+            # concatenate and then slice.
+            
+           # rel2global_f=np.dot(rotv(array((0,0,1)), ang), np.concatenate((ent.total_relative_force, [1])))[0:2]
+            rel2global_f=np.dot(rotv(array((0,0,1)), ang)[0:2,0:2], ent.total_relative_force)                
+                    
             force=(ent.total_force + rel2global_f)
             print np.dot(force, ent.velocity)
             
@@ -206,7 +212,13 @@ class PhysicsModel(Model):
                 #To calculate the new f(v) force... less error but still
                 #Didn't find any simplectic algorithm to solve H(x,v) yet...
                 #Maybe  http://adsabs.harvard.edu/abs/1994AmJPh..62..259G
-
+                # The usal election is Adam-Dashforth which is like a 
+                # Runge-Kutta http://mymathlib.webtrellis.net/diffeq/adams_top.html
+                # I will read the paper...I have nother one with lots of methds
+                # I will check that one too. Anyway, I have a multigent simualtion
+                # using the verlet and it works ok. It is not simplectic anymore
+                # but is order 4.
+                
                 ent.velocity=v_2+force*dt/2*(1.0/1000)
             else:
                 '''
