@@ -191,7 +191,8 @@ class PhysicsModel(Model):
             # concatenate and then slice.
             
            # rel2global_f=np.dot(rotv(array((0,0,1)), ang), np.concatenate((ent.total_relative_force, [1])))[0:2]
-            rel2global_f=np.dot(rotv(array((0,0,1)), ang)[0:2,0:2], ent.total_relative_force)                
+            R=rotv(array((0,0,1), ang)[0:2,0:2]
+            rel2global_f=np.dot(R, ent.total_relative_force)                
                     
             force=(ent.total_force + rel2global_f)
             print np.dot(force, ent.velocity)
@@ -217,7 +218,7 @@ class PhysicsModel(Model):
                 # but is order 4.
                 
                 ang=ent.ang=vector2angle(v_2)
-                rel2global_f=np.dot(rotv(array((0,0,1)), ang)[0:2,0:2], ent.total_relative_force)
+                rel2global_f=np.dot(R, ent.total_relative_force)
                 force=(ent.total_force + rel2global_f)
                 #To calculate the new f(v) force... less error but still
                 #Didn't find any simplectic algorithm to solve H(x,v) yet...
