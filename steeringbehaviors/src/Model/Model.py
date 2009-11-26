@@ -4,6 +4,7 @@ Created on 16/11/2009
 @author: Ezequiel N. Pozzo, JuanPi Carbajal
 Last edit: Thursday, November 26 2009
 '''
+from __future__ import division
 import numpy as np
 from numpy import add, dot, array
 from math import sin,cos,pi
@@ -178,7 +179,7 @@ class PhysicsModel(Model):
             # the direction of the velocity.
             # TODO: generalize this
            
-            # Update vel(t+1/2) and position pos(t+1)
+            
             if ent.id in grabbed:
                 continue
             
@@ -196,7 +197,9 @@ class PhysicsModel(Model):
             print np.dot(force, ent.velocity)
             
             if verlet_v_integrator:
-                v_2=ent.velocity+force*dt*1.0/2000
+                # Update vel(t+1/2) and position pos(t+1)
+                dt_2=dt*1.0/2000
+                v_2=ent.velocity+force*dt_2
                 ent.position=ent.position+v_2*dt*(1.0/1000)
                 '''
                 Forces should be updated at this point, not needed for constant forces.
@@ -219,7 +222,11 @@ class PhysicsModel(Model):
                 # using the verlet and it works ok. It is not simplectic anymore
                 # but is order 4.
                 
-                ent.velocity=v_2+force*dt/2*(1.0/1000)
+                ang=ent.ang=vector2angle(v_2)
+                rel2global_f=np.dot(rotv(array((0,0,1)), ang)[0:2,0:2], ent.total_relative_force)
+                force=(ent.total_force + rel2global_f)
+                
+                ent.velocity=v_2+force*dt_2
             else:
                 '''
                 verlet normal
