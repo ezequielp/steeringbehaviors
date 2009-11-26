@@ -13,7 +13,7 @@ from Controller.MouseController import PygameMouseController
 from Mediator.EventManager import EventManager
 from Controller.MiscControllers import PygCPUSpinner
 from numpy import pi
-FPS=20 #Same FPS for all for the moment
+FPS=30 #Same FPS for all for the moment
 
 
 
@@ -38,7 +38,7 @@ class Test():
         model=self.world
         view=self.screen
         import random
-        entity_list=[model.add_entity((100,100),(30, 0)) for i in xrange(1) ]
+        entity_list=[model.add_entity((100,100),(100, 0)) for i in xrange(1) ]
         [view.add_entity(entity, trace=True) for entity in entity_list]
         [model.apply_relative_force(entity, pi/2, 100) for entity in entity_list]
         

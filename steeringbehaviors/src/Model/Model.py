@@ -191,12 +191,12 @@ class PhysicsModel(Model):
             # As a workaround I prefer to slice the rotation matrix rather than,
             # concatenate and then slice.
             
-           # rel2global_f=np.dot(rotv(array((0,0,1)), ang), np.concatenate((ent.total_relative_force, [1])))[0:2]
+            # rel2global_f=np.dot(rotv(array((0,0,1)), ang), np.concatenate((ent.total_relative_force, [1])))[0:2]
             R=rotv(array((0,0,1)), ang)[0:2,0:2]
             rel2global_f=np.dot(R, ent.total_relative_force)                
                     
             force=(ent.total_force + rel2global_f)
-            print np.dot(force, ent.velocity)
+            print np.dot(ent.velocity, ent.velocity)
             
             if verlet_v_integrator:
                 # Update vel(t+1/2) and position pos(t+1)
@@ -210,7 +210,7 @@ class PhysicsModel(Model):
                 # JPI: Do we have to update the entities somehow?
                 # Eze: Yes, Forces depend on velocity. Which means we can't use Verlet Velocity :(
                 # TODO
-                #Maybe  http://adsabs.harvard.edu/abs/1994AmJPh..62..259G
+                # Maybe  http://adsabs.harvard.edu/abs/1994AmJPh..62..259G
                 # The usal election is Adam-Dashforth which is like a 
                 # Runge-Kutta http://mymathlib.webtrellis.net/diffeq/adams_top.html
                 # I will read the paper...I have nother one with lots of methds
