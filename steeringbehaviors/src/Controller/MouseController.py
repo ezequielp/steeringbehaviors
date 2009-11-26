@@ -6,14 +6,8 @@ Edited by Ezequiel N. Pozzo
 Last edit: Tuesday, November 24 2009
 '''
 from __future__ import division
-import numpy as np
+from Controller import Controller
 
-class Controller(object):
-   '''
-   Abstract controller
-   '''
-   def __init__(self,EventManager):
-      pass
       
 class PygameMouseController(Controller):
     '''

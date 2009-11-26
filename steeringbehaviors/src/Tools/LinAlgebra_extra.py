@@ -4,11 +4,14 @@ Created on Tuesday, November 24 2009
 @author JuanPi Carbajal, Eze Pozzo
 Last edit: Tuesday, November 24 2009
 '''
+from math import pi, sqrt, cos, sin
+from numpy import transpose, dot, vstack, kron, ones, zeros, eye, arctan2
 
 def rotv(v,ang):
     # Based on the Octave implementation of Etienne Grossmann
     '''
      Generates the rotation matrix of angle around the vector v
+     Angle is in degrees
     '''
 
     a = ang*pi/180.0
@@ -28,11 +31,11 @@ def rotv(v,ang):
 
     return r
     
-def vector2angle(v)
+def vector2angle(v):
     '''
        Get the angle between the X axis and the direction defined by v.
-       The angle is in [-pi, pi] range
+       The angle is in (-pi, pi] range
     '''
-    #TODO
-    return 0.0
+
+    return arctan2(v[1], v[0])
     
