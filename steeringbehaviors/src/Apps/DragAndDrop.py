@@ -15,9 +15,7 @@ class DragAndDropApp():
 		self.mouse=mouse
 		self.spinner=spinner
 		
-		#entitylist=[world.add_entity((400*(i/20.0),200*(i%3)), (0,0)) for i in xrange(0,3)]
-		#[screen.add_entity(entity) for entity in entitylist]
-
+		
 		event_handler.bind(self.on_mouse_down, mouse.MOUSE_BTN1_DOWN)
 		event_handler.bind(self.on_mouse_up, mouse.MOUSE_BTN1_UP)
 		event_handler.bind(self.on_mouse_move, mouse.MOUSE_MOVE)
