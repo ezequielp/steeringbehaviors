@@ -8,4 +8,4 @@ class Controller(object):
     Abstract controller
     '''
     def __init__(self, EventManager):
-        pass
+        self.event_handler=event_handler
