@@ -34,6 +34,8 @@ class Test():
         self.RestartModelView()
         self.AddRemoveEntities()
         self.RandomMove()
+        
+        # Testign the behaviors and DRag and Drop
         from steering.behaviors import SteerForSeek, SteerForArrive, SteerForPursuit
         
         self.AddSteeringEntity(SteerForSeek)

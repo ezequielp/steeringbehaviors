@@ -208,7 +208,7 @@ class PhysicsModel(Model):
             if verlet_v_integrator:
                 # Update vel(t+1/2) and position pos(t+1)
                 v_2=ent.velocity+force*dt_2
-                ent.position=ent.position+v_2*
+                ent.position=ent.position+v_2*dt_sec
                
                 # Update forces
                 ang=ent.ang=vector2angle(v_2)
@@ -220,11 +220,11 @@ class PhysicsModel(Model):
                 ent.velocity=v_2+force*dt_2
                 
             elif Heun_f_integrator:
-            '''
-            The so-call "Improved Euler" method, also known as the trapezoidal 
-            or bilinear or predictor/corrector or Heun Formula method, is a 
-            second order integrator.
-            '''
+                '''
+                The so-call "Improved Euler" method, also known as the trapezoidal 
+                or bilinear or predictor/corrector or Heun Formula method, is a 
+                second order integrator.
+                '''
                 # I don't think is the algorithm above, but lets see.
                 # I think the algorithm is keeping track of the predictor and
                 # the corrector, while I am just doing it for one time step.
