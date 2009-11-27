@@ -21,7 +21,7 @@ class PursuitTestApp():
         
         self.steering_entities=set()
         self.entity_list=[self.world.add_entity((100,100),(100, 0)) for i in xrange(1)]
-        [self.screen.add_entity(entity, trace=False) for entity in self.entity_list]
+        [self.screen.add_entity(entity, trace=False,color='b',size=5) for entity in self.entity_list]
         [self.world.apply_relative_force(entity, pi/2, 100) for entity in self.entity_list]
        
         self.AddSteeringEntity(SteerForSeek)
@@ -36,7 +36,7 @@ class PursuitTestApp():
         spinner=self.spinner
         #Create and apply Seeking Behavior controller to entity
         seeking_entity=self.world.add_entity((200,200),(0, 0))
-        self.screen.add_entity(seeking_entity, trace=False)
+        self.screen.add_entity(seeking_entity, trace=False,size=3,color='r')
         seek=Behavior(self.world, seeking_entity)
         seek.target_entity(self.entity_list[0])
         self.steering_entities.add(seek)

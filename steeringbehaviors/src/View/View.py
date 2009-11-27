@@ -128,7 +128,7 @@ class PygameViewer(View2D):
             '''
             TODO: implement better and more versatile method to set sprite image
             '''
-            self._draw_entity(shape='o',size=3,color='k')
+            self._draw_entity(shape,size,color)
             
             
             
@@ -188,7 +188,7 @@ class PygameViewer(View2D):
     def add_entity(self, model_entity_id, trace=False, color='k', shape='o',
                    size=3):
         model_entity=self.model.get_entity(model_entity_id)
-        new_sprite=self.Sprite(model_entity)
+        new_sprite=self.Sprite(model_entity,shape,size,color)
         self.sprite_from_model[model_entity]=new_sprite
         self._sprites.add(new_sprite)
         if trace:
