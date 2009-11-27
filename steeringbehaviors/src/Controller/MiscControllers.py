@@ -17,10 +17,18 @@ class CPUSpinner(object):
         self.fps=fps
         self.event_handler=event_handler
         self.TICK=event_handler.new_event_type()
+        self._custom_ticks=dict()
+        self._custom_ticks[fps]=event_handler.new_event_type()
         
     def run(self):
         assert False, "Abstract Class, use specific implementation instead"
         
+    def ticks_at_frequency(self, fps):
+        try:
+            return self._custom_ticks[fps]
+        except KeyError:
+            self._custom_ticks[fps]=self.event_handler.new_event_type()
+            return self._custom_ticks[fps]
         
 class PygCPUSpinner(CPUSpinner):
     '''
@@ -40,6 +48,7 @@ class PygCPUSpinner(CPUSpinner):
         TICK=self.TICK
         self.running=True
         while self.running:
+            '''TODO: Multifps ticking'''
             dt=self.clock.tick(self.fps)
             eh.post({'Type': TICK, 'dt': dt})
             

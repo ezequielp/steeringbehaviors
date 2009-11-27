@@ -13,6 +13,7 @@ from Tools.LinAlgebra_extra import rotv, vector2angle
 np.seterr(all='raise')
 verlet_v_integrator=False
 Heun_f_integrator=True
+MAXSPEED=300
 
 class Model(object):
     '''
@@ -60,6 +61,7 @@ class Model_Entity(object):
         self.relative_forces=[]
         self.total_force=copy.deepcopy(zero_vector)
         self.total_relative_force=copy.deepcopy(zero_vector)
+        self.zero_vector=zero_vector
         
     def apply_force(self, force):
         '''
@@ -87,7 +89,7 @@ class Model_Entity(object):
         Removes a force previously applied.
         '''
         del self.forces[force_id]
-        self.total_force=reduce(add, self.forces)
+        self.total_force=reduce(add, self.forces, self.zero_vector)
 
     def remove_relative_force(self, relative_force_id):
         del self.relative_forces[relative_force_id]
@@ -107,6 +109,9 @@ class PhysicsModel(Model):
         entity.id=len(self.entities)-1
         return len(self.entities) -1
         
+    def get_max_speed(self, entity_id):
+        return MAXSPEED
+    
     def delete_entity(self, entity_id):
         del self.entities[entity_id]
         
@@ -124,6 +129,13 @@ class PhysicsModel(Model):
         Returns the list of entities
         '''
         return self.entities[id]
+    
+    def get_relative_position(self, entity1_id, entity2_id):
+        '''Returns the position of entitiy 2 respect to entity 1'''
+        return self.get_entity(entity2_id).position-self.get_entity(entity1_id).position
+    
+    def get_velocity(self, entity_id):
+        return self.get_entity(entity_id).velocity
     
     def apply_force(self, entity_id, force):
         '''
@@ -198,7 +210,8 @@ class PhysicsModel(Model):
             rel2global_f=np.dot(R, ent.total_relative_force)                
                     
             force=(ent.total_force + rel2global_f)
-            print np.dot(ent.velocity, ent.velocity)
+            # force
+            #print np.dot(ent.velocity, ent.velocity)
             
             if verlet_v_integrator:
                 # Update vel(t+1/2) and position pos(t+1)
