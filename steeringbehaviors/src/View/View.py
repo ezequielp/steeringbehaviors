@@ -10,6 +10,10 @@ import numpy as np
 from Tools import real2pix as rp
 import config
 
+# Colormap
+from colormap import *
+
+
 class View(object):
     '''
     An abstract class for Viewers
@@ -103,14 +107,14 @@ class PygameViewer(View2D):
         self.screen=pygame.display.set_mode(config.screen_size)
         background = pygame.Surface(self.screen.get_size())
         background = background.convert()
-        background.fill((250, 250, 250))
+        background.fill(tuple(cmap[ckey['w']]))
         self.background=background
         self.screen.blit(background, (0,0))
         pygame.display.flip()
 
 
     class Sprite(SpriteParent):
-        def __init__(self, model_entity):
+        def __init__(self, model_entity,shape='o',size=3,color='k'):
             '''
             @model_entity_position: the position of the model object. Use [position] to get reference!!!
             '''
@@ -124,28 +128,54 @@ class PygameViewer(View2D):
             '''
             TODO: implement better and more versatile method to set sprite image
             '''
-            simple_sprite=pygame.Surface((6,6))
-            simple_sprite.fill((255,255,255))
-            simple_sprite.set_colorkey((255,255,255), pygame.RLEACCEL)
-            self.image=simple_sprite
-        
-            pygame.draw.circle(self.image, (0,0,0), (3,3), 3)
+            self._draw_entity(shape='o',size=3,color='k')
+            
             
             
         def update(self):
             PygameViewer.SpriteParent.update(self)
             self.rect.center=self._project.transform(self.model.position)
         
-        
+        def _draw_entity(self,shape='o',size=3,color='k'):
+            '''
+               Draws entity following arguments.
+               shape:
+                    'o' - circle
+                    's' - square
+               color:
+                   Can be a color key
+                   'k' - black
+                   'w' - white
+                   'r' - red
+                   'g' - green
+                   'b' - blue
+                   
+                   or a tuple eith r,g,b values [0,255]
+                   
+                   TODO: still dirty
+            '''  
+            if type(color)==type(str()):      
+               color=tuple(cmap[ckey[color]])
+               
+            simple_sprite=PygameViewer.pygame.Surface((2*size,2*size))
+            simple_sprite.fill(tuple(cmap[ckey['w']]))
+            simple_sprite.set_colorkey(tuple(cmap[ckey['w']]),
+                                                  PygameViewer.pygame.RLEACCEL)
+            self.image=simple_sprite
+            
+            if shape=='o':
+                PygameViewer.pygame.draw.circle(self.image, color,
+                                                              (size,size), size)
+            elif shape=='s':
+                PygameViewer.pygame.draw.rect(self.image,color,(.5*size,
+                                                     .5*size,1.5*size,1.5*size))
         
     def on_update(self, event):
         self.update()
         
     def update(self):
-        '''tick forces the whole program to run at the given fps. It should be replaced'''
-        ''' JPI: as used in test View.update has to return the dt'''
         #self.pygame.event.pump()
-        #dt=self._clock.tick()
+
         self._untraced_sprites.clear(self.screen, self.background)
         
         self._sprites.update()
@@ -155,7 +185,8 @@ class PygameViewer(View2D):
         self.pygame.display.update(self._untraced_sprites.draw(self.screen))
         
         
-    def add_entity(self, model_entity_id, trace=False):
+    def add_entity(self, model_entity_id, trace=False, color='k', shape='o',
+                   size=3):
         model_entity=self.model.get_entity(model_entity_id)
         new_sprite=self.Sprite(model_entity)
         self.sprite_from_model[model_entity]=new_sprite
@@ -184,4 +215,6 @@ class PygameViewer(View2D):
             return pygsprites.spritecollide(pos_sprite, self._sprites, False)[0].model
         except IndexError:
             return None
+            
     
+        
