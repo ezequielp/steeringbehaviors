@@ -7,5 +7,5 @@ class Controller(object):
     '''
     Abstract controller
     '''
-    def __init__(self, EventManager):
+    def __init__(self, event_handler):
         self.event_handler=event_handler

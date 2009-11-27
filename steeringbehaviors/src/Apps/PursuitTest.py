@@ -30,7 +30,7 @@ class PursuitTestApp():
 
         event_handler.bind(self.on_mouse_left_up, mouse.MOUSE_BTN3_UP) #Left click ends app
         for listener_obj in [self.mouse, self.world, self.screen ]:
-			event_handler.bind(listener_obj.on_update, self.spinner.TICK)
+            event_handler.bind(listener_obj.on_update, self.spinner.TICK)
 			
     def AddSteeringEntity(self, Behavior):
         spinner=self.spinner

@@ -26,7 +26,8 @@ class BaseKeyboardController(Controller):
         +set(map(chr, range(ord('a'), ord('z'))))
         +set(['Esc', 'Space', 'Enter'])
         +set(map(chr, range(ord('0'), ord('9'))))
-        +set( map(str, range(ord('0'), ord('9'))))
+        '''TODO: more keys'''
+        
         possible_keys=self.keys
         import string
         key=string.split(key, '-')
