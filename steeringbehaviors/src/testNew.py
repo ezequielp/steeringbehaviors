@@ -106,7 +106,8 @@ class Test():
         '''
         Test mouse for Drag and Drop
         '''
-        print "Testing Drag and Drop: Pick the circles and move them around"
+        print "Testing Drag and Drop: Pick the circles and move them around"+"\n"+"Right-click to end this test"
+        
         from Apps.DragAndDrop import DragAndDropApp
        	self.entitylist=[self.world.add_entity((400*(i/20.0),200*(i%3)), (0,0)) for i in xrange(0,3)]
         [self.screen.add_entity(entity) for entity in self.entitylist]
@@ -117,7 +118,7 @@ class Test():
         print "...OK"
 
     def PursuitTest(self):
-        print "Look how they behave!"
+        print "Look how they behave!"+"\n"+"Right-click to end this test"
         from Apps.PursuitTest import PursuitTestApp
         test=PursuitTestApp(self.event_handler, self.world, self.screen, 
         self.mouse, self.spinner)
@@ -125,11 +126,12 @@ class Test():
         print "...OK"
         
     def CombinedTest(self):
-        print "Now you can pick them and move them around!"
+        print "Now you can pick them and move them around!"+"\n"+"Right-click to end this test"
         pass
         from Apps.PursuitTest import PursuitTestApp
         test=PursuitTestApp(self.event_handler, self.world, self.screen, 
         self.mouse, self.spinner)
+        self.spinner=PygCPUSpinner(FPS, self.event_handler)	
         from Apps.DragAndDrop import DragAndDropApp
         test2=DragAndDropApp(self.event_handler, self.world, self.screen, 
         self.mouse, self.spinner)	
