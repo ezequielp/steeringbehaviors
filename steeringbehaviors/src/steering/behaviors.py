@@ -42,7 +42,7 @@ class SteerForSeek(SteerController):
         rel_position=self.get_relative_position()
         '''TODO: Ohashi, Yoshikazu (1994) "Fast Linear Approximations of Euclidean Distance 
         in Higher Dimensions", in Graphics Gems IV, Paul Heckbert editor, Academic Press. 
-        See ftp://princeton.edu/pub/Graphics/GraphicsGems/GemsIV/ '''
+        See ftp://princeton.edu/pub/Graphics/GraphicsGems/GemsIV/ <- Deadlink '''
 
         self.apply_force(rel_position, self.max_speed)
 
