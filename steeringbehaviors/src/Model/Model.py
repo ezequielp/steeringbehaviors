@@ -183,94 +183,61 @@ class PhysicsModel(Model):
         '''
         rel2global_f=np.array([0,0])
         grabbed=self.grabbed
+        
+        # TODO: Where do we put this?
+        dt_sec=dt*(1.0/1000)
+        dt_2=dt_sec/2
+        
         for ID , ent in enumerate(self.entities):
-            '''
-            Thinking out loud: This is not efficient, I think we could use matrices to store all velocities
-            positions and forces, and do this without any loop. Requires model redesign but should have mayor
-            performance improvement.
-            '''
-            # Rotate the forces in the frame of the entity to the global frame
-            # The direction of Y axis of the entity is asusmed coincident with 
-            # the direction of the velocity.
-            # TODO: generalize this
-           
+            #TODO: Store the state of all the entities in a matrix and update
+            #      all of them in a single operation.
             
             if ent.id in grabbed:
                 continue
             
+            # Put the forces given in the entity frame into the global frame
+            # TODO: Put this in a function. Soon the entties wont be points 
+            #       anymore and more projections/rotations will be needed.
             ang=ent.ang=vector2angle(ent.velocity)
-
-            # JPi: I thought the model was 3D, i.e. all forces arrays had 3 
-            # elements. I guess that is the best way of doing it.
-            # As a workaround I prefer to slice the rotation matrix rather than,
-            # concatenate and then slice.
-            
-            # rel2global_f=np.dot(rotv(array((0,0,1)), ang), np.concatenate((ent.total_relative_force, [1])))[0:2]
             R=rotv(array((0,0,1)), ang)[0:2,0:2]
             rel2global_f=np.dot(R, ent.total_relative_force)                
-                    
+
+            # Update the total force                    
             force=(ent.total_force + rel2global_f)
-            # force
-            #print np.dot(ent.velocity, ent.velocity)
             
             if verlet_v_integrator:
                 # Update vel(t+1/2) and position pos(t+1)
-                dt_2=dt*1.0/2000
                 v_2=ent.velocity+force*dt_2
-                ent.position=ent.position+v_2*dt*(1.0/1000)
-                '''
-                Forces should be updated at this point, not needed for constant forces.
-                '''
-                # Update accelerations a(t+1) and vel(t+1)
-                # JPI: Do we have to update the entities somehow?
-                # Eze: Yes, Forces depend on velocity. Which means we can't use Verlet Velocity :(
-                # TODO
-                # Maybe  http://adsabs.harvard.edu/abs/1994AmJPh..62..259G
-                # The usal election is Adam-Dashforth which is like a 
-                # Runge-Kutta http://mymathlib.webtrellis.net/diffeq/adams_top.html
-                # I will read the paper...I have nother one with lots of methds
-                # I will check that one too. Anyway, I have a multigent simualtion
-                # using the verlet and it works ok. It is not simplectic anymore
-                # but is order 4.
-                
+                ent.position=ent.position+v_2*
+               
+                # Update forces
                 ang=ent.ang=vector2angle(v_2)
                 R=rotv(array((0,0,1)), ang)[0:2,0:2]
                 rel2global_f=np.dot(R, ent.total_relative_force)
                 force=(ent.total_force + rel2global_f)
-                #To calculate the new f(v) force... less error but still
-                #Didn't find any simplectic algorithm to solve H(x,v) yet...
-                
+               
+               # Update vel(t+1)
                 ent.velocity=v_2+force*dt_2
                 
             elif Heun_f_integrator:
-                '''
-            The so-call "Improved Euler" method, also known as the trapezoidal or bilinear or predictor/corrector or Heun Formula method, is a second order integrator.
-
-                ppos=
- STATE predictor(state);
- predictor.x += state.v * dt;
- predictor.v += system.GetAcceleration(state) * dt;
- 
- STATE corrector(state);
- corrector.x += predictor.v * dt;
- corrector.v += system.GetAcceleration(predictor) * dt;
- 
- state.x = (predictor.x + corrector.x)*0.5;
- state.v = (predictor.v + corrector.v)*0.5;
-'''
+            '''
+            The so-call "Improved Euler" method, also known as the trapezoidal 
+            or bilinear or predictor/corrector or Heun Formula method, is a 
+            second order integrator.
+            '''
                 # I don't think is the algorithm above, but lets see.
                 # I think the algorithm is keeping track of the predictor and
                 # the corrector, while I am just doing it for one time step.
-                ppos=ent.position+ent.velocity*dt*(1.0/1e3)
-                pvel=ent.velocity+force*dt*(1.0/1e3)
-                cpos=ent.position+pvel*dt*(1.0/1e3)
+                ppos=ent.position+ent.velocity*dt_sec
+                pvel=ent.velocity+force*dt_sec
+                cpos=ent.position+pvel*dt_sec
                 
                 ang=vector2angle(pvel)
                 R=rotv(array((0,0,1)), ang)[0:2,0:2]
                 rel2global_f=np.dot(R, ent.total_relative_force)
                 force=(ent.total_force + rel2global_f)
                 
-                cvel=ent.velocity+force*dt*(1.0/1e3)
+                cvel=ent.velocity+force*dt_sec
 
                 ent.position=(ppos + cpos)*0.5
                 ent.velocity=(pvel + cvel)*0.5
@@ -282,15 +249,13 @@ class PhysicsModel(Model):
                 try:
                     ent.old_position
                 except:
-                    ent.old_position=ent.position-ent.velocity*dt*1.0/1000
+                    ent.old_position=ent.position-ent.velocity*dt_sec
                     
                
-                new_position=ent.position+ent.velocity*dt*1.0/1000+force*dt*dt*1.0/2000000
+                new_position=ent.position+ent.velocity*dt_sec+0.5*force*dt_sec*dt_sec
             
-                ent.velocity=(new_position-ent.old_position)*500.0/dt
+                ent.velocity=(new_position-ent.old_position)*dt_2
                 
                 ent.old_position=ent.position
                 ent.position=new_position
-
-
         
