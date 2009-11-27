@@ -12,35 +12,52 @@ from Model.Model import PhysicsModel
 from Controller.MouseController import PygameMouseController
 from Mediator.EventManager import EventManager
 from Controller.MiscControllers import PygCPUSpinner
-from numpy import pi
-from steering.behaviors import SteerForPursuit
+#from steering.behaviors import SteerForPursuit
+
 FPS=30 #Same FPS for all for the moment
 
 
 
 class Test():
 
-    def __init__(self, event_handler, world, screen, mouse, spinner):
-        self.prepareWorld()
+    def __init__(self, EventManager, PhysicsModel, PygameViewer, 
+    PygameMouseController, PygCPUSpinner):
+        self.prepareWorld(EventManager, PhysicsModel, PygameViewer, 
+    PygameMouseController, PygCPUSpinner)
         
     
     def run(self):
+        self.prepareWorld(EventManager, PhysicsModel, PygameViewer, 
+    PygameMouseController, PygCPUSpinner)
         self.RestartModelView()
+        
+        self.prepareWorld(EventManager, PhysicsModel, PygameViewer, 
+    PygameMouseController, PygCPUSpinner)
         self.AddRemoveEntities()
+        
+        self.prepareWorld(EventManager, PhysicsModel, PygameViewer, 
+    PygameMouseController, PygCPUSpinner)
         self.RandomMove()
+        
+        self.prepareWorld(EventManager, PhysicsModel, PygameViewer, 
+    PygameMouseController, PygCPUSpinner)
         self.DragNDrop()
+        
+        self.prepareWorld(EventManager, PhysicsModel, PygameViewer, 
+    PygameMouseController, PygCPUSpinner)
         self.PursuitTest()
+
+        self.prepareWorld(EventManager, PhysicsModel, PygameViewer, 
+    PygameMouseController, PygCPUSpinner)
+        self.CombinedTest()
         
-    def prepareWorld(self):
-        self.event_handler=event_handler
-        self.world=world
-        self.screen=screen
-        self.mouse=mouse
-        self.spinner=spinner
-        self.steering_entities=set()
-        self.entity_list=[]
-        
-        
+    def prepareWorld(self, EventManager, PhysicsModel, PygameViewer, 
+    PygameMouseController, PygCPUSpinner):
+        self.event_handler=EventManager()
+        self.world=PhysicsModel()
+        self.screen=PygameViewer(self.world)
+        self.mouse=PygameMouseController(self.event_handler)
+        self.spinner=PygCPUSpinner(FPS, self.event_handler)	
       
     def AddRemoveEntities(self):
         print "Testing dynamic add/remove entities from view"
@@ -89,21 +106,40 @@ class Test():
         '''
         Test mouse for Drag and Drop
         '''
-        from Apps.drag_and_drop import DragAndDropApp
-        test=DragAndDropApp(event_handler, world, screen, mouse, spinner)	
+        print "Testing Drag and Drop: Pick the circles and move them around"
+        from Apps.DragAndDrop import DragAndDropApp
+       	self.entitylist=[self.world.add_entity((400*(i/20.0),200*(i%3)), (0,0)) for i in xrange(0,3)]
+        [self.screen.add_entity(entity) for entity in self.entitylist]
+
+        test=DragAndDropApp(self.event_handler, self.world, self.screen, 
+        self.mouse, self.spinner)	
+        test.run()
+        print "...OK"
+
+    def PursuitTest(self):
+        print "Look how they behave!"
+        from Apps.PursuitTest import PursuitTestApp
+        test=PursuitTestApp(self.event_handler, self.world, self.screen, 
+        self.mouse, self.spinner)
+        test.run()
+        print "...OK"
+        
+    def CombinedTest(self):
+        print "Now you can pick them and move them around!"
+        pass
+        from Apps.PursuitTest import PursuitTestApp
+        test=PursuitTestApp(self.event_handler, self.world, self.screen, 
+        self.mouse, self.spinner)
+        from Apps.DragAndDrop import DragAndDropApp
+        test2=DragAndDropApp(self.event_handler, self.world, self.screen, 
+        self.mouse, self.spinner)	
         test.run()
         
-    def Pursuit(self):
-    
-        
+        print "...OK"
+            
     
  
 if __name__ == '__main__':
-    event_handler=EventManager()
-    world=PhysicsModel()
-    screen=PygameViewer(world)
-    mouse=PygameMouseController(event_handler)
-    spinner=PygCPUSpinner(FPS, event_handler)	
-    
-    python_app=Test(event_handler, world, screen, mouse, spinner)	
+    python_app=Test(EventManager, PhysicsModel, PygameViewer, PygameMouseController
+    , PygCPUSpinner)	
     python_app.run()
