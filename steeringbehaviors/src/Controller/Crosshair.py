@@ -21,13 +21,13 @@ class Crosshair(Controller):
         #registers sprite on model and view. Grabs it to disallow physics modification
         ch_id=world_model.add_entity((0,0), (0,0))
         world_model.grab_entity(ch_id)
-        view.add_sprite(ch_id)
+        view.add_sprite(ch_id, shape='s')
         self.ch_id
         
     #Callbacks for mouse controller
     def mouse_move_cb(self, event):
         position=event['Pos']
         view_transform=self.view.get_world_position
-        self.world.
+        self.world.move_entity(self.ch_id, view_transform(position))
         
         
