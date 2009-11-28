@@ -113,8 +113,12 @@ class PygameKeyboardController(BaseKeyboardController):
                              pygame.KMOD_NONE: 'NONE'}
        
         #multiple key modifiers
-        inverse_mod=dict([() self._pyg_modifiers.iteritems()])
-        inverse_mod={'Shift': pygame.KMOD_SHIFT, 'Ctrl': pygame.KMOD_CTRL, 'Alt': pygame.KMOD_ALT }
+        inverse_mod=dict()
+        for key,value in self._pyg_modifiers.iteritems():
+            inverse_mod[value]=key
+            
+        del inverse_mod['NONE']
+        #inverse_mod={'Shift': pygame.KMOD_SHIFT, 'Ctrl': pygame.KMOD_CTRL, 'Alt': pygame.KMOD_ALT }
        
         
         from itertools import combinations
