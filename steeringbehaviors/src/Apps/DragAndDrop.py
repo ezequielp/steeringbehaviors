@@ -22,7 +22,7 @@ class DragAndDropApp():
 		event_handler.bind(self.on_mouse_move, mouse.MOUSE_MOVE)
 		event_handler.bind(self.on_quit, mouse.MOUSE_BTN3_UP) #Left click ends app
 		
-		space_key_event_id=keyboard.register_event_type('Ctrl-Q', 'UP') #Ctrl-Q ends app too
+		space_key_event_id=keyboard.register_event_type('Right Ctrl-Q', 'UP') #Ctrl-Q ends app too
 		
 		event_handler.bind(self.on_quit, space_key_event_id)
 		for listener_obj in [self.mouse, self.world, self.screen, self.keyboard ]:
