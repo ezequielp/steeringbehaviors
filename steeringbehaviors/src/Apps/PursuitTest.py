@@ -3,7 +3,9 @@ from Model.Model import PhysicsModel
 from Controller.MouseController import PygameMouseController
 from Mediator.EventManager import EventManager
 from Controller.MiscControllers import PygCPUSpinner
-from Controller.Steering import SteerForSeek, SteerForArrive, SteerForPursuit
+from Controller.Steering.SteerForSeek import SteerForSeek
+from Controller.Steering.SteerForArrive import SteerForArrive
+from Controller.Steering.SteerForPursuit import SteerForPursuit
 import random
 from numpy import pi
 
@@ -22,7 +24,7 @@ class PursuitTestApp():
         
         self.steering_entities=set()
         self.entity_list=[self.world.add_entity((100,100),(100, 0)) for i in xrange(1)]
-        [self.screen.add_entity(entity, trace=False,color='b',size=5) for entity in self.entity_list]
+        [self.screen.add_entity(entity, trace=False,shape='s',color='b',size=5) for entity in self.entity_list]
         [self.world.apply_relative_force(entity, pi/2, 100) for entity in self.entity_list]
        
         self.AddSteeringEntity(SteerForSeek)

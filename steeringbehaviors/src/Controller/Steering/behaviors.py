@@ -6,7 +6,7 @@ Last edit: Saturday, November 28 2009
 '''
 from numpy import sqrt, dot
 '''TODO: Dehack this. Probably must create/find an abstract vector class with v.norm() to avoid using directly'''
-from Controller import Controller
+from Controller.Controller import Controller
 
 class SteerController(Controller):
     def __init__(self, model, entity_id):
