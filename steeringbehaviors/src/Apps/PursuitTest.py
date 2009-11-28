@@ -12,12 +12,13 @@ FPS=30 #Same FPS for all for the moment
 
 class PursuitTestApp():
 
-    def __init__(self, event_handler, world, screen, mouse, spinner):
+    def __init__(self, event_handler, world, screen, mouse, spinner, keyboard):
         self.event_handler=event_handler
         self.world=world
         self.screen=screen
         self.mouse=mouse
         self.spinner=spinner
+        self.keyboard=keyboard
         
         self.steering_entities=set()
         self.entity_list=[self.world.add_entity((100,100),(100, 0)) for i in xrange(1)]
@@ -29,9 +30,9 @@ class PursuitTestApp():
         self.AddSteeringEntity(SteerForPursuit)
 
         event_handler.bind(self.on_mouse_left_up, mouse.MOUSE_BTN3_UP) #Left click ends app
-        for listener_obj in [self.mouse, self.world, self.screen ]:
+        for listener_obj in [self.mouse, self.world, self.screen, self.keyboard ]:
             event_handler.bind(listener_obj.on_update, self.spinner.TICK)
-			
+		
     def AddSteeringEntity(self, Behavior):
         spinner=self.spinner
         #Create and apply Seeking Behavior controller to entity

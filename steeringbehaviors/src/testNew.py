@@ -6,17 +6,7 @@ Created on Wednesday, November 25 2009
 Last edit: Wednesday, November 25 2009
 '''
 # Test all the functions from the class PygameViewer
-
-from View.View import PygameViewer
-from Model.Model import PhysicsModel
-from Controller.MouseController import PygameMouseController
-from Mediator.EventManager import EventManager
-from Controller.MiscControllers import PygCPUSpinner
-#from steering.behaviors import SteerForPursuit
-
 FPS=30 #Same FPS for all for the moment
-
-
 
 class Test():
 
@@ -24,32 +14,19 @@ class Test():
     MouseController, CPUSpinner, KeyboardController):
         self.prepareWorld(EventManager, PhysicsModel, Viewer, 
     MouseController, CPUSpinner, KeyboardController)
+        self.EventManager=EventManager
+        self.PhysicsModel=PhysicsModel
+        self.Viewer=Viewer
+        self.MouseController=MouseController
+        self.CPUSpinner=CPUSpinner
+        self.KeyboardController=KeyboardController
         
     
     def run(self):
-        self.prepareWorld(EventManager, PhysicsModel, PygameViewer, 
-    PygameMouseController, PygCPUSpinner)
-        self.RestartModelView()
+        for test in [self.RestartModelView, self.AddRemoveEntities, self.RandomMove, self.DragNDrop, self.PursuitTest, self.CombinedTest]:
+            self.prepareWorld(self.EventManager, self.PhysicsModel, self.Viewer, self.MouseController, self.CPUSpinner, self.KeyboardController)
+            test()
         
-        self.prepareWorld(EventManager, PhysicsModel, PygameViewer, 
-    PygameMouseController, PygCPUSpinner)
-        self.AddRemoveEntities()
-        
-        self.prepareWorld(EventManager, PhysicsModel, PygameViewer, 
-    PygameMouseController, PygCPUSpinner)
-        self.RandomMove()
-        
-        self.prepareWorld(EventManager, PhysicsModel, PygameViewer, 
-    PygameMouseController, PygCPUSpinner)
-        self.DragNDrop()
-        
-        self.prepareWorld(EventManager, PhysicsModel, PygameViewer, 
-    PygameMouseController, PygCPUSpinner)
-        self.PursuitTest()
-
-        self.prepareWorld(EventManager, PhysicsModel, PygameViewer, 
-    PygameMouseController, PygCPUSpinner)
-        self.CombinedTest()
         
     def prepareWorld(self, EventManager, PhysicsModel, Viewer, 
     MouseController, CPUSpinner, KeyboardController):
@@ -107,42 +84,53 @@ class Test():
         '''
         Test mouse for Drag and Drop
         '''
-        print "Testing Drag and Drop: Pick the circles and move them around"+"\n"+"Right-click to end this test"
+        print "Testing Drag and Drop: Pick the circles and move them around"+"\n"+"Right-click or Ctrl-q to end this test\n(USE BOTH CTRLS AT THE SAME TIME!)"
         
         from Apps.DragAndDrop import DragAndDropApp
        	self.entitylist=[self.world.add_entity((400*(i/20.0),200*(i%3)), (0,0)) for i in xrange(0,3)]
         [self.screen.add_entity(entity) for entity in self.entitylist]
 
         test=DragAndDropApp(self.event_handler, self.world, self.screen, 
-        self.mouse, self.spinner)	
+        self.mouse, self.spinner, self.keyboard)	
         test.run()
         print "...OK"
 
     def PursuitTest(self):
-        print "Look how they behave!"+"\n"+"Right-click to end this test"
+        print "Look how they behave!\nRight-click to end this test"
         from Apps.PursuitTest import PursuitTestApp
         test=PursuitTestApp(self.event_handler, self.world, self.screen, 
-        self.mouse, self.spinner)
+        self.mouse, self.spinner, self.keyboard)
         test.run()
         print "...OK"
         
     def CombinedTest(self):
-        print "Now you can pick them and move them around!"+"\n"+"Right-click to end this test"
+        print "Now you can pick them and move them around!\nRight-click or Ctrl-q to end this test\n(USE BOTH CTRLS AT THE SAME TIME!)"
         pass
         from Apps.PursuitTest import PursuitTestApp
         test=PursuitTestApp(self.event_handler, self.world, self.screen, 
-        self.mouse, self.spinner)
+        self.mouse, self.spinner, self.keyboard)
         self.spinner=PygCPUSpinner(FPS, self.event_handler)	
         from Apps.DragAndDrop import DragAndDropApp
         test2=DragAndDropApp(self.event_handler, self.world, self.screen, 
-        self.mouse, self.spinner)	
+        self.mouse, self.spinner, self.keyboard)	
         test.run()
         
         print "...OK"
         
     
  
-if __name__ == '__main__':
+if __name__ == '__main__':    
+    
+    from View.View import PygameViewer
+    from Model.Model import PhysicsModel
+    from Controller.MouseController import PygameMouseController
+    from Mediator.EventManager import EventManager
+    from Controller.MiscControllers import PygCPUSpinner
+    from Controller.KeyboardController import PygameKeyboardController
+    #from steering.behaviors import SteerForPursuit
+    
+
+
     python_app=Test(EventManager, PhysicsModel, PygameViewer, PygameMouseController
     , PygCPUSpinner, PygameKeyboardController)	
     python_app.run()

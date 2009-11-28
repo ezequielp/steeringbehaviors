@@ -20,17 +20,17 @@ class PygameMouseController(Controller):
     import pygame
     import pygame.locals
       
-    def __init__(self,event_manager):
-        Controller.__init__(self,event_manager)
+    def __init__(self,event_handler):
+        Controller.__init__(self,event_handler)
         
         # Definition of Mouse events
-        self.MOUSE_MOVE=event_manager.new_event_type() 
-        self.MOUSE_BTN1_DOWN=event_manager.new_event_type() 
-        self.MOUSE_BTN2_DOWN=event_manager.new_event_type()
-        self.MOUSE_BTN3_DOWN=event_manager.new_event_type()
-        self.MOUSE_BTN1_UP=event_manager.new_event_type()
-        self.MOUSE_BTN2_UP=event_manager.new_event_type()                          
-        self.MOUSE_BTN3_UP=event_manager.new_event_type()                 
+        self.MOUSE_MOVE=event_handler.new_event_type() 
+        self.MOUSE_BTN1_DOWN=event_handler.new_event_type() 
+        self.MOUSE_BTN2_DOWN=event_handler.new_event_type()
+        self.MOUSE_BTN3_DOWN=event_handler.new_event_type()
+        self.MOUSE_BTN1_UP=event_handler.new_event_type()
+        self.MOUSE_BTN2_UP=event_handler.new_event_type()                          
+        self.MOUSE_BTN3_UP=event_handler.new_event_type()                 
         
         self.pygame.init()        
         self.pygame.mouse.set_visible(True)
@@ -94,6 +94,6 @@ class PygameMouseController(Controller):
                 output_events.append(int_event)
                 
         self.last_btn=btn
-        self.event_manager.post(output_events)
+        self.event_handler.post(output_events)
         return True
         

@@ -130,7 +130,7 @@ class PygameViewer(View2D):
             '''
             self._draw_entity(shape,size,color)
             
-            
+
             
         def update(self):
             PygameViewer.SpriteParent.update(self)
