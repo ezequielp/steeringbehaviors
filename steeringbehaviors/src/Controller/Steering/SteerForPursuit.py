@@ -6,7 +6,7 @@ Last Edit: Saturday, November 28 2009
 '''
 
 from numpy import sqrt, dot
-import SteerForSeek
+from SteerForSeek import SteerForSeek
 
 class SteerForPursuit(SteerForSeek):
     def __init__(self, model, entity_id):
