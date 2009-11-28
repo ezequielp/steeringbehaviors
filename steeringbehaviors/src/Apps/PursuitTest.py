@@ -3,7 +3,7 @@ from Model.Model import PhysicsModel
 from Controller.MouseController import PygameMouseController
 from Mediator.EventManager import EventManager
 from Controller.MiscControllers import PygCPUSpinner
-from Controler.Steering import SteerForSeek, SteerForArrive, SteerForPursuit
+from Controller.Steering import SteerForSeek, SteerForArrive, SteerForPursuit
 import random
 from numpy import pi
 
