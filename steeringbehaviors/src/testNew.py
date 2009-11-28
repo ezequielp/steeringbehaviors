@@ -20,10 +20,10 @@ FPS=30 #Same FPS for all for the moment
 
 class Test():
 
-    def __init__(self, EventManager, PhysicsModel, PygameViewer, 
-    PygameMouseController, PygCPUSpinner):
-        self.prepareWorld(EventManager, PhysicsModel, PygameViewer, 
-    PygameMouseController, PygCPUSpinner)
+    def __init__(self, EventManager, PhysicsModel, Viewer, 
+    MouseController, CPUSpinner, KeyboardController):
+        self.prepareWorld(EventManager, PhysicsModel, Viewer, 
+    MouseController, CPUSpinner, KeyboardController)
         
     
     def run(self):
@@ -51,13 +51,14 @@ class Test():
     PygameMouseController, PygCPUSpinner)
         self.CombinedTest()
         
-    def prepareWorld(self, EventManager, PhysicsModel, PygameViewer, 
-    PygameMouseController, PygCPUSpinner):
+    def prepareWorld(self, EventManager, PhysicsModel, Viewer, 
+    MouseController, CPUSpinner, KeyboardController):
         self.event_handler=EventManager()
         self.world=PhysicsModel()
-        self.screen=PygameViewer(self.world)
-        self.mouse=PygameMouseController(self.event_handler)
-        self.spinner=PygCPUSpinner(FPS, self.event_handler)	
+        self.screen=Viewer(self.world)
+        self.mouse=MouseController(self.event_handler)
+        self.spinner=CPUSpinner(FPS, self.event_handler)	
+        self.keyboard=KeyboardController(self.event_handler)
       
     def AddRemoveEntities(self):
         print "Testing dynamic add/remove entities from view"
@@ -138,10 +139,10 @@ class Test():
         test.run()
         
         print "...OK"
-            
+        
     
  
 if __name__ == '__main__':
     python_app=Test(EventManager, PhysicsModel, PygameViewer, PygameMouseController
-    , PygCPUSpinner)	
+    , PygCPUSpinner, PygameKeyboardController)	
     python_app.run()

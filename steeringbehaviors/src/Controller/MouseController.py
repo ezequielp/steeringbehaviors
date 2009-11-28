@@ -34,7 +34,6 @@ class PygameMouseController(Controller):
         
         self.pygame.init()        
         self.pygame.mouse.set_visible(True)
-        self._EH=event_manager
         self.last_btn=[False, False, False]
         
     def on_update(self, event):
@@ -95,6 +94,6 @@ class PygameMouseController(Controller):
                 output_events.append(int_event)
                 
         self.last_btn=btn
-        self._EH.post(output_events)
+        self.event_manager.post(output_events)
         return True
         
