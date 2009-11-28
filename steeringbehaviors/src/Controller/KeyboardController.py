@@ -8,7 +8,7 @@ from Controller import Controller
 class BaseKeyboardController(Controller):
     def __init__(self, event_handler):
         Controller.__init__(self, event_handler)
-        self.modifiers=set(map(str, ['SHIFT','CTRL','ALT']))
+        self.modifiers=set(map(str, ['RIGHT SHIFT','LEFT SHIFT','RIGHT CTRL', 'LEFT CTRL','RIGHT ALT', 'LEFT ALT']))
         
         self.keys=set(['F'+str(x) for x in range(12)]) \
             | set(map(chr, range(ord('A'), ord('Z')))) \
@@ -27,8 +27,8 @@ class BaseKeyboardController(Controller):
             or single character:
             LETTER
             Example:
-                Ctrl-Alt-S
-                Alt-Enter
+                Right Ctrl-Left Alt-S
+                Right Alt-Enter
                 Enter
         action:
             DOWN
@@ -74,7 +74,7 @@ class BaseKeyboardController(Controller):
         try:
             return self.key_codes[key_name]
         except KeyError:
-            
+            print "Registering ", key_name
             type_id=self.key_codes[key_name]=self.event_handler.new_event_type()
             
             return type_id
@@ -108,9 +108,12 @@ class PygameKeyboardController(BaseKeyboardController):
         
         #Creates modifier translation table
         #Single key modifiers
-        self._pyg_modifiers={pygame.KMOD_SHIFT: 'SHIFT', pygame.KMOD_CTRL: 'CTRL', pygame.KMOD_ALT: 'ALT', pygame.KMOD_NONE: 'NONE'}
+        self._pyg_modifiers={pygame.KMOD_RSHIFT: 'RIGHT SHIFT', pygame.KMOD_RCTRL: 'RIGHT CTRL', pygame.KMOD_RALT: 'RIGHT ALT', \
+                             pygame.KMOD_LSHIFT: 'LEFT SHIFT', pygame.KMOD_LCTRL: 'LEFT CTRL', pygame.KMOD_LALT: 'LEFT ALT', \
+                             pygame.KMOD_NONE: 'NONE'}
        
         #multiple key modifiers
+        inverse_mod=dict([() self._pyg_modifiers.iteritems()])
         inverse_mod={'Shift': pygame.KMOD_SHIFT, 'Ctrl': pygame.KMOD_CTRL, 'Alt': pygame.KMOD_ALT }
        
         

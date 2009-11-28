@@ -48,6 +48,7 @@ class DragAndDropApp():
 			self.world.move_entity(self.grabbed, self.screen.get_world_position(event['Pos']))
 			
 	def on_quit(self, event):
+		
 		self.spinner.stop()
 		
 	def run(self):
