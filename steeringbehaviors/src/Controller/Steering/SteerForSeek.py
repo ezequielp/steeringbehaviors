@@ -5,8 +5,7 @@ Created on Saturday, November 28 2009
 Last Edit: Saturday, November 28 2009
 '''
 from numpy import sqrt, dot
-from Controller.Controller import Controller
-import SteerController
+from behaviors import SteerController
 
 class SteerForSeek(SteerController):
     def __init__(self, model, entity_id):
