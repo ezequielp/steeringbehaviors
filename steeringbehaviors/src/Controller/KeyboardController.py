@@ -74,7 +74,6 @@ class BaseKeyboardController(Controller):
         try:
             return self.key_codes[key_name]
         except KeyError:
-            print "Registering ", key_name
             type_id=self.key_codes[key_name]=self.event_handler.new_event_type()
             
             return type_id
@@ -176,7 +175,6 @@ class PygameKeyboardController(BaseKeyboardController):
             try:
                 output_events.append({'Type': key_codes[event_name]})
             except KeyError:
-                print "Not Binded:", event_name
                 continue
         self.event_handler.post(output_events)
             

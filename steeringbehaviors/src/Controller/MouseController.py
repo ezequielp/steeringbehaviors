@@ -39,6 +39,11 @@ class PygameMouseController(Controller):
     def on_update(self, event):
         self.update()
         
+    def hide(self):
+        self.pygame.mouse.set_visible(False)
+    def show(self):
+        self.pygame.mouse.set_visible(True)
+
     def update(self): 
         #Pygame - Event handling
         #int_event={"Type":[], "Pos":[],"BTN":[]}

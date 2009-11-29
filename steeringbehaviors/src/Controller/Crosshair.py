@@ -10,7 +10,7 @@ class Crosshair(Controller):
     A simple 
     '''
 
-
+    crosshair_damage=10
     def __init__(self, view, world_model, event_handler):
         '''
         Constructor
@@ -20,9 +20,11 @@ class Crosshair(Controller):
         self.world=world_model
         #registers sprite on model and view. Grabs it to disallow physics modification
         ch_id=world_model.add_entity((0,0), (0,0))
+        print "CH:", ch_id
+        view.add_entity(ch_id, shape='s')
         world_model.grab_entity(ch_id)
-        view.add_sprite(ch_id, shape='s')
-        self.ch_id
+
+        self.ch_id=ch_id
         
         self.DAMAGE_EVENT=world_model.DAMAGE_EVENT
         
@@ -35,8 +37,12 @@ class Crosshair(Controller):
         
     #Firing event
     def fire_cb(self, event):
-        damaged_entity=self.view.get_colliding_entity(self.ch_id)
-        if damaged_entity!=None:
-            self.event_handler.Post({'Type': self.DAMAGE_EVENT, 'Damage': self.croshair_damage, 'Damaged entity':  damaged_entity, 'Damaging entity': self.ch_id})
+        damaged_entities=self.view.get_colliding_entities(self.ch_id)
         
+        for hitted_id in damaged_entities:
+            self.event_handler.post({'Type': self.DAMAGE_EVENT, 'Damage': self.crosshair_damage, 'Damaged entity':  hitted_id, 'Damaging entity': self.ch_id})
+            
         
+            
+    def get_entity_id(self):
+        return self.ch_id

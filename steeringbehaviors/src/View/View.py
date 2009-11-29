@@ -123,7 +123,7 @@ class PygameViewer(View2D):
             self.model=model_entity
             
             self.rect=pygame.Rect(self._project.transform(model_entity.position)
-                                  , (0,0))
+                                  , (size,size))
             
             '''
             TODO: implement better and more versatile method to set sprite image
@@ -155,7 +155,7 @@ class PygameViewer(View2D):
                    TODO: still dirty
             '''  
             if type(color)==type(str()):      
-               color=tuple(cmap[ckey[color]])
+                color=tuple(cmap[ckey[color]])
                
             simple_sprite=PygameViewer.pygame.Surface((2*size,2*size))
             simple_sprite.fill(tuple(cmap[ckey['w']]))
@@ -169,6 +169,8 @@ class PygameViewer(View2D):
             elif shape=='s':
                 PygameViewer.pygame.draw.rect(self.image,color,(.5*size,
                                                      .5*size,1.5*size,1.5*size))
+                
+            
         
     def on_update(self, event):
         self.update()
@@ -189,6 +191,7 @@ class PygameViewer(View2D):
                    size=3):
         model_entity=self.model.get_entity(model_entity_id)
         new_sprite=self.Sprite(model_entity,shape,size,color)
+        
         self.sprite_from_model[model_entity]=new_sprite
         self._sprites.add(new_sprite)
         if trace:
@@ -215,12 +218,16 @@ class PygameViewer(View2D):
         except IndexError:
             return None
             
-    def get_colliding_entity(self, entity_id):
-        sprite=self.sprite_from_model[entity_id]
-        
+    def get_colliding_entities(self, entity_id):
+        '''
+        TODO: Move to the model when it supports shapes
+        '''
+        sprite=self.sprite_from_model[self.model.get_entity(entity_id)]
+        colliding_sprites=self.pygsprites.spritecollide(sprite, self._sprites, False)
+
         try:
-            return self.pygsprites.spritecollide(sprite, self._sprites, False)[0].model
-        except IndexError:
+            return [sprite.model.id for sprite in colliding_sprites if sprite.model.id!=entity_id]
+        except TypeError:
             return None
         
         

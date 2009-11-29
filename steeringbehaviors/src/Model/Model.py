@@ -18,8 +18,8 @@ MAXSPEED=300
 class Model(object):
     '''
     Registers DAMAGE_EVENT:
-        damaged_entity: id
-        damaging_entity: id
+        damaged entity: id
+        damaging entity: id
         damage: integer
     '''
     
@@ -29,7 +29,7 @@ class Model(object):
         '''
         self.event_handler=event_handler
         self.DAMAGE_EVENT=event_handler.new_event_type()
-        event_handler.bind(self.DAMAGE_EVENT, self.on_damage)
+        event_handler.bind(self.on_damage,self.DAMAGE_EVENT)
         
     def update(self, dt):
         '''
@@ -103,10 +103,14 @@ class Model_Entity(object):
     
 class PhysicsModel(Model):
     def __init__(self, event_handler):
-        self.Model.__init__(event_handler)
+        Model.__init__(self, event_handler)
         self.entities = []#WeakKeyDictionary()
         self.grabbed=set()
           
+    def on_damage(self, event):
+        id=event['Damaged entity']
+        self.grab_entity(id)
+        
     def add_entity(self, position, velocity):
         entity=Model_Entity(array((0.0,0.0)))
         self.entities.append(entity)
@@ -197,7 +201,7 @@ class PhysicsModel(Model):
         dt_sec=dt*(1.0/1000)
         dt_2=dt_sec/2
         
-        for ID , ent in enumerate(self.entities):
+        for ent in self.entities:
             #TODO: Store the state of all the entities in a matrix and update
             #      all of them in a single operation.
             

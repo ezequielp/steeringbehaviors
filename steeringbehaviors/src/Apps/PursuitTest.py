@@ -15,7 +15,6 @@ from numpy import pi
 FPS=30 #Same FPS for all for the moment
 
 class PursuitTestApp():
-
     def __init__(self, event_handler, world, screen, mouse, spinner, keyboard):
         self.event_handler=event_handler
         self.world=world
@@ -38,7 +37,7 @@ class PursuitTestApp():
         event_handler.bind(self.on_mouse_left_up, mouse.MOUSE_BTN3_UP) #Left click ends app
         for listener_obj in [self.mouse, self.world, self.screen, self.keyboard ]:
             event_handler.bind(listener_obj.on_update, self.spinner.TICK)
-		
+            
     def AddSteeringEntity(self, Behavior,color='r'):
         spinner=self.spinner
         #Create and apply Seeking Behavior controller to entity
@@ -51,20 +50,25 @@ class PursuitTestApp():
         self.event_handler.bind(seek.update, spinner.TICK)
 
     def run(self):
-    	self.spinner.run()
+        self.spinner.run()
 
     def on_mouse_left_up(self, event):
-		self.spinner.stop()    	
-		
+        self.spinner.stop()    	
+
 if __name__ == '__main__':
-	event_handler=EventManager()
-	world=PhysicsModel()
-	screen=PygameViewer(world)
-	mouse=PygameMouseController(event_handler)
-	spinner=PygCPUSpinner(FPS, event_handler)	
-	
-	python_app=PursuitTestApp(event_handler, world, screen, mouse, spinner)	
-	python_app.run()
+    from View.View import PygameViewer
+    from Model.Model import PhysicsModel
+    from Controller.MouseController import PygameMouseController
+    from Mediator.EventManager import EventManager
+    from Controller.MiscControllers import PygCPUSpinner
+    event_handler=EventManager()
+    world=PhysicsModel()
+    screen=PygameViewer(world)
+    mouse=PygameMouseController(event_handler)
+    spinner=PygCPUSpinner(FPS, event_handler)	
+    
+    python_app=PursuitTestApp(event_handler, world, screen, mouse, spinner)	
+    python_app.run()
        
 
 
