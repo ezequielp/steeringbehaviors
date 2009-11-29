@@ -130,6 +130,9 @@ class PhysicsModel(Model):
         '''
         return self.entities[id]
     
+    def get_position(self, entity_id):
+        return self.get_entity(entity_id).position
+    
     def get_relative_position(self, entity1_id, entity2_id):
         '''Returns the position of entitiy 2 respect to entity 1'''
         return self.get_entity(entity2_id).position-self.get_entity(entity1_id).position

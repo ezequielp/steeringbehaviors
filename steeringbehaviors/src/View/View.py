@@ -211,10 +211,18 @@ class PygameViewer(View2D):
         pos_sprite.rect=self.pygame.Rect(view_position, size)
         pos_sprite.rect.center=view_position
         try:
-            
             return pygsprites.spritecollide(pos_sprite, self._sprites, False)[0].model
         except IndexError:
             return None
             
-    
+    def get_colliding_entity(self, entity_id):
+        sprite=self.sprite_from_model[entity_id]
+        
+        try:
+            return self.pygsprites.spritecollide(sprite, self._sprites, False)[0].model
+        except IndexError:
+            return None
+        
+        
+        
         

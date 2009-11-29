@@ -54,7 +54,7 @@ class DragAndDropApp():
 	def run(self):
 		'''
 		App will not return from Run until the spinner is stopped, so be sure to bind an event to 
-		self.spinner.stop() 
+		self.spinner.stop()
 		'''
 		
 		self.spinner.run()

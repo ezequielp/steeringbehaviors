@@ -24,10 +24,19 @@ class Crosshair(Controller):
         view.add_sprite(ch_id, shape='s')
         self.ch_id
         
-    #Callbacks for mouse controller
+        self.DAMAGE_EVENT=event_handler.new_event_type()
+        
+        
+    #Callback for mouse controller
     def mouse_move_cb(self, event):
         position=event['Pos']
         view_transform=self.view.get_world_position
         self.world.move_entity(self.ch_id, view_transform(position))
+        
+    #Firing event
+    def fire_cb(self, event):
+        damaged_entity=self.view.get_colliding_entity(self.ch_id)
+        if damaged_entity!=None:
+            self.event_handler.Post({'Type': self.DAMAGE_EVENT, 'Damage': 10, 'Damaged entity':  damaged_entity})
         
         
