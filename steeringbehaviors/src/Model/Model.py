@@ -229,7 +229,7 @@ class PhysicsModel(Model):
                 rel2global_f=np.dot(R, ent.total_relative_force)
                 force=(ent.total_force + rel2global_f)
                
-               # Update vel(t+1)
+                # Update vel(t+1)
                 ent.velocity=v_2+force*dt_2
                 
             elif Heun_f_integrator:
