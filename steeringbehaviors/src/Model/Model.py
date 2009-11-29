@@ -17,7 +17,10 @@ MAXSPEED=300
 
 class Model(object):
     '''
-    Abstract model. 
+    Registers DAMAGE_EVENT:
+        damaged_entity: id
+        damaging_entity: id
+        damage: integer
     '''
     
     def __init__(self, event_handler):
