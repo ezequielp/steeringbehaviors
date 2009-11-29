@@ -2,13 +2,16 @@
 Created on Saturday, November 28 2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal 
-Last Edit: Saturday, November 28 2009
+Last Edit: Sunday, November 29 2009
 '''
 
 from numpy import sqrt, dot
 from SteerForSeek import SteerForSeek
 
 class SteerForArrive(SteerForSeek):
+    '''
+      Stops on arrival
+    '''
     def __init__(self,model, entity_id):
         SteerForSeek.__init__(self, model, entity_id)
         self.slowing_distance=500
@@ -21,5 +24,6 @@ class SteerForArrive(SteerForSeek):
         if distance>slowing_distance:
             SteerForSeek.update(self, event)
         else:
-            self.apply_force(rel_position, self.max_speed*distance/slowing_distance)
+            self.set_force(rel_position, 
+                           self.max_speed*distance/slowing_distance)
 

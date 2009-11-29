@@ -2,13 +2,13 @@
 Created on Saturday, November 28 2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal 
-Last Edit: Sunday, November 29 2009
+Last Edit: Saturday, November 28 2009
 '''
 
 from numpy import sqrt, dot
 from SteerController import SteerController
 
-class SteerForPursuit(SteerController):
+class SteerForEvasion(SteerController):
 
     def __init__(self, model, entity_id):
         SteerController.__init__(self, model, entity_id)
@@ -24,6 +24,6 @@ class SteerForPursuit(SteerController):
         
         # Stimates the position fo the targe tin the next time step and
         # Applies a force in that direction
-        self.set_force(rel_position-target_velocity*event['dt']*1.0/1000,
-                         self.max_speed)
+        future_target_pos=rel_position-target_velocity*event['dt']*1.0/1000
+        self.set_force((-1)*future_target_pos,self.max_speed)
 

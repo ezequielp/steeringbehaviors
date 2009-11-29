@@ -4,8 +4,10 @@ from Controller.MouseController import PygameMouseController
 from Mediator.EventManager import EventManager
 from Controller.MiscControllers import PygCPUSpinner
 from Controller.Steering.SteerForSeek import SteerForSeek
+from Controller.Steering.SteerForFlee import SteerForFlee
 from Controller.Steering.SteerForArrive import SteerForArrive
 from Controller.Steering.SteerForPursuit import SteerForPursuit
+from Controller.Steering.SteerForEvasion import SteerForEvasion
 import random
 from numpy import pi
 
@@ -28,18 +30,20 @@ class PursuitTestApp():
         [self.world.apply_relative_force(entity, pi/2, 100) for entity in self.entity_list]
        
         self.AddSteeringEntity(SteerForSeek)
+        self.AddSteeringEntity(SteerForFlee,'g')
         self.AddSteeringEntity(SteerForArrive)
         self.AddSteeringEntity(SteerForPursuit)
+        self.AddSteeringEntity(SteerForEvasion,'g')        
 
         event_handler.bind(self.on_mouse_left_up, mouse.MOUSE_BTN3_UP) #Left click ends app
         for listener_obj in [self.mouse, self.world, self.screen, self.keyboard ]:
             event_handler.bind(listener_obj.on_update, self.spinner.TICK)
 		
-    def AddSteeringEntity(self, Behavior):
+    def AddSteeringEntity(self, Behavior,color='r'):
         spinner=self.spinner
         #Create and apply Seeking Behavior controller to entity
         seeking_entity=self.world.add_entity((200,200),(0, 0))
-        self.screen.add_entity(seeking_entity, trace=False,size=3,color='r')
+        self.screen.add_entity(seeking_entity, trace=False,size=3,color=color)
         seek=Behavior(self.world, seeking_entity)
         seek.target_entity(self.entity_list[0])
         self.steering_entities.add(seek)

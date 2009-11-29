@@ -128,9 +128,6 @@ if __name__ == '__main__':
     from Mediator.EventManager import EventManager
     from Controller.MiscControllers import PygCPUSpinner
     from Controller.KeyboardController import PygameKeyboardController
-    #from steering.behaviors import SteerForPursuit
-    
-
 
     python_app=Test(EventManager, PhysicsModel, PygameViewer, PygameMouseController
     , PygCPUSpinner, PygameKeyboardController)	
