@@ -37,6 +37,6 @@ class Crosshair(Controller):
     def fire_cb(self, event):
         damaged_entity=self.view.get_colliding_entity(self.ch_id)
         if damaged_entity!=None:
-            self.event_handler.Post({'Type': self.DAMAGE_EVENT, 'Damage': 10, 'Damaged entity':  damaged_entity})
+            self.event_handler.Post({'Type': self.DAMAGE_EVENT, 'Damage': self.croshair_damage, 'Damaged entity':  damaged_entity, 'Damaging entity': self.ch_id})
         
         
