@@ -20,11 +20,13 @@ class Model(object):
     Abstract model. 
     '''
     
-    def __init__(self):
+    def __init__(self, event_handler):
         '''
         Constructor
         '''
-        assert False, "Abstract object"
+        self.event_handler=event_handler
+        self.DAMAGE_EVENT=event_handler.new_event_type()
+        event_handler.bind(self.DAMAGE_EVENT, self.on_damage)
         
     def update(self, dt):
         '''
@@ -97,7 +99,8 @@ class Model_Entity(object):
     
     
 class PhysicsModel(Model):
-    def __init__(self):
+    def __init__(self, event_handler):
+        self.Model.__init__(event_handler)
         self.entities = []#WeakKeyDictionary()
         self.grabbed=set()
           

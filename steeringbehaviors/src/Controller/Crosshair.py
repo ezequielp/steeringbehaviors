@@ -24,7 +24,7 @@ class Crosshair(Controller):
         view.add_sprite(ch_id, shape='s')
         self.ch_id
         
-        self.DAMAGE_EVENT=event_handler.new_event_type()
+        self.DAMAGE_EVENT=world_model.DAMAGE_EVENT
         
         
     #Callback for mouse controller
