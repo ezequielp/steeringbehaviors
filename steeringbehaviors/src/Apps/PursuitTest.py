@@ -1,8 +1,3 @@
-from View.View import PygameViewer
-from Model.Model import PhysicsModel
-from Controller.MouseController import PygameMouseController
-from Mediator.EventManager import EventManager
-from Controller.MiscControllers import PygCPUSpinner
 from Controller.Steering.SteerForSeek import SteerForSeek
 from Controller.Steering.SteerForFlee import SteerForFlee
 from Controller.Steering.SteerForArrive import SteerForArrive
@@ -61,13 +56,15 @@ if __name__ == '__main__':
     from Controller.MouseController import PygameMouseController
     from Mediator.EventManager import EventManager
     from Controller.MiscControllers import PygCPUSpinner
+    from Controller.KeyboardController import PygameKeyboardController
+    
     event_handler=EventManager()
-    world=PhysicsModel()
+    world=PhysicsModel(event_handler)
     screen=PygameViewer(world)
     mouse=PygameMouseController(event_handler)
     spinner=PygCPUSpinner(FPS, event_handler)	
-    
-    python_app=PursuitTestApp(event_handler, world, screen, mouse, spinner)	
+    keyboard=PygameKeyboardController(event_handler)
+    python_app=PursuitTestApp(event_handler, world, screen, mouse, spinner, keyboard)	
     python_app.run()
        
 
