@@ -187,7 +187,7 @@ class PhysicsModel(Model):
         
     def update(self, dt):
         '''
-        dt in miliseconds
+        dt in seconds
         Using:
         1. actualize velocidad con aceleracion actual dt/2 -> v(t+1/2)=v(t)+a(t)*dt/2
         2. actualize posicion x(t+1)=x(t)+v(t+1/2)*dt
@@ -198,7 +198,7 @@ class PhysicsModel(Model):
         grabbed=self.grabbed
         
         # TODO: Where do we put this?
-        dt_sec=dt*(1.0/1000)
+        dt_sec=dt
         dt_2=dt_sec/2
         
         for ent in self.entities:

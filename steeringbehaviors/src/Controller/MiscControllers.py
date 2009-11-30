@@ -50,7 +50,7 @@ class PygCPUSpinner(CPUSpinner):
         while self.running:
             '''TODO: Multifps ticking'''
             self.pygame.event.pump()
-            dt=self.clock.tick(self.fps)
+            dt=self.clock.tick(self.fps)*1.0/1e3
             eh.post({'Type': TICK, 'dt': dt})
             
             
