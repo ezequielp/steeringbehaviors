@@ -12,7 +12,7 @@ class SteerForOffset(SteerController):
 
     def __init__(self, model, entity_id):
         SteerController.__init__(self, model, entity_id)
-        self.offset_distance=50
+        self.offset_distance=75
         
     def update(self, event=None):
         model=self.model
