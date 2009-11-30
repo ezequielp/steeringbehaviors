@@ -14,7 +14,7 @@ class ShootTheFliesApp(object):
 
     def __init__(self, world, view, spinner, event_handler, mouse, keyboard):
         
-        from Controller.Steering.SteerForSeek import SteerForSeek
+        from Controller.Steering.SteerForOffset import SteerForOffset
 
         mouse.hide()
         self.crosshair=Crosshair(view, world, event_handler)
@@ -25,7 +25,7 @@ class ShootTheFliesApp(object):
         
         flies=set()
         for i in range(10):
-            flies.add(self.add_steering_entity(SteerForSeek, self.crosshair.get_entity_id()))
+            flies.add(self.add_steering_entity(SteerForOffset, self.crosshair.get_entity_id()))
             
         #self.add_flee_behavior(flies)
             
@@ -71,7 +71,7 @@ class ShootTheFliesApp(object):
     def run(self):
         self.spinner.run()
         
-    def on_quit(self):
+    def on_quit(self, event):
         self.spinner.stop()
         
 if __name__ == '__main__':
