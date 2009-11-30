@@ -22,7 +22,7 @@ class Test():
         
     
     def run(self):
-        for test in [self.RestartModelView, self.AddRemoveEntities, self.RandomMove, self.DragNDrop, self.PursuitTest, self.CombinedTest]:
+        for test in [self.RestartModelView, self.AddRemoveEntities, self.RandomMove, self.DragNDrop, self.PursuitTest, self.CombinedTest, self.ShootingTest]:
             self.prepareWorld(self.EventManager, self.PhysicsModel, self.Viewer, self.MouseController, self.CPUSpinner, self.KeyboardController)
             test()
         
@@ -104,7 +104,6 @@ class Test():
         
     def CombinedTest(self):
         print "Now you can pick them and move them around!\nRight-click or Ctrl-q to end this test"
-        pass
         from Apps.PursuitTest import PursuitTestApp
         test=PursuitTestApp(self.event_handler, self.world, self.screen, 
         self.mouse, self.spinner, self.keyboard)
@@ -117,7 +116,10 @@ class Test():
         
         print "...OK"
         
-    
+    def ShootingTest(self):
+        from Apps.ShootTheFliesApp import ShootTheFliesApp
+        test=ShootTheFliesApp(self.world, self.screen, self.spinner, self.event_handler, self.mouse, self.keyboard)
+        test.run()
  
 if __name__ == '__main__':    
     
