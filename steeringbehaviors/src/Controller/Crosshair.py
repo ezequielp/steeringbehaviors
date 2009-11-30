@@ -20,7 +20,6 @@ class Crosshair(Controller):
         self.world=world_model
         #registers sprite on model and view. Grabs it to disallow physics modification
         ch_id=world_model.add_entity((0,0), (0,0))
-        print "CH:", ch_id
         view.add_entity(ch_id, shape='s')
         world_model.grab_entity(ch_id)
 

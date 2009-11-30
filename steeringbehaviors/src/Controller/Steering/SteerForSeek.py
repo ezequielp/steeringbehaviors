@@ -22,7 +22,6 @@ class SteerForSeek(SteerController):
         
         # Gets the vector pointing to the target
         rel_position=self.get_relative_position()
-
         # Applies a force in the sense of that vector
         self.set_force(rel_position, self.max_speed)
 

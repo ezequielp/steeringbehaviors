@@ -55,7 +55,6 @@ class SteerController(Controller):
         
         # Normalize the relative postion vector
         rel_position=rel_position*1.0/sqrt(dot(rel_position, rel_position))
-        
         try:
             model.detach_force(entity_id, self.last_force)
             
@@ -88,5 +87,5 @@ class SteerController(Controller):
         
     def get_rel_velocity(self,entity_id=None):
         # TODO: implement the getter in the model
-        rel_vel=self.model.get_relative_velocity(target_id,self.entity_id)
+        return self.model.get_relative_velocity(self.target_id,self.entity_id)
         

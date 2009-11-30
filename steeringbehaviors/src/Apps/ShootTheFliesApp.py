@@ -23,8 +23,11 @@ class ShootTheFliesApp(object):
         self.world=world
         self.event_handler=event_handler
         
+        flies=set()
         for i in range(10):
-            self.add_steering_entity(SteerForSeek, self.crosshair.get_entity_id())
+            flies.add(self.add_steering_entity(SteerForSeek, self.crosshair.get_entity_id()))
+            
+        #self.add_flee_behavior(flies)
             
         event_handler.bind(self.crosshair.mouse_move_cb, mouse.MOUSE_MOVE)
         event_handler.bind(self.crosshair.fire_cb, keyboard.register_event_type('Space', 'UP'))
@@ -34,12 +37,25 @@ class ShootTheFliesApp(object):
             event_handler.bind(listener_obj.on_update, self.spinner.TICK)
         
         
+    def add_flee_behavior(self, group):
+        from Controller.Steering.SteerForFlee import SteerForFlee
+        import random
+        for flie in group:
+            second_flie=flie
+            while flie==second_flie:
+                second_flie=random.randint(0,len(group))
+            
+            seek=SteerForFlee(self.world,flie)
+            seek.target_entity(second_flie)
+            self.steering_entities.add(seek)
+            self.event_handler.bind(seek.update, spinner.TICK)
+
+                
     def add_steering_entity(self, Behavior, target):
         import random
         spinner=self.spinner
         #Create and apply Seeking Behavior controller to entity
         seeking_entity=self.world.add_entity((random.randint(0,640) ,random.randint(0,480)),(100, 100))
-        print seeking_entity
         self.view.add_entity(seeking_entity, trace=False,size=5,shape='o')
         seek=Behavior(self.world, seeking_entity)
         seek.target_entity(target)
@@ -50,7 +66,8 @@ class ShootTheFliesApp(object):
             self.steering_entities.add(seek)
         
         self.event_handler.bind(seek.update, spinner.TICK)
-        
+        return seeking_entity
+   
     def run(self):
         self.spinner.run()
         
