@@ -154,7 +154,7 @@ class PygameViewer(View2D):
                    
                    TODO: still dirty
             '''  
-            if type(color)==type(str()):      
+            if type(color)==type(str()):
                 color=tuple(cmap[ckey[color]])
                
             simple_sprite=PygameViewer.pygame.Surface((2*size,2*size))

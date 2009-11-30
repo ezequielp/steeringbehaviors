@@ -9,7 +9,6 @@ Last edit: Wednesday, November 25 2009
 FPS=30 #Same FPS for all for the moment
 
 class Test():
-
     def __init__(self, EventManager, PhysicsModel, Viewer, 
     MouseController, CPUSpinner, KeyboardController):
         self.prepareWorld(EventManager, PhysicsModel, Viewer, 
@@ -31,7 +30,7 @@ class Test():
     def prepareWorld(self, EventManager, PhysicsModel, Viewer, 
     MouseController, CPUSpinner, KeyboardController):
         self.event_handler=EventManager()
-        self.world=PhysicsModel()
+        self.world=PhysicsModel(self.event_handler)
         self.screen=Viewer(self.world)
         self.mouse=MouseController(self.event_handler)
         self.spinner=CPUSpinner(FPS, self.event_handler)	
@@ -84,10 +83,10 @@ class Test():
         '''
         Test mouse for Drag and Drop
         '''
-        print "Testing Drag and Drop: Pick the circles and move them around"+"\n"+"Right-click or Ctrl-q to end this test\n(USE BOTH CTRLS AT THE SAME TIME!)"
+        print "Testing Drag and Drop: Pick the circles and move them around"+"\n"+"Right-click or Ctrl-q to end this test\n"
         
         from Apps.DragAndDrop import DragAndDropApp
-       	self.entitylist=[self.world.add_entity((400*(i/20.0),200*(i%3)), (0,0)) for i in xrange(0,3)]
+        self.entitylist=[self.world.add_entity((400*(i/20.0),200*(i%3)), (0,0)) for i in xrange(0,3)]
         [self.screen.add_entity(entity) for entity in self.entitylist]
 
         test=DragAndDropApp(self.event_handler, self.world, self.screen, 
@@ -104,7 +103,7 @@ class Test():
         print "...OK"
         
     def CombinedTest(self):
-        print "Now you can pick them and move them around!\nRight-click or Ctrl-q to end this test\n(USE BOTH CTRLS AT THE SAME TIME!)"
+        print "Now you can pick them and move them around!\nRight-click or Ctrl-q to end this test"
         pass
         from Apps.PursuitTest import PursuitTestApp
         test=PursuitTestApp(self.event_handler, self.world, self.screen, 
