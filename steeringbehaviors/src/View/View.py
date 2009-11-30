@@ -35,18 +35,12 @@ class View(object):
         '''
         assert False, "Not implemented"
         
-    def get_world_position(self, view_position):
-        '''
-        Returns the position in world coordinates for the 
-        point view_position
-        '''
-        assert False, "Not implemented"
-
-    def get_entity_at(self, view_position):
-        '''
-        Returns the entity id at the requested position or None if there isn't any.
-        '''
-        assert False, "Not implemented"
+    def update(self):
+        # Here sprites are updated. How? Idea: apply the transformation
+        # self._project.transformation(Model.actors) or something like that.
+        # 
+        pass     
+ 
 
 class View2D(View):
     '''
@@ -61,20 +55,27 @@ class View2D(View):
         self._sprites=np.array([])
         self._project=rp.Transformation()
     
-    def update(self):
-        # Here sprites are updated. How? Idea: apply the transformation
-        # self._project.transformation(Model.actors) or something like that.
-        # 
-        pass
+ 
     
     def set_transform(self,move=np.array([0,0]), 
                            rotate=np.array([0]),
                            scale=np.array([1,1])):
         self._project.set_transform(move, rotate, scale)
         
+
     def get_world_position(self, view_position):
+        '''
+        Returns the position in world coordinates for the 
+        point view_position
+        '''
         return self._project.inverse_transform(view_position)
 
+
+    def get_entity_at(self, view_position):
+        '''
+        Returns the entity id at the requested position or None if there isn't any.
+        '''
+        assert False, "Not implemented"
 
 class PygameViewer(View2D):
     '''
