@@ -107,21 +107,32 @@ class PhysicsModel(Model):
         self.entities = []#WeakKeyDictionary()
         self.grabbed=set()
           
-    def on_damage(self, event):
-        id=event['Damaged entity']
-        self.grab_entity(id)
-        
-    def add_entity(self, position, velocity):
-        entity=Model_Entity(array((0.0,0.0)))
-        self.entities.append(entity)
-        entity.position=array(position)
-        entity.velocity=array(velocity)
-        entity.id=len(self.entities)-1
-        return len(self.entities) -1
-        
+    def on_update(self, event):
+        self.update(event['dt'])
+
+    ###################
+    #Getters
+            
     def get_max_speed(self, entity_id):
         return MAXSPEED
+
+    def get_position(self, entity_id):
+        return self.get_entity(entity_id).position
     
+    def get_relative_position(self, entity1_id, entity2_id):
+        '''Returns the position of entitiy 2 respect to entity 1'''
+        return self.get_entity(entity2_id).position-self.get_entity(entity1_id).position
+    
+    def get_velocity(self, entity_id):
+        return self.get_entity(entity_id).velocity
+        
+    def get_relative_velocity(self, entity1_id,entity2_id):
+        '''Returns the velocity of entitiy 2 respect to entity 1'''
+        return self.get_entity(entity2_id).velocity-self.get_entity(entity1_id).velocity
+    
+    
+    ###################
+    # Entity related
     def delete_entity(self, entity_id):
         del self.entities[entity_id]
         
@@ -139,16 +150,21 @@ class PhysicsModel(Model):
         Returns the list of entities
         '''
         return self.entities[id]
-    
-    def get_position(self, entity_id):
-        return self.get_entity(entity_id).position
-    
-    def get_relative_position(self, entity1_id, entity2_id):
-        '''Returns the position of entitiy 2 respect to entity 1'''
-        return self.get_entity(entity2_id).position-self.get_entity(entity1_id).position
-    
-    def get_velocity(self, entity_id):
-        return self.get_entity(entity_id).velocity
+
+    def add_entity(self, position, velocity):
+        entity=Model_Entity(array((0.0,0.0)))
+        self.entities.append(entity)
+        entity.position=array(position)
+        entity.velocity=array(velocity)
+        entity.id=len(self.entities)-1
+        return len(self.entities) -1
+
+    def on_damage(self, event):
+        id=event['Damaged entity']
+        self.grab_entity(id)
+
+    ###################    
+    # Setters
     
     def apply_force(self, entity_id, force):
         '''
@@ -181,10 +197,10 @@ class PhysicsModel(Model):
     def detach_force(self, entity_id, force_id):
         self.entities[entity_id].remove_force(force_id)
         
-        
-    def on_update(self, event):
-        self.update(event['dt'])
-        
+ 
+    ###################   
+    #Update
+             
     def update(self, dt):
         '''
         dt in seconds

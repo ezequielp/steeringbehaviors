@@ -3,6 +3,7 @@ from Controller.Steering.SteerForFlee import SteerForFlee
 from Controller.Steering.SteerForArrive import SteerForArrive
 from Controller.Steering.SteerForPursuit import SteerForPursuit
 from Controller.Steering.SteerForEvasion import SteerForEvasion
+from Controller.Steering.SteerForOffset import SteerForOffset
 import random
 from numpy import pi
 
@@ -28,7 +29,8 @@ class PursuitTestApp():
         self.AddSteeringEntity(SteerForArrive)
         self.AddSteeringEntity(SteerForPursuit)
         self.AddSteeringEntity(SteerForEvasion,'g')        
-
+        self.AddSteeringEntity(SteerForOffset,'k')
+        
         event_handler.bind(self.on_mouse_left_up, mouse.MOUSE_BTN3_UP) #Left click ends app
         for listener_obj in [self.mouse, self.world, self.screen, self.keyboard ]:
             event_handler.bind(listener_obj.on_update, self.spinner.TICK)

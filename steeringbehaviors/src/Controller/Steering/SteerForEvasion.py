@@ -20,10 +20,10 @@ class SteerForEvasion(SteerController):
         
         rel_position=self.get_relative_position()
         
-        target_velocity=self.get_abs_velocity(target_id)
+        target_velocity=self.get_rel_velocity(target_id)
         
-        # Stimates the position fo the targe tin the next time step and
+        # Stimates the position of the target in the next time step and
         # Applies a force in that direction
-        future_target_pos=rel_position-target_velocity*event['dt']*1.0/1000
+        future_target_pos=rel_position+target_velocity*event['dt']
         self.set_force((-1)*future_target_pos,self.max_speed)
 

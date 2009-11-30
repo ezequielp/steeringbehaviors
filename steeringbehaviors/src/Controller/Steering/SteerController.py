@@ -1,7 +1,7 @@
 '''
 Created on 08/11/2009
 
-@author: Ezequiel N. Pozzo
+@author: Ezequiel N. Pozzo, JuanPi Carbajal
 Last edit: Saturday, November 28 2009
 '''
 from numpy import sqrt, dot
@@ -85,7 +85,11 @@ class SteerController(Controller):
     def get_abs_velocity(self,entity_id=None):
         return self.model.get_velocity(entity_id)
         
-    def get_rel_velocity(self,entity_id=None):
-        # TODO: implement the getter in the model
-        return self.model.get_relative_velocity(self.target_id,self.entity_id)
-        
+    def get_rel_velocity(self,target_id=None):
+        if not target_id:
+            rel_vel=self.model.get_relative_velocity(self.entity_id,
+                                                     self.target_entity_id)
+        else:
+            rel_vel=self.model.get_relative_velocity(self.entity_id,target_id)
+            
+        return rel_vel
