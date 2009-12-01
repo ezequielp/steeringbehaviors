@@ -193,11 +193,11 @@ class PhysicsModel(Model):
         entity.position=position
         entity.velocity=estimator[entity_id].get_velocity_estimation()
         
-    def get_entity(self, id):
+    def get_entity(self, entity_id):
         '''
         Returns the list of entities
         '''
-        return self.entities[id]
+        return self.entities[entity_id]
 
     def add_entity(self, position, velocity):
         entity=Model_Entity(array((0.0,0.0)))
@@ -208,8 +208,8 @@ class PhysicsModel(Model):
         return len(self.entities) -1
 
     def on_damage(self, event):
-        id=event['Damaged entity']
-        self.grab_entity(id)
+        entity_id=event['Damaged entity']
+        self.grab_entity(entity_id)
 
     ###################    
     # Setters
