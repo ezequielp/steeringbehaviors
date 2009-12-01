@@ -103,7 +103,7 @@ class TopDownSprite(object):
     
     def set_orientation(self, angle):
         i=round((angle-self._initial_angle)*self._N*1.0/360) % self._N
-        
+        print angle, self._initial_angle, self._N, i
         self.image=self._sprite[i]
     
 class PygameViewer(View2D):
