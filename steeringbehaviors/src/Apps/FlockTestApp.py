@@ -58,7 +58,7 @@ if __name__ == '__main__':
     mouse=PygameMouseController(event_handler)
     spinner=PygCPUSpinner(FPS, event_handler)	
     keyboard=PygameKeyboardController(event_handler)
-    python_app=PursuitTestApp(event_handler, world, screen, mouse, spinner, keyboard)	
+    python_app=FlockTestApp(event_handler, world, screen, mouse, spinner, keyboard)	
     python_app.run()
        
 

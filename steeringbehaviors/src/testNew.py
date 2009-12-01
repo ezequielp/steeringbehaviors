@@ -123,8 +123,9 @@ class Test():
         
     def FlockTest(self):
         from Apps.FlockTestApp import FlockTestApp
-        test=FlockTestApp(self.world, self.screen, self.spinner,
-                          self.event_handler, self.mouse, self.keyboard)
+        FlockTestApp(event_handler, world, screen, mouse, spinner, keyboard)
+        test=FlockTestApp(self.event_handler,self.world, self.screen, self.spinner,
+                          self.mouse, self.keyboard)
         test.run()
     
  
