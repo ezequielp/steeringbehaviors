@@ -126,21 +126,21 @@ class SteerController(Controller):
      # Getters for grupal based steering
      
     def get_neighbors_id(self):
-        neighbors = self.model.get_in_cone_of_vision (self.entity_id,
+        neighbors = self.model.get_in_cone_of_vision(self.entity_id,
                                                         100, 2*pi, get_set=True,
                                                         get_CM = False, 
                                                         get_heading = False)
         return neighbors
         
     def get_neighbors_centriod(self,weights=None):
-        centroid = self.model.get_in_cone_of_vision (self.entity_id, 100,
+        centroid = self.model.get_in_cone_of_vision(self.entity_id, 100,
                                                         100, 2*pi, get_set=False,
                                                         get_CM = True, 
                                                         get_heading = False)
         return centroid
         
     def get_neighbors_heading(self,weights=None):
-        heading = self.model.get_in_cone_of_vision (self.entity_id, 100,
+        heading = self.model.get_in_cone_of_vision(self.entity_id, 100,
                                                         100, 2*pi, get_set=False,
                                                         get_CM = False, 
                                                         get_heading = True)
