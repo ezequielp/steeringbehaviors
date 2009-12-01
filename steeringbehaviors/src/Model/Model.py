@@ -354,7 +354,6 @@ class PhysicsModel(Model):
             rel_position=ent.position-position
             dx=rel_position[0]
             dy=rel_position[1]
-            print dx, dy
             if dx>radius or dx<-radius or dy>radius or dy<radius:
                 #Skip if entity is outside a box that contains the circle of radius radius
                 continue

@@ -25,7 +25,6 @@ class SteerForSeparation(SteerController):
         force=array([0.0,0.0])
 
         for neighbor in others_id:
-            print neighbor, others_id
             self.target_entity(neighbor)
             
             # Gets the vector pointing to the target
