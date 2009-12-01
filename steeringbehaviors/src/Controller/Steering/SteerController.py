@@ -4,7 +4,7 @@ Created on 08/11/2009
 @author: Ezequiel N. Pozzo, JuanPi Carbajal
 Last edit: Tuesday, December 01 2009
 '''
-from numpy import sqrt, dot, array
+from numpy import sqrt, dot, array, cos , sin
 '''TODO: Dehack this. Probably must create/find an abstract vector class with v.norm() to avoid using directly'''
 from Controller.Controller import Controller
 
@@ -113,31 +113,36 @@ class SteerController(Controller):
         '''
         return self.model.forces[self.last_force]
     
-    def get_heading(self,entity_id):
+    def get_heading_vec(self,entity_id):
         '''
          Returns the normalized vector representing the heading of the unit
          WARNING: At the moment is the velocity
         '''
-        heading=self.model.get_velocity(entity_id)
-        try:
-            heading=heading/sqrt(dot(heading,heading))
-        except FloatingPointError:
-            heading=array([1.0,0.0])
+        heading=model.get_ang(entity_id)
             
-        return heading
+        return array(cos(heading),sin(heading))
         
      ########
      # Getters for grupal based steering
      
     def get_neighbors_id(self):
-        #TODO: Get neighbors id in range, done by the model
-        return [0]
-     
+        neighbors = self.model.get_in_cone_of_vision (self.entity_id,
+                                                        100, 2*pi, get_set=True,
+                                                        get_CM = False, 
+                                                        get_heading = False)
+        return neighbors
+        
     def get_neighbors_centriod(self,weights=None):
-        #TODO: Get the centriod of the neighbors
-        return array([0,0])
+        centroid = self.model.get_in_cone_of_vision (self.entity_id, 100,
+                                                        100, 2*pi, get_set=False,
+                                                        get_CM = True, 
+                                                        get_heading = False)
+        return centroid
         
     def get_neighbors_heading(self,weights=None):
-        #TODO: Get the average heading of the neighbors
-        return array([1,0])
+        heading = self.model.get_in_cone_of_vision (self.entity_id, 100,
+                                                        100, 2*pi, get_set=False,
+                                                        get_CM = False, 
+                                                        get_heading = True)
+        return array(cos(heading),sin(heading))
 

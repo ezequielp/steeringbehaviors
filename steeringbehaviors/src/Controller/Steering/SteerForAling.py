@@ -26,6 +26,11 @@ class SteerForAling(SteerController):
 
         force=heading-self.get_heading(self.entity_id)
         
+        try:
+            force= force/sqrt(dot(force,force))
+        except FloatingPointError:
+            pass
+       
         #Return the force
         return force
                
