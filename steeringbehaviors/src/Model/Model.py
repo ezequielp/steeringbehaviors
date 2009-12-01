@@ -6,7 +6,7 @@ Last edit: Tuesday, December 01 2009
 '''
 from __future__ import division
 import numpy as np
-from numpy import add, dot, array
+from numpy import add, dot, array, concatenate
 from math import sin,cos,pi
 from Tools.LinAlgebra_extra import rotv, vector2angle
 
@@ -335,7 +335,7 @@ class PhysicsModel(Model):
                 ent.old_position=ent.position
                 ent.position=new_position
             
-        def get_in_cone_of_vision(self, ent_id, range, aperture, get_set=False):
+        def get_in_cone_of_vision(self, ent_id, range, aperture, get_CM=True, get_heading=False, get_set=False):
             '''
             returns the centroid of the positions of entities that are inside a cone
             oriented in the entity ent_id direction and of given range and aperture.
@@ -346,7 +346,7 @@ class PhysicsModel(Model):
             if get_set:
                 in_range=set()
                 
-            centroid=list()
+            to_average=list()
             angle=self.entities[ent_id].ang
             for ent in self.entities:
                 rel_position=ent.position-position
@@ -363,10 +363,18 @@ class PhysicsModel(Model):
                 if angle-aperture<vector2angle(rel_position)<angle+aperture:
                     if get_set:
                         in_range.add(ent.id)
-                    centroid.append(ent.position)
+                    if get_CM and get_heading:
+                        av_qty=concatenate(ent.position, ent.angle)
+                    elif get_heading:
+                        av_qty=ent.angle
+                    elif get_CM:
+                        av_qty(ent.position)
+                    to_average.append(av_qty)
                     
+            average=reduce(add, to_average)*1.0/len(to_average)
             if get_set:
-                return reduce(add, centroid)*1.0/len(centroid), in_range
+                if get_CM and get_heading:
+                return average[0:2], average[1], in_range
             else:
                 return reduce(add, centroid)*1.0/len(centroid)
                 
