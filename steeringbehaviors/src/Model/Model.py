@@ -2,7 +2,7 @@
 Created on 16/11/2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal
-Last edit: Thursday, November 26 2009
+Last edit: Tuesday, December 01 2009
 '''
 from __future__ import division
 import numpy as np

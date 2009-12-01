@@ -2,7 +2,7 @@
 Created on 08/11/2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal
-Last edit: Saturday, November 28 2009
+Last edit: Tuesday, December 01 2009
 '''
 from numpy import sqrt, dot
 '''TODO: Dehack this. Probably must create/find an abstract vector class with v.norm() to avoid using directly'''
@@ -63,6 +63,7 @@ class SteerController(Controller):
             
         except AttributeError:
             pass
+        rel_position = self.get_relative_position()
         
         # store the current id of the force for future references
         self.last_force = model.apply_force(entity_id, rel_position*max_speed -\
@@ -89,6 +90,12 @@ class SteerController(Controller):
         return self.model.get_velocity(entity_id)
         
     def get_rel_velocity(self,target_id=None):
+        '''
+            TODO: THe if is for functionality. Is not efficient to do it this
+            way. The best would be that the default value of 
+            target_id=self.entity_id, but that is not working.
+            Solution is to define that all this getters always need an argument
+        '''
         if not target_id:
             rel_vel=self.model.get_relative_velocity(self.entity_id,
                                                      self.target_entity_id)
@@ -104,17 +111,26 @@ class SteerController(Controller):
         get_force function. 
         '''
         return self.model.forces[self.last_force]
+    
+    def get_heading(self,entity_id=None):
+        '''
+         Returns the normalized vector representing the heading of the unit
+         WARNING: At the moment is the velocity
+        '''
+        return self.model.get_velocity(entity_id)        
         
+     ########
      # Getters for grupal based steering
-     def get_neighbors_id(self):
+     
+    def get_neighbors_id(self):
         #TODO: Get neighbors id in range, done by the model
         pass
      
-     def get_neighbors_centriod(self):
+    def get_neighbors_centriod(self,weights=None):
         #TODO: Get the centriod of the neighbors
         pass
         
-     def get_neighbors_aligment(self):
-        #TODO: Get the average alignmentof the neighboirs
+    def get_neighbors_heading(self,weights=None):
+        #TODO: Get the average heading of the neighbors
         pass
 

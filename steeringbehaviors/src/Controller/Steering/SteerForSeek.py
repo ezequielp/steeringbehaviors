@@ -2,7 +2,7 @@
 Created on Saturday, November 28 2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal 
-Last Edit: Sunday, November 29 2009
+Last Edit: Tuesday, December 01 2009
 '''
 '''TODO: Ohashi, Yoshikazu (1994) "Fast Linear Approximations of Euclidean Distance 
          in Higher Dimensions", in Graphics Gems IV, Paul Heckbert editor, Academic

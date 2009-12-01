@@ -22,7 +22,7 @@ class Test():
         
     
     def run(self):
-        for test in [self.RestartModelView, self.AddRemoveEntities, self.RandomMove, self.DragNDrop, self.PursuitTest, self.CombinedTest, self.ShootingTest]:
+        for test in [self.RestartModelView, self.AddRemoveEntities, self.RandomMove, self.DragNDrop, self.PursuitTest, self.CombinedTest, self.ShootingTest, self.FlockTest]:
             self.prepareWorld(self.EventManager, self.PhysicsModel, self.Viewer, self.MouseController, self.CPUSpinner, self.KeyboardController)
             test()
         
@@ -120,6 +120,13 @@ class Test():
         from Apps.ShootTheFliesApp import ShootTheFliesApp
         test=ShootTheFliesApp(self.world, self.screen, self.spinner, self.event_handler, self.mouse, self.keyboard)
         test.run()
+        
+    def FlockTest(self):
+        from Apps.FlockTestApp import FlockTestApp
+        test=FlockTestApp(self.world, self.screen, self.spinner,
+                          self.event_handler, self.mouse, self.keyboard)
+        test.run()
+    
  
 if __name__ == '__main__':    
     
