@@ -354,31 +354,35 @@ class PhysicsModel(Model):
             rel_position=ent.position-position
             dx=rel_position[0]
             dy=rel_position[1]
-            if dx>radius or dx<-radius or dy>radius or dy<radius:
+            
+            if dx>radius or dx<-radius or dy>radius or dy<-radius:
                 #Skip if entity is outside a box that contains the circle of radius radius
                 continue
             distance2=dx*dx+dy*dy
+            
             if distance2>radius*radius:
                 #skip if outside the circle of radius radius
                 continue
                     
+            
             if angle-aperture<vector2angle(rel_position)<angle+aperture:
                 if get_set:
                     in_range.add(ent.id)
                 if get_CM and get_heading:
                     av_qty=concatenate(ent.position, ent.angle)
                 elif get_heading:
-                    av_qty=ent.angle
+                    av_qty=ent.ang
                 elif get_CM:
-                    av_qty(ent.position)
-                to_average.append(av_qty)
-                        
+                    av_qty=ent.position
+                if get_CM or get_heading:
+                    to_average.append(av_qty)
+          
         try:
             average=reduce(add, to_average)*1.0/len(to_average)
         except TypeError:
             average=0
             to_average=[0,]
-           
+        print average
         if get_set:
             if get_CM and get_heading:
                 return average[0:2], average[1], in_range
