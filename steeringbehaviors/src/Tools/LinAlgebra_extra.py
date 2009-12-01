@@ -36,6 +36,5 @@ def vector2angle(v):
        Get the angle between the X axis and the direction defined by v.
        The angle is in (-pi, pi] range
     '''
-    print v, arctan2(v[1], v[0])
     return arctan2(v[1], v[0])
     

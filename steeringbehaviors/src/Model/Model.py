@@ -337,7 +337,7 @@ class PhysicsModel(Model):
                 ent.old_position=ent.position
                 ent.position=new_position
             
-    def get_in_cone_of_vision(self, ent_id, range, aperture, get_CM=True, get_heading=False, get_set=False):
+    def get_in_cone_of_vision(self, ent_id, radius, aperture, get_CM=True, get_heading=False, get_set=False):
         '''
         Calculates averages for all entities in a cone of vision of the given entity.
         Returns the average of the requested magnitudes in the following order (skiped if not requested):
@@ -354,12 +354,13 @@ class PhysicsModel(Model):
             rel_position=ent.position-position
             dx=rel_position[0]
             dy=rel_position[1]
-            if dx>range or dx<-range or dy>range or dy<range:
-                #Skip if entity is outside a box that contains the circle of radius range
+            print dx, dy
+            if dx>radius or dx<-radius or dy>radius or dy<radius:
+                #Skip if entity is outside a box that contains the circle of radius radius
                 continue
             distance2=dx*dx+dy*dy
-            if distance2>range*range:
-                #skip if outside the circle of radius range
+            if distance2>radius*radius:
+                #skip if outside the circle of radius radius
                 continue
                     
             if angle-aperture<vector2angle(rel_position)<angle+aperture:
@@ -378,7 +379,7 @@ class PhysicsModel(Model):
         except TypeError:
             average=0
             to_average=[0,]
-            
+           
         if get_set:
             if get_CM and get_heading:
                 return average[0:2], average[1], in_range
