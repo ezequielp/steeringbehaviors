@@ -336,6 +336,7 @@ class PhysicsModel(Model):
                 
                 ent.old_position=ent.position
                 ent.position=new_position
+            print ent.id, ent.ang
             
     def get_in_cone_of_vision(self, ent_id, range, aperture, get_CM=True, get_heading=False, get_set=False):
         '''
