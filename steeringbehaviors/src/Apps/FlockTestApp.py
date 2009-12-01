@@ -31,7 +31,6 @@ class FlockTestApp():
         for i in xrange(1,number,1):
             pos=round((rnd.uniform(0,240),rnd.uniform(0,320)))
             seeking_entity=self.world.add_entity(pos,(0, 0))
-            print seeking_entity
             self.screen.add_entity(seeking_entity, trace=False,size=3,color=color)
             flock=Behavior(self.world, seeking_entity)
             self.steering_entities.add(flock)
