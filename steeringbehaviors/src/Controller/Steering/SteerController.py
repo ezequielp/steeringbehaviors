@@ -48,20 +48,23 @@ class SteerController(Controller):
     ###################
 
     # Setter methods        
-    
     def set_force(self, rel_position, max_speed):
+        '''
+        TODO: Change this method. set_force should have an argument that is a 
+        force. Not the elements to build that force 
+        (also change names of arguments)
+        '''
+
         model=self.model
         entity_id=self.entity_id
         
-        # Normalize the relative postion vector
-        rel_position=rel_position*1.0/sqrt(dot(rel_position, rel_position))
         try:
             model.detach_force(entity_id, self.last_force)
             
         except AttributeError:
             pass
         
-        # store the current value for future references
+        # store the current id of the force for future references
         self.last_force = model.apply_force(entity_id, rel_position*max_speed -\
                         model.get_velocity(entity_id))
 
@@ -93,3 +96,25 @@ class SteerController(Controller):
             rel_vel=self.model.get_relative_velocity(self.entity_id,target_id)
             
         return rel_vel
+     
+    def get_force(self):
+        '''
+        This method is used for combining behaviors. When a behavior is composed
+        with other behaviors, instead of using the function update, we use the
+        get_force function. 
+        '''
+        return self.model.forces[self.last_force]
+        
+     # Getters for grupal based steering
+     def get_neighbors_id(self):
+        #TODO: Get neighbors id in range, done by the model
+        pass
+     
+     def get_neighbors_centriod(self):
+        #TODO: Get the centriod of the neighbors
+        pass
+        
+     def get_neighbors_aligment(self):
+        #TODO: Get the average alignmentof the neighboirs
+        pass
+

@@ -9,5 +9,30 @@ from numpy import sqrt, dot
 from SteerController import SteerController
 
 class SteerForSeparation(SteerController):
-        pass
+
+    def __init__(self, model, entity_id):
+        SteerController.__init__(self, model, entity_id)
+                
+    def update(self, event=None):
+        force=self.get_force()
+        self.set_force(force, self.max_speed)
         
+    def get_force(self):
+        
+        others_id=self.get_neighbors_id()
+
+        #TODO: Is this anywhere?
+        force=array(0,0)
+
+        for neighbor in others_id:
+            target_entity(neighbor)
+            
+            # Gets the vector pointing to the target
+            rel_position=self.get_relative_position()
+            # Sqaure norm
+            norm2=dot(rel_position, rel_position)
+            force += rel_position/norm2
+        
+        #Return the force
+        return force
+               
