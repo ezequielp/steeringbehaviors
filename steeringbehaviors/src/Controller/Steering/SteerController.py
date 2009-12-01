@@ -58,7 +58,7 @@ class SteerController(Controller):
         model=self.model
         entity_id=self.entity_id
         
-        # Normalize the relative postion vector
+        # Normalize the relative position vector
         rel_position=rel_position*1.0/sqrt(dot(rel_position, rel_position))
         try:
             model.detach_force(entity_id, self.last_force)
