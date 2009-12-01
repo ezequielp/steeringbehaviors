@@ -24,7 +24,7 @@ class SteerForAling(SteerController):
         
         heading=self.get_neighbors_heading()
 
-        force=aling-self.get_heading()
+        force=heading-self.get_heading(self.entity_id)
         
         #Return the force
         return force

@@ -26,8 +26,7 @@ class FlockTestApp():
             event_handler.bind(listener_obj.on_update, self.spinner.TICK)
             
     def AddSteeringEntity(self, Behavior,number=1,color='r'):
-        spinner=self.spinner
-        
+      
         #Create and apply Seeking Behavior controller to entity
         for i in xrange(1,number,1):
             pos=round((rnd.uniform(0,240),rnd.uniform(0,320)))
@@ -36,7 +35,7 @@ class FlockTestApp():
             self.screen.add_entity(seeking_entity, trace=False,size=3,color=color)
             flock=Behavior(self.world, seeking_entity)
             self.steering_entities.add(flock)
-            self.event_handler.bind(flock.update, spinner.TICK)
+            self.event_handler.bind(flock.update, self.spinner.TICK)
 
     def run(self):
         self.spinner.run()

@@ -4,7 +4,7 @@ Created on 08/11/2009
 @author: Ezequiel N. Pozzo, JuanPi Carbajal
 Last edit: Tuesday, December 01 2009
 '''
-from numpy import sqrt, dot
+from numpy import sqrt, dot, array
 '''TODO: Dehack this. Probably must create/find an abstract vector class with v.norm() to avoid using directly'''
 from Controller.Controller import Controller
 
@@ -113,25 +113,31 @@ class SteerController(Controller):
         '''
         return self.model.forces[self.last_force]
     
-    def get_heading(self,entity_id=None):
+    def get_heading(self,entity_id):
         '''
          Returns the normalized vector representing the heading of the unit
          WARNING: At the moment is the velocity
         '''
-        return self.model.get_velocity(entity_id)        
+        heading=self.model.get_velocity(entity_id)
+        try:
+            heading=heading/sqrt(dot(heading,heading))
+        except FloatingPointError:
+            heading=array([1.0,0.0])
+            
+        return heading
         
      ########
      # Getters for grupal based steering
      
     def get_neighbors_id(self):
         #TODO: Get neighbors id in range, done by the model
-        pass
+        return [0]
      
     def get_neighbors_centriod(self,weights=None):
         #TODO: Get the centriod of the neighbors
-        pass
+        return array([0,0])
         
     def get_neighbors_heading(self,weights=None):
         #TODO: Get the average heading of the neighbors
-        pass
+        return array([1,0])
 

@@ -22,7 +22,7 @@ class Test():
         
     
     def run(self):
-        for test in [self.RestartModelView, self.AddRemoveEntities, self.RandomMove, self.DragNDrop, self.PursuitTest, self.CombinedTest, self.ShootingTest, self.FlockTest]:
+        for test in [self.FlockTest, self.RestartModelView, self.AddRemoveEntities, self.RandomMove, self.DragNDrop, self.PursuitTest, self.CombinedTest, self.ShootingTest]:
             self.prepareWorld(self.EventManager, self.PhysicsModel, self.Viewer, self.MouseController, self.CPUSpinner, self.KeyboardController)
             test()
         
@@ -123,8 +123,8 @@ class Test():
         
     def FlockTest(self):
         from Apps.FlockTestApp import FlockTestApp
-        test=FlockTestApp(self.event_handler,self.world, self.screen, self.spinner,
-                          self.mouse, self.keyboard)
+        test=FlockTestApp(self.event_handler, self.world, self.screen, 
+                                        self.mouse, self.spinner, self.keyboard)
         test.run()
     
  

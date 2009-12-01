@@ -4,8 +4,8 @@ Created on Sunday, November 29 2009
 @author: Ezequiel N. Pozzo, JuanPi Carbajal 
 Last Edit: Tuesday, December 01 2009
 '''
-
-from numpy import sqrt, dot
+from __future__ import division
+from numpy import sqrt, dot, array
 from SteerController import SteerController
 
 class SteerForSeparation(SteerController):
@@ -22,16 +22,21 @@ class SteerForSeparation(SteerController):
         others_id=self.get_neighbors_id()
 
         #TODO: Is this anywhere?
-        force=array(0,0)
+        force=array([0.0,0.0])
 
         for neighbor in others_id:
-            target_entity(neighbor)
+            self.target_entity(neighbor)
             
             # Gets the vector pointing to the target
             rel_position=self.get_relative_position()
+            
             # Sqaure norm
+
             norm2=dot(rel_position, rel_position)
-            force += rel_position/norm2
+            try:     
+                force += rel_position/norm2
+            except FloatingPointError:
+                force += rel_position
         
         #Return the force
         return force

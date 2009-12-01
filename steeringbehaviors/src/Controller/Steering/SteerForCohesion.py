@@ -5,7 +5,7 @@ Created on Sunday, November 29 2009
 Last Edit: Tuesday, December 01 2009
 '''
 
-from numpy import sqrt, dot
+from numpy import sqrt, dot, array
 from SteerController import SteerController
 
 class SteerForCohesion(SteerController):
@@ -23,7 +23,7 @@ class SteerForCohesion(SteerController):
         
         center=self.get_neighbors_centriod()
         
-        target_position(center)
+        self.target_position(center)
         
         # Gets the vector pointing to the target
         rel_position=self.get_relative_position()
