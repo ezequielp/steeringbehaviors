@@ -33,7 +33,7 @@ class SteerController(Controller):
         self.targeting_entity=True
         self.target_entity_id=target_entity_id
         
-    def target_position(self, target_position):
+    def set_target_position(self, target_position):
         '''
         Not teleologically correct :D
         '''

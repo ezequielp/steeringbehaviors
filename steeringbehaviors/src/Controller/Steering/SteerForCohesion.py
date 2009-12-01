@@ -23,7 +23,7 @@ class SteerForCohesion(SteerController):
         
         center=self.get_neighbors_centriod()
         
-        self.target_position(center)
+        self.set_target_position(center)
         
         # Gets the vector pointing to the target
         rel_position=self.get_relative_position()
