@@ -18,20 +18,18 @@ class SteerForFlock(SteerController):
     
     def __init__(self, model, entity_id):
         SteerController.__init__(self, model, entity_id)
-        aling=self.SteerForAling(model, entity_id)
-        self.aling=aling.get_force
-        group=self.SteerForCohesion(model, entity_id)
-        self.group=group.get_force
-        avoid=self.SteerForSeparation(model, entity_id)
-        self.avoid=avoid.get_force
-                
+        self.aling=self.SteerForAling(model, entity_id)
+        self.group=self.SteerForCohesion(model, entity_id)
+        self.avoid=self.SteerForSeparation(model, entity_id)
+               
     def update(self, event=None):
         force=self.get_force()
         self.set_force(force, self.max_speed)
         
     def get_force(self):
         
-        force=self.aling()+self.group()+self.avoid()
+        force=self.aling.get_force()+self.group.get_force()+ \
+              self.avoid.get_force()
 
         return force
                
