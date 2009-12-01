@@ -130,6 +130,7 @@ class SteerController(Controller):
                                                         2*pi, get_set=True,
                                                         get_CM = False, 
                                                         get_heading = False)
+        
         return neighbors
         
     def get_neighbors_centriod(self,weights=None):
@@ -137,6 +138,7 @@ class SteerController(Controller):
                                                         2*pi, get_set=False,
                                                         get_CM = True, 
                                                         get_heading = False)
+        
         return centroid
         
     def get_neighbors_heading(self,weights=None):
@@ -144,5 +146,6 @@ class SteerController(Controller):
                                                          2*pi, get_CM = False,
                                                         get_heading = True,
                                                         get_set=False)
+        
         return array(cos(heading),sin(heading))
 

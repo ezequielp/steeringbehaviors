@@ -382,8 +382,10 @@ class PhysicsModel(Model):
         if get_set:
             if get_CM and get_heading:
                 return average[0:2], average[1], in_range
-            else:
+            elif get_CM or get_heading:
                 return average, in_range
+            else:
+                return in_range
         else:
             if get_CM and get_heading:
                 return average[0:2], average[1]
