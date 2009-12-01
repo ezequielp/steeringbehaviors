@@ -4,7 +4,7 @@ Created on 08/11/2009
 @author: Ezequiel N. Pozzo, JuanPi Carbajal
 Last edit: Tuesday, December 01 2009
 '''
-from numpy import sqrt, dot, array, cos , sin
+from numpy import sqrt, dot, array, cos , sin, pi
 '''TODO: Dehack this. Probably must create/find an abstract vector class with v.norm() to avoid using directly'''
 from Controller.Controller import Controller
 
@@ -118,7 +118,7 @@ class SteerController(Controller):
          Returns the normalized vector representing the heading of the unit
          WARNING: At the moment is the velocity
         '''
-        heading=model.get_ang(entity_id)
+        heading=self.model.get_ang(entity_id)
             
         return array(cos(heading),sin(heading))
         
@@ -126,23 +126,23 @@ class SteerController(Controller):
      # Getters for grupal based steering
      
     def get_neighbors_id(self):
-        neighbors = self.model.get_in_cone_of_vision(self.entity_id,
-                                                        100, 2*pi, get_set=True,
+        neighbors = self.model.get_in_cone_of_vision (self.entity_id, 100,
+                                                        2*pi, get_set=True,
                                                         get_CM = False, 
                                                         get_heading = False)
         return neighbors
         
     def get_neighbors_centriod(self,weights=None):
-        centroid = self.model.get_in_cone_of_vision(self.entity_id, 100,
-                                                        100, 2*pi, get_set=False,
+        centroid = self.model.get_in_cone_of_vision (self.entity_id, 100,
+                                                        2*pi, get_set=False,
                                                         get_CM = True, 
                                                         get_heading = False)
         return centroid
         
     def get_neighbors_heading(self,weights=None):
-        heading = self.model.get_in_cone_of_vision(self.entity_id, 100,
-                                                        100, 2*pi, get_set=False,
-                                                        get_CM = False, 
-                                                        get_heading = True)
+        heading = self.model.get_in_cone_of_vision (self.entity_id, 100,
+                                                         2*pi, get_CM = False,
+                                                        get_heading = True,
+                                                        get_set=False)
         return array(cos(heading),sin(heading))
 

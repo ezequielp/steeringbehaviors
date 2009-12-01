@@ -24,7 +24,7 @@ class SteerForAling(SteerController):
         
         heading=self.get_neighbors_heading()
 
-        force=heading-self.get_heading(self.entity_id)
+        force=heading-self.get_heading_vec(self.entity_id)
         
         try:
             force= force/sqrt(dot(force,force))

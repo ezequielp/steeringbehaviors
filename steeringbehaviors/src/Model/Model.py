@@ -163,6 +163,8 @@ class PhysicsModel(Model):
         '''Returns the velocity of entitiy 2 respect to entity 1'''
         return self.get_entity(entity2_id).velocity-self.get_entity(entity1_id).velocity
     
+    def get_ang(self, entity_id):
+        return self.entities[entity_id].ang
     
     ###################
     # Entity related
@@ -335,53 +337,58 @@ class PhysicsModel(Model):
                 ent.old_position=ent.position
                 ent.position=new_position
             
-        def get_in_cone_of_vision(self, ent_id, range, aperture, get_CM=True, get_heading=False, get_set=False):
-            '''
-            Calculates averages for all entities in a cone of vision of the given entity.
-            Returns the average of the requested magnitudes in the following order (skiped if not requested):
-            CM, Heading
-            and an optional set of entity on the cone.
-            '''
-            position=self.entities[ent_id].position
-            if get_set:
-                in_range=set()
-                
-            to_average=list()
-            angle=self.entities[ent_id].ang
-            for ent in self.entities:
-                rel_position=ent.position-position
-                dx=rel_position[0]
-                dy=rel_position[1]
-                if dx>range or dx<-range or dy>range or dy<range:
-                    #Skip if entity is outside a box that contains the circle of radius range
-                    continue
-                distance2=dx*dx+dy*dy
-                if distance2>range*range:
-                    #skip if outside the circle of radius range
-                    continue
-                
-                if angle-aperture<vector2angle(rel_position)<angle+aperture:
-                    if get_set:
-                        in_range.add(ent.id)
-                    if get_CM and get_heading:
-                        av_qty=concatenate(ent.position, ent.angle)
-                    elif get_heading:
-                        av_qty=ent.angle
-                    elif get_CM:
-                        av_qty(ent.position)
-                    to_average.append(av_qty)
+    def get_in_cone_of_vision(self, ent_id, range, aperture, get_CM=True, get_heading=False, get_set=False):
+        '''
+        Calculates averages for all entities in a cone of vision of the given entity.
+        Returns the average of the requested magnitudes in the following order (skiped if not requested):
+        CM, Heading
+        and an optional set of entity on the cone.
+        '''
+        position=self.entities[ent_id].position
+        if get_set:
+            in_range=set()
                     
+        to_average=list()
+        angle=self.entities[ent_id].ang
+        for ent in self.entities:
+            rel_position=ent.position-position
+            dx=rel_position[0]
+            dy=rel_position[1]
+            if dx>range or dx<-range or dy>range or dy<range:
+                #Skip if entity is outside a box that contains the circle of radius range
+                continue
+            distance2=dx*dx+dy*dy
+            if distance2>range*range:
+                #skip if outside the circle of radius range
+                continue
+                    
+            if angle-aperture<vector2angle(rel_position)<angle+aperture:
+                if get_set:
+                    in_range.add(ent.id)
+                if get_CM and get_heading:
+                    av_qty=concatenate(ent.position, ent.angle)
+                elif get_heading:
+                    av_qty=ent.angle
+                elif get_CM:
+                    av_qty(ent.position)
+                to_average.append(av_qty)
+                        
+        try:
             average=reduce(add, to_average)*1.0/len(to_average)
-            if get_set:
-                if get_CM and get_heading:
-                    return average[0:2], average[1], in_range
-                else:
-                    return average, in_range
+        except TypeError:
+            average=0
+            to_average=[0,]
+            
+        if get_set:
+            if get_CM and get_heading:
+                return average[0:2], average[1], in_range
             else:
-                if get_CM and get_heading:
-                    return average[0:2], average[1], in_range
-                else:
-                    return average, in_range
+                return average, in_range
+        else:
+            if get_CM and get_heading:
+                return average[0:2], average[1]
+            else:
+                return average
                 
                 
             
