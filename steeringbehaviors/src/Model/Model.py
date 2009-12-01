@@ -11,10 +11,10 @@ from math import sin,cos,pi
 from Tools.LinAlgebra_extra import rotv, vector2angle
 
 np.seterr(all='raise')
-verlet_v_integrator=True
-verlet_friction=True
+verlet_v_integrator=False
+verlet_friction=False
 
-Heun_f_integrator=False
+Heun_f_integrator=True
 MAXSPEED=300
 
 class Model(object):

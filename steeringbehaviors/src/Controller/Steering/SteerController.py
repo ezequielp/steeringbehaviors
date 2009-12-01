@@ -58,12 +58,13 @@ class SteerController(Controller):
         model=self.model
         entity_id=self.entity_id
         
+        # Normalize the relative postion vector
+        rel_position=rel_position*1.0/sqrt(dot(rel_position, rel_position))
         try:
             model.detach_force(entity_id, self.last_force)
             
         except AttributeError:
             pass
-        rel_position = self.get_relative_position()
         
         # store the current id of the force for future references
         self.last_force = model.apply_force(entity_id, rel_position*max_speed -\
