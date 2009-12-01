@@ -337,10 +337,10 @@ class PhysicsModel(Model):
             
         def get_in_cone_of_vision(self, ent_id, range, aperture, get_CM=True, get_heading=False, get_set=False):
             '''
-            returns the centroid of the positions of entities that are inside a cone
-            oriented in the entity ent_id direction and of given range and aperture.
-            
-            returns centroid, set or just centroid depending of get_set
+            Calculates averages for all entities in a cone of vision of the given entity.
+            Returns the average of the requested magnitudes in the following order (skiped if not requested):
+            CM, Heading
+            and an optional set of entity on the cone.
             '''
             position=self.entities[ent_id].position
             if get_set:
@@ -374,8 +374,14 @@ class PhysicsModel(Model):
             average=reduce(add, to_average)*1.0/len(to_average)
             if get_set:
                 if get_CM and get_heading:
-                return average[0:2], average[1], in_range
+                    return average[0:2], average[1], in_range
+                else:
+                    return average, in_range
             else:
-                return reduce(add, centroid)*1.0/len(centroid)
+                if get_CM and get_heading:
+                    return average[0:2], average[1], in_range
+                else:
+                    return average, in_range
+                
                 
             
