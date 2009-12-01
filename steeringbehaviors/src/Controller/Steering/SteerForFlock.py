@@ -10,8 +10,7 @@ from SteerController import SteerController
 
 class SteerForFlock(SteerController):
     '''
-    Alings the unit to the average aligment.
-    WARNING: using velocity as the direction vector
+    A controller that flocks.
     '''
     from SteerForCohesion import SteerForCohesion
     from SteerForSeparation import SteerForSeparation
@@ -19,9 +18,12 @@ class SteerForFlock(SteerController):
     
     def __init__(self, model, entity_id):
         SteerController.__init__(self, model, entity_id)
-        self.aling=SteerForAling.get_force
-        self.group=SteerForCohesion.get_force
-        self.avoid=SteerForSeparation.get_force
+        aling=SteerForAling(model, entity_id)
+        self.aling=aling.get_force
+        group=SteerForCohesion(model, entity_id)
+        self.group=group.get_force
+        avoid=SteerForSeparation(model, entity_id)
+        self.avoid=avoid.get_force
                 
     def update(self, event=None):
         force=self.get_force()
