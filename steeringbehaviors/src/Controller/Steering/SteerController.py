@@ -59,7 +59,11 @@ class SteerController(Controller):
         entity_id=self.entity_id
         
         # Normalize the relative position vector
-        rel_position=rel_position*1.0/sqrt(dot(rel_position, rel_position))
+        try:
+            rel_position=rel_position*1.0/sqrt(dot(rel_position, rel_position))
+        except FloatingPointError:
+            pass
+            
         try:
             model.detach_force(entity_id, self.last_force)
             

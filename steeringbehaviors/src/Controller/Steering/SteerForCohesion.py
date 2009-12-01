@@ -28,8 +28,10 @@ class SteerForCohesion(SteerController):
         # Gets the vector pointing to the target
         rel_position=self.get_relative_position()
         # Normalize
-        rel_position=rel_position/sqrt(dot(rel_position, rel_position))
-        
+        try:
+            rel_position=rel_position/sqrt(dot(rel_position, rel_position))
+        except FloatingPointError:
+            pass
         #Return the force
         return rel_position
 
