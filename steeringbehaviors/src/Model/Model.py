@@ -335,4 +335,39 @@ class PhysicsModel(Model):
                 ent.old_position=ent.position
                 ent.position=new_position
             
-        
+        def get_in_cone_of_vision(self, ent_id, range, aperture, get_set=False):
+            '''
+            returns the centroid of the positions of entities that are inside a cone
+            oriented in the entity ent_id direction and of given range and aperture.
+            
+            returns centroid, set or just centroid depending of get_set
+            '''
+            position=self.entities[ent_id].position
+            if get_set:
+                in_range=set()
+                
+            centroid=list()
+            angle=self.entities[ent_id].ang
+            for ent in self.entities:
+                rel_position=ent.position-position
+                dx=rel_position[0]
+                dy=rel_position[1]
+                if dx>range or dx<-range or dy>range or dy<range:
+                    #Skip if entity is outside a box that contains the circle of radius range
+                    continue
+                distance2=dx*dx+dy*dy
+                if distance2>range*range:
+                    #skip if outside the circle of radius range
+                    continue
+                
+                if angle-aperture<vector2angle(rel_position)<angle+aperture:
+                    if get_set:
+                        in_range.add(ent.id)
+                    centroid.append(ent.position)
+                    
+            if get_set:
+                return reduce(add, centroid)*1.0/len(centroid), in_range
+            else:
+                return reduce(add, centroid)*1.0/len(centroid)
+                
+            
