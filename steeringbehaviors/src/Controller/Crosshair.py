@@ -32,6 +32,8 @@ class Crosshair(Controller):
     def mouse_move_cb(self, event):
         position=event['Pos']
         view_transform=self.view.get_world_position
+        old_position=self.world.get_position(self.ch_id)
+        
         self.world.move_entity(self.ch_id, view_transform(position))
         
     #Firing event

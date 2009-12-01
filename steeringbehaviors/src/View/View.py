@@ -77,6 +77,35 @@ class View2D(View):
         '''
         assert False, "Not implemented"
 
+class TopDownSprite(object):
+    '''
+    A sprite for a top down view.
+    '''
+    def __init__(self, image, image_angle):
+        self.set_sprite_for_orientation(image, image_angle)
+        self._sprite=dict()
+        self.image=image
+        
+    def set_sprite_for_orientation(self, image, angle_from_vertical):
+        self._image=image
+        self._initial_angle=angle_from_vertical
+        
+    def allow_angles(self, N):
+        '''
+        Set the sprite to allow N orientation angles in the interval [0, 360)
+        It is better to call this at initialization phase.
+        '''
+        self._N=N
+        for i in range(N):
+            angle=i*360.0/N+self._initial_angle
+            self._sprite[i]=self.get_rotated_image(self._image, angle)
+            
+    
+    def set_orientation(self, angle):
+        i=round((angle-self._initial_angle)*self._N*1.0/360) % self._N
+        
+        self.image=self._sprite[i]
+    
 class PygameViewer(View2D):
     '''
     A class rendering the actors of the Model into a Pygame window
@@ -114,29 +143,44 @@ class PygameViewer(View2D):
         pygame.display.flip()
 
 
-    class Sprite(SpriteParent):
+    class Sprite(SpriteParent, TopDownSprite):
         def __init__(self, model_entity,shape='o',size=3,color='k'):
             '''
             @model_entity_position: the position of the model object. Use [position] to get reference!!!
             '''
             pygame=PygameViewer.pygame
             PygameViewer.SpriteParent.__init__(self)
+            
             self.model=model_entity
             
             self.rect=pygame.Rect(self._project.transform(model_entity.position)
                                   , (size,size))
             
             '''
-            TODO: implement better and more versatile method to set sprite image
+            TODO: continue refactoring imaging capabilities to TopDownSprite
             '''
             self._draw_entity(shape,size,color)
+            
+            TopDownSprite.__init__(self, self.original_image, 0)
+            #If the shape is a circle, ignore rotation angles
+            if shape!='o':
+                self.allow_angles(36)
+            else:
+                self.allow_angles(1)
             
 
             
         def update(self):
             PygameViewer.SpriteParent.update(self)
+            
+            self.set_orientation(-self.model.ang*57.296)
+            self.rect=self.image.get_rect()
             self.rect.center=self._project.transform(self.model.position)
-        
+            
+        def get_rotated_image(self, image, angle):
+            from pygame import transform
+            return transform.rotate(image, angle)
+            
         def _draw_entity(self,shape='o',size=3,color='k'):
             '''
                Draws entity following arguments.
@@ -162,13 +206,13 @@ class PygameViewer(View2D):
             simple_sprite.fill(tuple(cmap[ckey['w']]))
             simple_sprite.set_colorkey(tuple(cmap[ckey['w']]),
                                                   PygameViewer.pygame.RLEACCEL)
-            self.image=simple_sprite
+            self.original_image=simple_sprite
             
             if shape=='o':
-                PygameViewer.pygame.draw.circle(self.image, color,
+                PygameViewer.pygame.draw.circle(self.original_image, color,
                                                               (size,size), size)
             elif shape=='s':
-                PygameViewer.pygame.draw.rect(self.image,color,(.5*size,
+                PygameViewer.pygame.draw.rect(self.original_image,color,(.5*size,
                                                      .5*size,1.5*size,1.5*size))
                 
             

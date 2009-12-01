@@ -11,8 +11,10 @@ from math import sin,cos,pi
 from Tools.LinAlgebra_extra import rotv, vector2angle
 
 np.seterr(all='raise')
-verlet_v_integrator=False
-Heun_f_integrator=True
+verlet_v_integrator=True
+verlet_friction=True
+
+Heun_f_integrator=False
 MAXSPEED=300
 
 class Model(object):
@@ -30,6 +32,7 @@ class Model(object):
         self.event_handler=event_handler
         self.DAMAGE_EVENT=event_handler.new_event_type()
         event_handler.bind(self.on_damage,self.DAMAGE_EVENT)
+        
         
     def update(self, dt):
         '''
@@ -67,7 +70,9 @@ class Model_Entity(object):
         self.total_force=copy.deepcopy(zero_vector)
         self.total_relative_force=copy.deepcopy(zero_vector)
         self.zero_vector=zero_vector
+        self.ang=0
         
+    
     def apply_force(self, force):
         '''
         Adds a force to the entity, can be deleted by calling remove_force with return id as parameter
@@ -100,12 +105,40 @@ class Model_Entity(object):
         del self.relative_forces[relative_force_id]
         self.total_relative_force=reduce(add, self.relative_forces)
     
+class VelocityEstimator(object):
+    '''
+    Calculates a series of points based on the historic set of time,positions
+    '''
+    def __init__(self):
+        from collections import deque
+        self.positions=deque([],2)
     
+    def append(self, time, new_position):
+        '''
+        Adds a new position to estimator model
+        '''
+        from copy import deepcopy
+        self.positions.append((time, deepcopy(new_position)))
+        
+    def get_velocity_estimation(self):
+        last_time, last_position=self.positions[-1]
+        try:
+            first_time, first_position=self.positions[-2]
+        except IndexError:
+            return last_position*0
+        
+        if last_time-first_time>0:
+            return (last_position-first_position)*1.0/(last_time-first_time)
+        else:
+            return last_position*0
+        
 class PhysicsModel(Model):
     def __init__(self, event_handler):
         Model.__init__(self, event_handler)
         self.entities = []#WeakKeyDictionary()
         self.grabbed=set()
+        self.reference_clock=0
+        self.velocity_estimator=dict()
           
     def on_update(self, event):
         self.update(event['dt'])
@@ -143,7 +176,20 @@ class PhysicsModel(Model):
         self.grabbed.remove(entity_id)
         
     def move_entity(self, entity_id, position):
-        self.get_entity(entity_id).position=position
+        '''
+        Moves the entity to its new position. 
+        It also updates the velocity to an average velocity using a simple estimator.
+        '''
+        estimator=self.velocity_estimator
+        try:
+            estimator[entity_id].append(self.reference_clock, position)
+        except KeyError:
+            estimator[entity_id]=VelocityEstimator()
+            estimator[entity_id].append(self.reference_clock, position)
+            
+        entity=self.get_entity(entity_id)
+        entity.position=position
+        entity.velocity=estimator[entity_id].get_velocity_estimation()
         
     def get_entity(self, id):
         '''
@@ -215,6 +261,7 @@ class PhysicsModel(Model):
         
         # TODO: Where do we put this?
         dt_sec=dt
+        self.reference_clock+=dt
         dt_2=dt_sec/2
         
         for ent in self.entities:
@@ -287,4 +334,5 @@ class PhysicsModel(Model):
                 
                 ent.old_position=ent.position
                 ent.position=new_position
+            
         

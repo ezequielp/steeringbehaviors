@@ -56,7 +56,7 @@ class ShootTheFliesApp(object):
         spinner=self.spinner
         #Create and apply Seeking Behavior controller to entity
         seeking_entity=self.world.add_entity((random.randint(0,640) ,random.randint(0,480)),(100, 100))
-        self.view.add_entity(seeking_entity, trace=False,size=5,shape='o')
+        self.view.add_entity(seeking_entity, trace=False,size=8,shape='s')
         seek=Behavior(self.world, seeking_entity)
         seek.target_entity(target)
         try:
