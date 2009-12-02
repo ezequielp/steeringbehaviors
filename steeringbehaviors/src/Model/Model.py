@@ -350,6 +350,8 @@ class PhysicsModel(Model):
                     
         to_average=list()
         angle=self.entities[ent_id].ang
+        lower_angle=(angle-aperture)%2*pi
+        higher_angle=(angle+aperture)%2*pi 
         for ent in self.entities:
             rel_position=ent.position-position
             dx=rel_position[0]
@@ -364,14 +366,15 @@ class PhysicsModel(Model):
                 #skip if outside the circle of radius radius
                 continue
                     
+            relative_ang=vector2angle(rel_position)%2*pi
             
-            if angle-aperture<vector2angle(rel_position)<angle+aperture:
+            if lower_angle<relative_ang<higher_angle:
                 if get_set:
                     in_range.add(ent.id)
                 if get_CM and get_heading:
-                    av_qty=concatenate(ent.position, ent.angle)
+                    av_qty=concatenate(ent.position, array((cos(ent.ang), sin(ent.ang))))
                 elif get_heading:
-                    av_qty=ent.ang
+                    av_qty=array((cos(ent.ang), sin(ent.ang)))
                 elif get_CM:
                     av_qty=ent.position
                 if get_CM or get_heading:
@@ -380,21 +383,34 @@ class PhysicsModel(Model):
         try:
             average=reduce(add, to_average)*1.0/len(to_average)
         except TypeError:
-            average=0
-            to_average=[0,]
-        print average
+            in_range=set()
+            if get_CM and get_heading:
+                average=concatenate(self.entities[ent_id].position, array((0.0,0.0)))
+            elif get_CM:
+                average=self.entities[ent_id].position
+            elif get_heading:
+                average=array((0.0,0.0))
+            
+        
+        
         if get_set:
             if get_CM and get_heading:
-                return average[0:2], average[1], in_range
-            elif get_CM or get_heading:
+                return average[0:2], vector2angle((average[2], average[3])), in_range
+            elif get_CM:
                 return average, in_range
+            elif get_heading:
+                return vector2angle((average[0], average[1])), in_range
             else:
                 return in_range
         else:
             if get_CM and get_heading:
-                return average[0:2], average[1]
-            else:
+                return average[0:2], vector2angle((average[2], average[3]))
+            elif get_heading:
+                return vector2angle((average[0], average[1]))
+            elif get_CM:
                 return average
+            else:
+                return 
                 
                 
             

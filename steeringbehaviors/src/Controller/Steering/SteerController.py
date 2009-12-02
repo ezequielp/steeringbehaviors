@@ -131,7 +131,7 @@ class SteerController(Controller):
      
     def get_neighbors_id(self):
         neighbors = self.model.get_in_cone_of_vision (self.entity_id, 100,
-                                                        2*pi, get_set=True,
+                                                        pi, get_set=True,
                                                         get_CM = False, 
                                                         get_heading = False)
         
@@ -139,7 +139,7 @@ class SteerController(Controller):
         
     def get_neighbors_centriod(self,weights=None):
         centroid = self.model.get_in_cone_of_vision (self.entity_id, 100,
-                                                        2*pi, get_set=False,
+                                                        pi, get_set=False,
                                                         get_CM = True, 
                                                         get_heading = False)
         
@@ -147,9 +147,10 @@ class SteerController(Controller):
         
     def get_neighbors_heading(self,weights=None):
         heading = self.model.get_in_cone_of_vision (self.entity_id, 100,
-                                                         2*pi, get_CM = False,
+                                                         pi, get_CM = False,
                                                         get_heading = True,
                                                         get_set=False)
+        
         
         return array(cos(heading),sin(heading))
 

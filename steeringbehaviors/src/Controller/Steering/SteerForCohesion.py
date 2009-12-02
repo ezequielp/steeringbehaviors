@@ -13,7 +13,7 @@ class SteerForCohesion(SteerController):
     def __init__(self, model, entity_id):
         SteerController.__init__(self, model, entity_id)
                 
-    pass
+    
     
     def update(self, event=None):
         force=self.get_force()
@@ -22,9 +22,10 @@ class SteerForCohesion(SteerController):
     def get_force(self):
         
         center=self.get_neighbors_centriod()
-        
+
+        #Esta bien esto?
         self.set_target_position(center)
-        
+       
         # Gets the vector pointing to the target
         rel_position=self.get_relative_position()
         # Normalize

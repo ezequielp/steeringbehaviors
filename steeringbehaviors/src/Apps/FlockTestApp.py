@@ -16,8 +16,8 @@ class FlockTestApp():
         
         self.steering_entities=set()
        
-        self.AddSteeringEntity(SteerForFlock,number=10,color='g')
-        self.AddSteeringEntity(SteerForFlock,number=6,color='r')
+        self.AddSteeringEntity(SteerForFlock,number=3,color='g')
+        self.AddSteeringEntity(SteerForFlock,number=3,color='r')
         
         #Left click ends app
         event_handler.bind(self.on_mouse_left_up, mouse.MOUSE_BTN3_UP)
@@ -29,7 +29,7 @@ class FlockTestApp():
       
         #Create and apply Seeking Behavior controller to entity
         for i in xrange(1,number,1):
-            pos=round((rnd.uniform(0,240),rnd.uniform(0,320)))
+            pos=round((rnd.uniform(120,240),rnd.uniform(120,320)))
             seeking_entity=self.world.add_entity(pos,(0, 0))
             self.screen.add_entity(seeking_entity, trace=False,size=3,color=color)
             flock=Behavior(self.world, seeking_entity)
