@@ -25,11 +25,11 @@ class PursuitTestApp():
         [self.world.apply_relative_force(entity, pi/2, 100) for entity in self.entity_list]
        
         self.AddSteeringEntity(SteerForSeek)
-        self.AddSteeringEntity(SteerForFlee,'g')
-        self.AddSteeringEntity(SteerForArrive)
-        self.AddSteeringEntity(SteerForPursuit)
-        self.AddSteeringEntity(SteerForEvasion,'g')        
-        self.AddSteeringEntity(SteerForOffset,'k')
+#        self.AddSteeringEntity(SteerForFlee,'g')
+#        self.AddSteeringEntity(SteerForArrive)
+        self.AddSteeringEntity(SteerForPursuit,'g')
+#        self.AddSteeringEntity(SteerForEvasion,'g')        
+#        self.AddSteeringEntity(SteerForOffset,'k')
         
         event_handler.bind(self.on_mouse_left_up, mouse.MOUSE_BTN3_UP) #Left click ends app
         for listener_obj in [self.mouse, self.world, self.screen, self.keyboard ]:

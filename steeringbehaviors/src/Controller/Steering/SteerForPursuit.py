@@ -11,14 +11,22 @@ from SteerController import SteerController
 class SteerForPursuit(SteerController):
     '''
     Steers the entity towards the estimated next positionof the target
-    WARNING: It may not work as desired after Wednesday, December 02 2009
-    TODO: Verify
+    Verified: Wednesday, December 02 2009 - Is working
     '''
 
     def __init__(self, model, entity_id):
         SteerController.__init__(self, model, entity_id)
-
+    
     def update(self, event=None):
+        # TODO: Parametrize this
+        force=self.get_force(event)
+        # Desired call
+        #self.set_force(force)
+        
+        # Emulating damping
+        self.set_force(300*force-self.get_abs_velocity(self.entity_id))
+        
+    def get_force(self,event=None):
         model=self.model
         target_id=self.target_entity_id
         entity_id=self.entity_id
@@ -29,6 +37,12 @@ class SteerForPursuit(SteerController):
         
         # Stimates the position of the target in the next time step and
         # Applies a force in that direction
-        self.set_force(rel_position+target_velocity*event['dt'],
-                         self.max_speed)
+        direction=rel_position+target_velocity*event['dt']
+        #Normalize
+        try:
+            direction=direction*1.0/sqrt(dot(direction, direction))
+        except FloatingPointError:
+            pass
+
+        return direction
 
