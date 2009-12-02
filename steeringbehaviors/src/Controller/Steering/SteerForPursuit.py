@@ -2,13 +2,18 @@
 Created on Saturday, November 28 2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal 
-Last Edit: Sunday, November 29 2009
+Last Edit: Wednesday, December 02 2009
 '''
 
 from numpy import sqrt, dot
 from SteerController import SteerController
 
 class SteerForPursuit(SteerController):
+    '''
+    Steers the entity towards the estimated next positionof the target
+    WARNING: It may not work as desired after Wednesday, December 02 2009
+    TODO: Verify
+    '''
 
     def __init__(self, model, entity_id):
         SteerController.__init__(self, model, entity_id)
@@ -18,7 +23,7 @@ class SteerForPursuit(SteerController):
         target_id=self.target_entity_id
         entity_id=self.entity_id
         
-        rel_position=self.get_relative_position()
+        rel_position=self.get_relative_position(target_id)
         
         target_velocity=self.get_rel_velocity(target_id)
         

@@ -2,7 +2,7 @@
 Created on Tuesday, December 01 2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal 
-Last Edit: Tuesday, December 01 2009
+Last Edit: Wednesday, December 02 2009
 '''
 
 from numpy import sqrt, dot, array
@@ -11,6 +11,8 @@ from SteerController import SteerController
 class SteerForFlock(SteerController):
     '''
     A controller that flocks.
+    WARNING: After Wednesday, December 02 2009 it may not work as desired
+    TODO: Verify 
     '''
     from SteerForCohesion import SteerForCohesion
     from SteerForSeparation import SteerForSeparation

@@ -2,7 +2,7 @@
 Created on 08/11/2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal
-Last edit: Tuesday, December 01 2009
+Last edit: Wednesday, December 02 2009
 '''
 from numpy import sqrt, dot, array, cos , sin, pi
 '''TODO: Dehack this. Probably must create/find an abstract vector class with v.norm() to avoid using directly'''
@@ -48,22 +48,26 @@ class SteerController(Controller):
     ###################
 
     # Setter methods        
-    def set_force(self, rel_position, max_speed):
+    def set_force(self, rel_position, max_speed=0.0):
         '''
         TODO: Change this method. set_force should have an argument that is a 
         force. Not the elements to build that force 
         (also change names of arguments)
         '''
-
+        '''
+        This function receives the force vector to be applied
+        '''
         model=self.model
         entity_id=self.entity_id
         
         # Normalize the relative position vector
+        # JPi: Idem as below, this is not needed
+        '''
         try:
             rel_position=rel_position*1.0/sqrt(dot(rel_position, rel_position))
         except FloatingPointError:
             pass
-            
+        '''    
         try:
             model.detach_force(entity_id, self.last_force)
             
@@ -71,22 +75,26 @@ class SteerController(Controller):
             pass
         
         # store the current id of the force for future references
-        self.last_force = model.apply_force(entity_id, rel_position*max_speed -\
-                        model.get_velocity(entity_id))
+        # JPi: Changed this based on the e-mail of Wednesday, December 02 2009
+        # it comes from the refactoring of SteerForSeek
+#        self.last_force = model.apply_force(entity_id, rel_position*max_speed -\
+ #                       model.get_velocity(entity_id))
+ 
+        self.last_force = model.apply_force(entity_id, rel_position)
 
     ###################
 
     # Getter methods        
     
-    def get_relative_position(self):
-        entity_id = self.entity_id
-        
+    # JPi: The default argument is to ensure that this function works with
+    # the new interface. All default arguments should go away!
+    def get_relative_position(self,target_id=None):
         if self.targeting_entity:
-            rel_position = self.model.get_relative_position(entity_id, 
-                           self.target_entity_id)
+            rel_position = self.model.get_relative_position(self.entity_id, 
+                           target_id)
         else:
             rel_position = self.target_position - \
-                           self.model.get_position(entity_id)
+                           self.model.get_position(self.entity_id)
                            
                                                       
         return rel_position

@@ -2,7 +2,7 @@
 Created on Sunday, November 29 2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal 
-Last Edit: Tuesday, December 01 2009
+Last Edit: Wednesday, December 02 2009
 '''
 
 from numpy import sqrt, dot,array
@@ -11,7 +11,9 @@ from SteerController import SteerController
 class SteerForAling(SteerController):
     '''
     Alings the unit to the average aligment.
-    WARNING: using velocity as the direction vector
+    WARNING: The force is normalized
+    WARNING: After Wednesday, December 02 2009 may not work as desired
+    TODO: Verify
     '''
     def __init__(self, model, entity_id):
         SteerController.__init__(self, model, entity_id)

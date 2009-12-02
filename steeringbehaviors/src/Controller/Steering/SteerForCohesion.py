@@ -2,13 +2,19 @@
 Created on Sunday, November 29 2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal 
-Last Edit: Tuesday, December 01 2009
+Last Edit: Wednesday, December 02 2009
 '''
 
 from numpy import sqrt, dot, array
 from SteerController import SteerController
 
 class SteerForCohesion(SteerController):
+    '''
+    Steers the entity towards the centriod of its neighbors.
+    WARNING: At the moment the force is normalized
+    WARNING: After Wednesday, December 02 2009 may not work as desired
+    TODO: Verify
+    '''
 
     def __init__(self, model, entity_id):
         SteerController.__init__(self, model, entity_id)
