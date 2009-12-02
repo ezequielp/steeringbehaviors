@@ -10,8 +10,8 @@ from SteerController import SteerController
 class SteerForFlee(SteerController):
     '''
        Is just the opposite of SteerForSeek
-       WARNING: AFter Wednesday, December 02 2009 it may not work as desired
-       TOD:Verify
+       Verified: Wednesday, December 02 2009 - Is working
+       TODO: Here damping is in the force itself... 
     '''
     def __init__(self, model, entity_id):
         SteerController.__init__(self, model, entity_id)

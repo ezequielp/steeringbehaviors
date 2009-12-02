@@ -11,22 +11,31 @@ from SteerForSeek import SteerForSeek
 class SteerForArrive(SteerForSeek):
     '''
       Stops on arrival
-      WARNING: THis function maynot work after the change of set_force on
-      Wednesday, December 02 2009.
-      TODO: Verify
+      Verified: Wednesday, December 02 2009 - Is working
+      TODO: Improve the approahcing, could be an error there
     '''
     def __init__(self,model, entity_id):
         SteerForSeek.__init__(self, model, entity_id)
         self.slowing_distance=500
-        
+
     def update(self, event=None):
+        # TODO: Parametrize this
+        force=self.get_force(event)
+        # Desired call
+        #self.set_force(force)
+        
+        # Emulating damping
+        self.set_force(20*force-self.get_abs_velocity(self.entity_id))        
+        
+    def get_force(self, event=None):
         rel_position=self.get_relative_position(self.target_entity_id)
            
         distance=sqrt(dot(rel_position, rel_position))
         slowing_distance=self.slowing_distance
         if distance>slowing_distance:
-            SteerForSeek.update(self, event)
+            force=SteerForSeek.get_force(self, event)
         else:
-            self.set_force(rel_position, 
-                           self.max_speed*distance/slowing_distance)
+            force=rel_position*self.max_speed/slowing_distance
+            # was: set_force(rel_position,self.max_speed*distance/slowing_distance)
+        return force
 
