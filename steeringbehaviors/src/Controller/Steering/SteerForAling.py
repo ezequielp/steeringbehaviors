@@ -5,7 +5,7 @@ Created on Sunday, November 29 2009
 Last Edit: Tuesday, December 01 2009
 '''
 
-from numpy import sqrt, dot
+from numpy import sqrt, dot,array
 from SteerController import SteerController
 
 class SteerForAling(SteerController):
@@ -29,7 +29,7 @@ class SteerForAling(SteerController):
         try:
             force= force/sqrt(dot(force,force))
         except FloatingPointError:
-            pass
+            return array((0.0,0.0))
        
         #Return the force
         return force

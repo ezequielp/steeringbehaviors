@@ -36,7 +36,8 @@ class SteerForSeparation(SteerController):
             try:     
                 force += rel_position/norm2
             except FloatingPointError:
-                force += rel_position
+                pass#force += rel_position
+        
         
         #Return the force
         return force

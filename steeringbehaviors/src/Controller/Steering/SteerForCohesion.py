@@ -17,13 +17,13 @@ class SteerForCohesion(SteerController):
     
     def update(self, event=None):
         force=self.get_force()
+        
         self.set_force(force, self.max_speed)
         
     def get_force(self):
         
         center=self.get_neighbors_centriod()
 
-        #Esta bien esto?
         self.set_target_position(center)
        
         # Gets the vector pointing to the target
@@ -32,6 +32,7 @@ class SteerForCohesion(SteerController):
         try:
             rel_position=rel_position/sqrt(dot(rel_position, rel_position))
         except FloatingPointError:
+            
             pass
         #Return the force
         return rel_position

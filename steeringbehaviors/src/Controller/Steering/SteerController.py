@@ -124,7 +124,7 @@ class SteerController(Controller):
         '''
         heading=self.model.get_ang(entity_id)
             
-        return array(cos(heading),sin(heading))
+        return array((cos(heading),sin(heading)))
         
      ########
      # Getters for grupal based steering
@@ -152,5 +152,5 @@ class SteerController(Controller):
                                                         get_set=False)
         
         
-        return array(cos(heading),sin(heading))
+        return array((cos(heading),sin(heading)))
 

@@ -350,9 +350,13 @@ class PhysicsModel(Model):
                     
         to_average=list()
         angle=self.entities[ent_id].ang
-        lower_angle=(angle-aperture)%2*pi
-        higher_angle=(angle+aperture)%2*pi 
+        lower_angle=-aperture
+        higher_angle=aperture
+        sin_ang=sin(angle)
+        cos_ang=cos(angle)
         for ent in self.entities:
+            if ent.id==ent_id:
+                continue
             rel_position=ent.position-position
             dx=rel_position[0]
             dy=rel_position[1]
@@ -365,10 +369,13 @@ class PhysicsModel(Model):
             if distance2>radius*radius:
                 #skip if outside the circle of radius radius
                 continue
-                    
-            relative_ang=vector2angle(rel_position)%2*pi
+                  
+            rot_rel_pos=array((rel_position[0]*cos_ang+rel_position[1]*sin_ang, -rel_position[0]*sin_ang +rel_position[1]*cos_ang ))
             
-            if lower_angle<relative_ang<higher_angle:
+            relative_ang=vector2angle(rel_position)
+            rot_rel_ang=vector2angle(rot_rel_pos)
+            
+            if lower_angle<rot_rel_ang<higher_angle:
                 if get_set:
                     in_range.add(ent.id)
                 if get_CM and get_heading:
@@ -382,8 +389,10 @@ class PhysicsModel(Model):
           
         try:
             average=reduce(add, to_average)*1.0/len(to_average)
+            
         except TypeError:
-            in_range=set()
+            
+           
             if get_CM and get_heading:
                 average=concatenate(self.entities[ent_id].position, array((0.0,0.0)))
             elif get_CM:

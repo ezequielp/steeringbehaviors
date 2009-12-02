@@ -24,12 +24,13 @@ class SteerForFlock(SteerController):
                
     def update(self, event=None):
         force=self.get_force()
+        
         self.set_force(force, self.max_speed)
         
     def get_force(self):
         
         force= self.aling.get_force() +self.group.get_force() + \
               self.avoid.get_force()
-
+        
         return force
                
