@@ -12,15 +12,14 @@ class SteerForAling(SteerController):
     '''
     Alings the unit to the average aligment.
     WARNING: The force is normalized
-    WARNING: After Wednesday, December 02 2009 may not work as desired
-    TODO: Verify
+    Verified: Wednesday, December 02 2009 - Is working
     '''
     def __init__(self, model, entity_id):
         SteerController.__init__(self, model, entity_id)
                 
     def update(self, event=None):
         force=self.get_force()
-        self.set_force(force, self.max_speed)
+        self.set_force(force)
         
     def get_force(self):
         
