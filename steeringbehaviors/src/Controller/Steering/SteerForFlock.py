@@ -16,11 +16,11 @@ class SteerForFlock(SteerController):
     '''
     from SteerForCohesion import SteerForCohesion
     from SteerForSeparation import SteerForSeparation
-    from SteerForAling import SteerForAling
+    from SteerForAlign import SteerForAlign
     
     def __init__(self, model, entity_id):
         SteerController.__init__(self, model, entity_id)
-        self.aling=self.SteerForAling(model, entity_id)
+        self.aling=self.SteerForAlign(model, entity_id)
         self.group=self.SteerForCohesion(model, entity_id)
         self.avoid=self.SteerForSeparation(model, entity_id)
                
@@ -31,8 +31,8 @@ class SteerForFlock(SteerController):
         
     def get_force(self):
         
-        force= 100*self.aling.get_force() + 20*self.group.get_force() + \
-              200*self.avoid.get_force() 
+        force= 200*self.avoid.get_force()+20*self.group.get_force()+100*self.aling.get_force()  
+              
         
         return force
                

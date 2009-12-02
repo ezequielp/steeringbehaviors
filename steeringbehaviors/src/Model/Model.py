@@ -375,7 +375,7 @@ class PhysicsModel(Model):
             relative_ang=vector2angle(rel_position)
             rot_rel_ang=vector2angle(rot_rel_pos)
             
-            if lower_angle<rot_rel_ang<higher_angle:
+            if lower_angle<=rot_rel_ang<=higher_angle:
                 if get_set:
                     in_range.add(ent.id)
                 if get_CM and get_heading:

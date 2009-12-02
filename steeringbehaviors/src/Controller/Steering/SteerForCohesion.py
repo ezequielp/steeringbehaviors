@@ -28,11 +28,12 @@ class SteerForCohesion(SteerController):
     def get_force(self):
         
         center=self.get_neighbors_centriod()
-
+        
         self.set_target_position(center)
-       
+        
         # Gets the vector pointing to the target
         rel_position=self.get_relative_position()
+       
         # Normalize
         try:
             rel_position=rel_position/sqrt(dot(rel_position, rel_position))

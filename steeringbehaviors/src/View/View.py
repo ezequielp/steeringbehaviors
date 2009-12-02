@@ -164,7 +164,7 @@ class PygameViewer(View2D):
             TopDownSprite.__init__(self, self.original_image, 0)
             #If the shape is a circle, ignore rotation angles
             if shape!='o':
-                self.allow_angles(36)
+                self.allow_angles(72)
             else:
                 self.allow_angles(1)
             

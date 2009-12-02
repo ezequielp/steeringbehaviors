@@ -8,7 +8,7 @@ Last Edit: Wednesday, December 02 2009
 from numpy import sqrt, dot,array
 from SteerController import SteerController
 
-class SteerForAling(SteerController):
+class SteerForAlign(SteerController):
     '''
     Alings the unit to the average aligment.
     WARNING: The force is normalized
@@ -24,7 +24,7 @@ class SteerForAling(SteerController):
     def get_force(self):
         
         heading=self.get_neighbors_heading()
-
+        print self.entity_id,heading
         force=heading-self.get_heading_vec(self.entity_id)
         
         try:
