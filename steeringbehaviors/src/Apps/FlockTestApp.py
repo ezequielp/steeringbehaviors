@@ -17,9 +17,9 @@ class FlockTestApp():
         
         self.steering_entities=set()
        
-        #self.add_in_square(SteerForFlock)
-        self.AddSteeringEntity(SteerForFlock,number=10,color='g')
-        self.AddSteeringEntity(SteerForFlock,number=6,color='r')
+        self.add_in_square(SteerForFlock)
+        #self.AddSteeringEntity(SteerForFlock,number=10,color='g')
+        #self.AddSteeringEntity(SteerForFlock,number=6,color='r')
         
         #Left click ends app
         event_handler.bind(self.on_mouse_left_up, mouse.MOUSE_BTN3_UP)
@@ -43,7 +43,7 @@ class FlockTestApp():
     def add_in_square(self, Behavior, color='r', shape='s'):
         side=50.0
         for pos in [(side,side),(2*side,side),(side,2*side),(2*side,2*side)]:
-            seeking_entity=self.world.add_entity(pos,(0.0,0.0))
+            seeking_entity=self.world.add_entity(pos,(100.0,100.0))
             self.screen.add_entity(seeking_entity, trace=False,size=8,color=color, shape=shape)
             flock=Behavior(self.world, seeking_entity)
             self.steering_entities.add(flock)

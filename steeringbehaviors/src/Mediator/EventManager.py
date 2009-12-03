@@ -5,12 +5,14 @@ Created on 14/11/2009
 TODO: create some events.
 '''
 
+from Tools.orderedset import OrderedSet as orderedset
+
 class EventManager(object):
     '''This object will mediate most communication between model, view and controller
    
     
     '''
-    from Tools.WeakRefSet import WeakSet, WeakMethod
+    from Tools.WeakRefSet import WeakMethod
 
 
     def __init__(self):
@@ -23,7 +25,7 @@ class EventManager(object):
         self.ALL_EVENTS=self.new_event_type()
         
     def new_event_type(self):
-        self.listeners[self._registered_events]=set()
+        self.listeners[self._registered_events]=orderedset()
         self._registered_events+=1
         return self._registered_events-1
     
