@@ -58,6 +58,7 @@ class EventManager(object):
         Sends event to all listeners
         
         Event must be an event or a list
+        TODO: decouple posting and actual delivery of events (Add instant priority too)
         '''
         
         if not isinstance(event, list):
