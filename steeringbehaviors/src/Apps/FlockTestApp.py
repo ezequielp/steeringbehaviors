@@ -17,9 +17,9 @@ class FlockTestApp():
         
         self.steering_entities=set()
        
-        self.add_in_square(SteerForFlock)
-        #self.AddSteeringEntity(SteerForFlock,number=10,color='g')
-        #self.AddSteeringEntity(SteerForFlock,number=6,color='r')
+        #self.add_in_square(SteerForFlock)
+        self.AddSteeringEntity(SteerForFlock,number=10,color='g')
+        self.AddSteeringEntity(SteerForFlock,number=6,color='r')
         
         #Left click ends app
         event_handler.bind(self.on_mouse_left_up, mouse.MOUSE_BTN3_UP)

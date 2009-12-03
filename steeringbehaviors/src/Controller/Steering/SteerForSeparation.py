@@ -28,7 +28,7 @@ class SteerForSeparation(SteerController):
 
         #TODO: Is this somewhere?
         force=array([0.0,0.0])
-
+        
         for neighbor in others_id:
             self.target_entity(neighbor)
             

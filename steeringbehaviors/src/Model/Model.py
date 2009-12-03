@@ -139,7 +139,8 @@ class PhysicsModel(Model):
         self.grabbed=set()
         self.reference_clock=0
         self.velocity_estimator=dict()
-          
+        self.precalculated=dict()
+        
     def on_update(self, event):
         self.update(event['dt'])
 
@@ -261,6 +262,8 @@ class PhysicsModel(Model):
         rel2global_f=np.array([0.0,0.0])
         grabbed=self.grabbed
         
+        #Erases precalculated neighbour values
+        self.precalculated=dict()
         # TODO: Where do we put this?
         # Ezequiel: Here?
         dt_sec=dt
@@ -342,7 +345,7 @@ class PhysicsModel(Model):
                 ent.old_position=ent.position
                 ent.position=new_position
             
-    def get_in_cone_of_vision(self, ent_id, radius, aperture, get_CM=True, get_heading=False, get_set=False):
+    def get_in_cone_of_vision_old(self, ent_id, radius, aperture, get_CM=True, get_heading=False, get_set=False):
         '''
         Calculates averages for all entities in a cone of vision of the given entity.
         Returns the average of the requested magnitudes in the following order (skiped if not requested):
@@ -426,5 +429,71 @@ class PhysicsModel(Model):
             else:
                 return 
                 
+    def get_in_cone_of_vision(self, ent_id, radius, aperture, get_CM=True, get_heading=False, get_set=False):
+        '''
+        Calculates averages for all entities in a cone of vision of the given entity.
+        Returns the average of the requested magnitudes in the following order (skiped if not requested):
+        CM, Heading
+        and an optional set of entity on the cone.
+        '''
+        position=self.entities[ent_id].position
+        
+        try:
+            average, in_range=self.precalculated[ent_id]
+        except KeyError:
+            in_range=set()      
+            to_average=list()
+            angle=self.entities[ent_id].ang
+            lower_angle=-aperture
+            higher_angle=aperture
+            sin_ang=sin(angle)
+            cos_ang=cos(angle)
+            for ent in self.entities:
+                if ent.id==ent_id:
+                    continue
+                rel_position=ent.position-position
+                dx=rel_position[0]
+                dy=rel_position[1]
                 
+                if dx>radius or dx<-radius or dy>radius or dy<-radius:
+                    #Skip if entity is outside a box that contains the circle of radius radius
+                    continue
+                distance2=dx*dx+dy*dy
+                
+                if distance2>radius*radius:
+                    #skip if outside the circle of radius radius
+                    continue
+                      
+                rot_rel_pos=array((rel_position[0]*cos_ang+rel_position[1]*sin_ang, -rel_position[0]*sin_ang +rel_position[1]*cos_ang ))
+                
+                #relative_ang=vector2angle(rel_position)
+                rot_rel_ang=vector2angle(rot_rel_pos)
+                
+                if lower_angle<=rot_rel_ang<=higher_angle:
+                    
+                    to_average.append(concatenate((ent.position, array((cos(ent.ang), sin(ent.ang))))))
+                    
+              
+            average=reduce(add, to_average)*1.0/len(to_average)
+              
+            self.precalculated[ent_id]=average, in_range
             
+        
+        
+        return_values=list()
+        if get_CM:
+            cm=average[0:2]
+            return_values.append(cm)
+        if get_heading:
+            heading=vector2angle((average[2], average[3]))
+            return_values.append(heading)
+        if get_set:
+            return_values.append(in_range)
+        
+        if len(return_values)==1:
+            return return_values[0]
+        if len(return_values)==2:
+            return return_values[0], return_values[1]
+        if len(return_values)==3:
+            return return_values[0], return_values[1], return_values[2]
+        return None
