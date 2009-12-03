@@ -31,7 +31,7 @@ class SteerForFlock(SteerController):
         
     def get_force(self):
         
-        force= 200*self.avoid.get_force()+20*self.group.get_force()+100*self.aling.get_force()  
+        force= 100*self.aling.get_force()+200*self.avoid.get_force()+20*self.group.get_force()
               
         
         return force

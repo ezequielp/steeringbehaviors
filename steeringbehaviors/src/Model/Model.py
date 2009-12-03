@@ -258,13 +258,15 @@ class PhysicsModel(Model):
         3. actualize acclereacion a(t+1)=f(x(t+1))/m
         4. actualize velocidad v(t+1)=v(t+1/2)+a(t+1)*dt/2
         '''
-        rel2global_f=np.array([0,0])
+        rel2global_f=np.array([0.0,0.0])
         grabbed=self.grabbed
         
         # TODO: Where do we put this?
+        # Ezequiel: Here?
         dt_sec=dt
         self.reference_clock+=dt
         dt_2=dt_sec/2
+        
         
         for ent in self.entities:
             #TODO: Store the state of all the entities in a matrix and update
@@ -296,6 +298,7 @@ class PhysicsModel(Model):
                
                 # Update vel(t+1)
                 ent.velocity=v_2+force*dt_2
+                ent.ang=vector2angle(v_2)
                 
             elif Heun_f_integrator:
                 '''
@@ -306,12 +309,14 @@ class PhysicsModel(Model):
                 # I don't think is the algorithm above, but lets see.
                 # I think the algorithm is keeping track of the predictor and
                 # the corrector, while I am just doing it for one time step.
+                
+                
                 ppos=ent.position+ent.velocity*dt_sec
                 pvel=ent.velocity+force*dt_sec
                 cpos=ent.position+pvel*dt_sec
                 
                 ang=vector2angle(pvel)
-                R=rotv(array((0,0,1)), ang)[0:2,0:2]
+                R=rotv(array((0.0,0.0,1.0)), ang)[0:2,0:2]
                 rel2global_f=np.dot(R, ent.total_relative_force)
                 force=(ent.total_force + rel2global_f)
                 

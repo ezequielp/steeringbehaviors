@@ -24,14 +24,15 @@ class SteerForAlign(SteerController):
     def get_force(self):
         
         heading=self.get_neighbors_heading()
-        print self.entity_id,heading
+        
         force=heading-self.get_heading_vec(self.entity_id)
         
         try:
             force= force/sqrt(dot(force,force))
         except FloatingPointError:
             return array((0.0,0.0))
-       
+        
+        
         #Return the force
         return force
                
