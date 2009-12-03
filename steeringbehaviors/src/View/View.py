@@ -52,7 +52,9 @@ class View2D(View):
        
         # JPi: How do we define private variables and methods?
         # 18.11.09 : Prefix "_" means private
-        self._sprites=np.array([])
+        # It is not really private. You can still access it if you have an instance of the obj
+        # But it is private to the child I think.
+        #self._sprites=np.array([])
         self._project=rp.Transformation()
     
  

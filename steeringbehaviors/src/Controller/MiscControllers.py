@@ -43,17 +43,28 @@ class PygCPUSpinner(CPUSpinner):
         
         
         
-    def run(self):
+    def run(self, total_time=None):
+        '''
+        total_time is time in seconds to keep ticking
+        '''
         eh=self.event_handler
         TICK=self.TICK
         self.running=True
+        if total_time!=None:
+            current_time=0
+            
+        dt=1.0/self.fps
         while self.running:
             '''TODO: Multifps ticking'''
             self.pygame.event.pump()
-            dt=self.clock.tick(self.fps)*1.0/1000
+            self.clock.tick(self.fps)*1.0/1000
             
             eh.post({'Type': TICK, 'dt': dt})
-            
+            if total_time!=None:
+                current_time+=dt
+                
+                if current_time>total_time:
+                    self.stop()
             
             
     def stop(self):
