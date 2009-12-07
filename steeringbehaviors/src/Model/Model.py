@@ -206,6 +206,7 @@ class PhysicsModel(Model):
         entity.position=array(position)
         entity.velocity=array(velocity)
         entity.id=len(self.entities)-1
+        entity.ang=vector2angle(velocity)
         return len(self.entities) -1
 
     def on_damage(self, event):

@@ -131,7 +131,7 @@ class SteerController(Controller):
          WARNING: At the moment is the velocity
         '''
         heading=self.model.get_ang(entity_id)
-            
+        print "Self:", entity_id, heading
         return array((cos(heading),sin(heading)))
         
      ########
@@ -158,6 +158,6 @@ class SteerController(Controller):
                                                         get_heading = True,
                                                         get_set=False)
         
-        print array((cos(heading),sin(heading)))
+        print "neightbours:", self.entity_id, heading
         return array((cos(heading),sin(heading)))
 
