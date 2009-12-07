@@ -2,7 +2,7 @@
 Created on 16/11/2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal
-Last edit: Tuesday, December 01 2009
+Last edit: Monday, December 07 2009
 '''
 from __future__ import division
 import numpy as np
@@ -11,10 +11,10 @@ from math import sin,cos,pi
 from Tools.LinAlgebra_extra import rotv, vector2angle
 
 np.seterr(all='raise')
-verlet_v_integrator=False
+verlet_v_integrator=True
 verlet_friction=False
 
-Heun_f_integrator=True
+Heun_f_integrator=False
 MAXSPEED=300
 
 class Model(object):
@@ -472,8 +472,9 @@ class PhysicsModel(Model):
                 if lower_angle<=rot_rel_ang<=higher_angle:
                     
                     to_average.append(concatenate((ent.position, array((cos(ent.ang), sin(ent.ang))))))
-                    
-              
+                    in_range.add(ent.id)
+            
+            #TODO: When to_average is empty reduce() gives an error  
             average=reduce(add, to_average)*1.0/len(to_average)
               
             self.precalculated[ent_id]=average, in_range

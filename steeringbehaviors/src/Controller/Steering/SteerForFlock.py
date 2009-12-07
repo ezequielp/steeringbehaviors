@@ -27,12 +27,13 @@ class SteerForFlock(SteerController):
     def update(self, event=None):
         force=self.get_force()
         
-        self.set_force(10*force-self.get_abs_velocity(self.entity_id))
+        self.set_force(1*force-0.0*self.get_abs_velocity(self.entity_id))
         
     def get_force(self):
         
-        force= 100*self.aling.get_force()+200*self.avoid.get_force()+20*self.group.get_force()
-              
+        force= 0*self.group.get_force() + \
+               0*self.avoid.get_force()+ \
+               50*self.aling.get_force()
         
         return force
                

@@ -25,7 +25,7 @@ class SteerForSeparation(SteerController):
     def get_force(self):
         
         others_id=self.get_neighbors_id()
-
+        
         #TODO: Is this somewhere?
         force=array([0.0,0.0])
         
@@ -38,6 +38,7 @@ class SteerForSeparation(SteerController):
             # Square norm
 
             norm2=dot(rel_position, rel_position)
+
             try:     
                 force += rel_position/norm2
             except FloatingPointError:

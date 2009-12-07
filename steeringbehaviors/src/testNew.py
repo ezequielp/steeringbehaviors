@@ -22,7 +22,7 @@ class Test():
         
     
     def run(self):
-        for test in [self.FlockTest, self.RestartModelView, self.AddRemoveEntities, self.RandomMove, self.DragNDrop, self.PursuitTest, self.CombinedTest, self.ShootingTest]:
+        for test in [ self.FlockTest, self.FlockDebug, self.RestartModelView, self.AddRemoveEntities, self.RandomMove, self.DragNDrop, self.PursuitTest, self.CombinedTest, self.ShootingTest]:
             self.prepareWorld(self.EventManager, self.PhysicsModel, self.Viewer, self.MouseController, self.CPUSpinner, self.KeyboardController)
             test()
         
@@ -127,7 +127,12 @@ class Test():
                                         self.mouse, self.spinner, self.keyboard)
         test.run()
     
- 
+    def FlockDebug(self):
+        from Apps.FlockDebug import FlockTestApp
+        test=FlockTestApp(self.event_handler, self.world, self.screen, 
+                                        self.mouse, self.spinner, self.keyboard)
+        test.run()
+
 if __name__ == '__main__':    
     
     from View.View import PygameViewer
