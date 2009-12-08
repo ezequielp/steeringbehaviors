@@ -127,12 +127,25 @@ class SteerController(Controller):
     
     def get_heading_vec(self,entity_id):
         '''
-         Returns the normalized vector representing the heading of the unit
-         WARNING: At the moment is the velocity
+         Returns the normalized vector representing the heading of the entity
         '''
         heading=self.model.get_ang(entity_id)
-        print "Self:", entity_id, heading
+#        print "Self:", entity_id, heading
         return array((cos(heading),sin(heading)))
+
+    def get_course_vec(self,entity_id):
+        '''
+         Returns the normalized vector representing the course of the entity, 
+         i.e. the normalized velocity
+        '''
+        course=self.get_abs_velocity(entity_id)
+        try:
+            course=course/sqrt(dot(course,course))
+        except FloatingPointError:
+            # If course is zero leave it zero
+            pass
+            
+        return course
         
      ########
      # Getters for grupal based steering
@@ -158,6 +171,10 @@ class SteerController(Controller):
                                                         get_heading = True,
                                                         get_set=False)
         
-        print "neightbours:", self.entity_id, heading
+#        print "neightbours:", self.entity_id, heading
         return array((cos(heading),sin(heading)))
+
+    def get_neighbors_course(self,weights=None):
+        #TODO: Implement in model
+        pass
 
