@@ -153,8 +153,8 @@ class SteerController(Controller):
         neighbors = self.model.get_neighbours(self.entity_id)
         return neighbors
         
-    def get_neighbors_centriod(self,weights=None):
-        centroid = self.model.get_neighbour_centriod(self.entity_id)
+    def get_neighbors_centroid(self,weights=None):
+        centroid = self.model.get_neighbour_centroid(self.entity_id)
         return centroid
         
     def get_neighbors_heading(self,weights=None):

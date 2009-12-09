@@ -27,7 +27,7 @@ class SteerForCohesion(SteerController):
         
     def get_force(self):
         
-        center=self.get_neighbors_centriod()
+        center=self.get_neighbors_centroid()
         
         self.set_target_position(center)
         
