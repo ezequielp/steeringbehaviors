@@ -143,6 +143,7 @@ class PhysicsModel(Model):
         self._heading=dict()
         self._direction=dict()
         self._neighbours=dict()
+        self.sensors=dict()
         
     def on_update(self, event):
         self.update(event['dt'])
