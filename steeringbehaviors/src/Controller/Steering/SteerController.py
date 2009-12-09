@@ -151,30 +151,18 @@ class SteerController(Controller):
      # Getters for grupal based steering
      
     def get_neighbors_id(self):
-        neighbors = self.model.get_in_cone_of_vision (self.entity_id, 500,
-                                                        pi, get_set=True,
-                                                        get_CM = False, 
-                                                        get_heading = False)
+        neighbors = self.model.get_neighbours(self.entity_id)
         return neighbors
         
     def get_neighbors_centriod(self,weights=None):
-        centroid = self.model.get_in_cone_of_vision (self.entity_id, 500,
-                                                        pi, get_set=False,
-                                                        get_CM = True, 
-                                                        get_heading = False)
-        
+        centroid = self.model.get_neighbour_centriod(self.entity_id)
         return centroid
         
     def get_neighbors_heading(self,weights=None):
-        heading = self.model.get_in_cone_of_vision (self.entity_id, 500,
-                                                         pi, get_CM = False,
-                                                        get_heading = True,
-                                                        get_set=False)
-        
-#        print "neightbours:", self.entity_id, heading
+        heading = self.model.get_neighbour_average_heading(self.entity_id)
         return array((cos(heading),sin(heading)))
 
     def get_neighbors_course(self,weights=None):
-        #TODO: Implement in model
-        pass
+        course = self.model.get_neighbour_average_direction(self.entity_id)
+        return course
 
