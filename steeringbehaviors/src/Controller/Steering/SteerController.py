@@ -130,7 +130,6 @@ class SteerController(Controller):
          Returns the normalized vector representing the heading of the entity
         '''
         heading=self.model.get_ang(entity_id)
-#        print "Self:", entity_id, heading
         return array((cos(heading),sin(heading)))
 
     def get_course_vec(self,entity_id):
@@ -160,7 +159,7 @@ class SteerController(Controller):
         
     def get_neighbors_heading(self,weights=None):
         heading = self.model.get_neighbour_average_heading(self.entity_id)
-        return array((cos(heading),sin(heading)))
+        return heading
 
     def get_neighbors_course(self,weights=None):
         course = self.model.get_neighbour_average_direction(self.entity_id)
