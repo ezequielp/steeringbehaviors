@@ -430,6 +430,19 @@ class PhysicsModel(Model):
             else:
                 return 
                 
+                
+    def get_neighbour_average_heading(self):
+        pass
+    
+    def get_neighbour_direction(self):
+        pass
+    
+    def get_neighbour_CM(self):
+        pass
+    
+    def get_neighbour(self):
+        pass
+    
     def get_in_cone_of_vision(self, ent_id, radius, aperture, get_CM=True, get_heading=False, get_set=False):
         '''
         Calculates averages for all entities in a cone of vision of the given entity.
