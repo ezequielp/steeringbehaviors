@@ -6,8 +6,8 @@ Last edit: Monday, December 07 2009
 '''
 from __future__ import division
 import numpy as np
-from numpy import add, dot, array, concatenate, sqrt
-from math import sin,cos
+from numpy import add, dot, array, concatenate, sqrt, sin, cos
+
 from Tools.LinAlgebra_extra import rotv, vector2angle
 
 np.seterr(all='raise')
