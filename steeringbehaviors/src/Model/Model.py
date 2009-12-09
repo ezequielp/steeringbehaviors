@@ -2,12 +2,12 @@
 Created on 16/11/2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal
-Last edit: Wednesday, December 09 2009
+Last edit: Monday, December 07 2009
 '''
 from __future__ import division
 import numpy as np
-from numpy import add, dot, array, concatenate
-from math import sin,cos,pi
+from numpy import add, dot, array, concatenate, sqrt
+from math import sin,cos
 from Tools.LinAlgebra_extra import rotv, vector2angle
 
 np.seterr(all='raise')
@@ -345,91 +345,7 @@ class PhysicsModel(Model):
                 
                 ent.old_position=ent.position
                 ent.position=new_position
-            
-    def get_in_cone_of_vision_old(self, ent_id, radius, aperture, get_CM=True, get_heading=False, get_set=False):
-        '''
-        Calculates averages for all entities in a cone of vision of the given entity.
-        Returns the average of the requested magnitudes in the following order (skiped if not requested):
-        CM, Heading
-        and an optional set of entity on the cone.
-        '''
-        position=self.entities[ent_id].position
-        if get_set:
-            in_range=set()
-                    
-        to_average=list()
-        angle=self.entities[ent_id].ang
-        lower_angle=-aperture
-        higher_angle=aperture
-        sin_ang=sin(angle)
-        cos_ang=cos(angle)
-        for ent in self.entities:
-            if ent.id==ent_id:
-                continue
-            rel_position=ent.position-position
-            dx=rel_position[0]
-            dy=rel_position[1]
-            
-            if dx>radius or dx<-radius or dy>radius or dy<-radius:
-                #Skip if entity is outside a box that contains the circle of radius radius
-                continue
-            distance2=dx*dx+dy*dy
-            
-            if distance2>radius*radius:
-                #skip if outside the circle of radius radius
-                continue
-                  
-            rot_rel_pos=array((rel_position[0]*cos_ang+rel_position[1]*sin_ang, -rel_position[0]*sin_ang +rel_position[1]*cos_ang ))
-            
-            relative_ang=vector2angle(rel_position)
-            rot_rel_ang=vector2angle(rot_rel_pos)
-            
-            if lower_angle<=rot_rel_ang<=higher_angle:
-                if get_set:
-                    in_range.add(ent.id)
-                if get_CM and get_heading:
-                    av_qty=concatenate(ent.position, array((cos(ent.ang), sin(ent.ang))))
-                elif get_heading:
-                    av_qty=array((cos(ent.ang), sin(ent.ang)))
-                elif get_CM:
-                    av_qty=ent.position
-                if get_CM or get_heading:
-                    to_average.append(av_qty)
-          
-        try:
-            average=reduce(add, to_average)*1.0/len(to_average)
-            
-        except TypeError:
-            
-           
-            if get_CM and get_heading:
-                average=concatenate(self.entities[ent_id].position, array((0.0,0.0)))
-            elif get_CM:
-                average=self.entities[ent_id].position
-            elif get_heading:
-                average=array((0.0,0.0))
-            
-        
-        
-        if get_set:
-            if get_CM and get_heading:
-                return average[0:2], vector2angle((average[2], average[3])), in_range
-            elif get_CM:
-                return average, in_range
-            elif get_heading:
-                return vector2angle((average[0], average[1])), in_range
-            else:
-                return in_range
-        else:
-            if get_CM and get_heading:
-                return average[0:2], vector2angle((average[2], average[3]))
-            elif get_heading:
-                return vector2angle((average[0], average[1]))
-            elif get_CM:
-                return average
-            else:
-                return 
-                
+ 
                 
     def get_neighbour_average_heading(self, ent_id):
         try:
@@ -475,72 +391,57 @@ class PhysicsModel(Model):
         
     def precalculate(self, ent_id):
         '''
-        Calculates averages for all entities in a cone of vision of the given entity.
-        Returns the average of the requested magnitudes in the following order (skiped if not requested):
-        CM, Heading
-        and an optional set of entity on the cone.
-        TO BE DELETED FROM INTERFACE
+        Calculates averages for all entities in sensor range of the given entity.
+        DO NOT CALL DIRECTLY
         '''
+        radius, aperture=self.sensors[ent_id]
         
         position=self.entities[ent_id].position
-        
-        try:
-            average, in_range=self.precalculated[ent_id]
-        except KeyError:
-            in_range=set()      
-            to_average=list()
-            angle=self.entities[ent_id].ang
-            lower_angle=-aperture
-            higher_angle=aperture
-            sin_ang=sin(angle)
-            cos_ang=cos(angle)
-            for ent in self.entities:
-                if ent.id==ent_id:
-                    continue
-                rel_position=ent.position-position
-                dx=rel_position[0]
-                dy=rel_position[1]
+        in_range=set()   
+        to_average=list()   
+        angle=self.entities[ent_id].ang
+        lower_angle=-aperture
+        higher_angle=aperture
+        sin_ang=sin(angle)
+        cos_ang=cos(angle)
+        for ent in self.entities:
+            if ent.id==ent_id:
+                continue
+            rel_position=ent.position-position
+            dx=rel_position[0]
+            dy=rel_position[1]
                 
-                if dx>radius or dx<-radius or dy>radius or dy<-radius:
-                    #Skip if entity is outside a box that contains the circle of radius radius
-                    continue
-                distance2=dx*dx+dy*dy
+            if dx>radius or dx<-radius or dy>radius or dy<-radius:
+                #Skip if entity is outside a box that contains the circle of radius radius
+                continue
+            distance2=dx*dx+dy*dy
                 
-                if distance2>radius*radius:
-                    #skip if outside the circle of radius radius
-                    continue
+            if distance2>radius*radius:
+                #skip if outside the circle of radius radius
+                continue
                       
-                rot_rel_pos=array((rel_position[0]*cos_ang+rel_position[1]*sin_ang, -rel_position[0]*sin_ang +rel_position[1]*cos_ang ))
+            rot_rel_pos=array((rel_position[0]*cos_ang+rel_position[1]*sin_ang, -rel_position[0]*sin_ang +rel_position[1]*cos_ang ))
                 
-                #relative_ang=vector2angle(rel_position)
-                rot_rel_ang=vector2angle(rot_rel_pos)
+            #relative_ang=vector2angle(rel_position)
+            rot_rel_ang=vector2angle(rot_rel_pos)
                 
-                if lower_angle<=rot_rel_ang<=higher_angle:
+            if lower_angle<=rot_rel_ang<=higher_angle:
                     
-                    to_average.append(concatenate((ent.position, array((cos(ent.ang), sin(ent.ang))))))
-                    in_range.add(ent.id)
+                to_average.append(concatenate((ent.position, array((cos(ent.ang), sin(ent.ang))), ent.velocity)))
+                in_range.add(ent.id)
             
-            #TODO: When to_average is empty reduce() gives an error  
-            average=reduce(add, to_average)*1.0/len(to_average)
+        #TODO: When to_average is empty reduce() gives an error 
+         
+        average=reduce(add, to_average)*1.0/len(to_average)
               
-            self.precalculated[ent_id]=average, in_range
-            
+        self._centroid[ent_id]=average[0:2]
+        heading=average[2:4]
+        heading=heading/sqrt(dot(heading, heading))
+        self._heading[ent_id]=heading
+        direction=average[4:6]
+        direction=direction/sqrt(dot(direction, direction))
+        self._direction[ent_id]=direction
+        self._neighbours[ent_id]=in_range
+
         
         
-        return_values=list()
-        if get_CM:
-            cm=average[0:2]
-            return_values.append(cm)
-        if get_heading:
-            heading=vector2angle((average[2], average[3]))
-            return_values.append(heading)
-        if get_set:
-            return_values.append(in_range)
-        
-        if len(return_values)==1:
-            return return_values[0]
-        if len(return_values)==2:
-            return return_values[0], return_values[1]
-        if len(return_values)==3:
-            return return_values[0], return_values[1], return_values[2]
-        return None
