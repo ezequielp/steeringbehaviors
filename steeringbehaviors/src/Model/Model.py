@@ -139,7 +139,10 @@ class PhysicsModel(Model):
         self.grabbed=set()
         self.reference_clock=0
         self.velocity_estimator=dict()
-        self.precalculated=dict()
+        self._centroid=dict()
+        self._heading=dict()
+        self._direction=dict()
+        self._neighbours=dict()
         
     def on_update(self, event):
         self.update(event['dt'])
@@ -264,7 +267,11 @@ class PhysicsModel(Model):
         grabbed=self.grabbed
         
         #Erases precalculated neighbour values
-        self.precalculated=dict()
+
+        self._centroid=dict()
+        self._heading=dict()
+        self._direction=dict()
+        self._neighbours=dict()
         # TODO: Where do we put this?
         # Ezequiel: Here?
         dt_sec=dt
