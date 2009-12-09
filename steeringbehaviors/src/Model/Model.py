@@ -431,24 +431,31 @@ class PhysicsModel(Model):
                 return 
                 
                 
-    def get_neighbour_average_heading(self):
+    def get_neighbour_average_heading(self, ent_id):
         pass
     
-    def get_neighbour_direction(self):
+    def get_neighbour_direction(self, ent_id):
         pass
     
-    def get_neighbour_CM(self):
+    def get_neighbour_CM(self, ent_id):
         pass
     
-    def get_neighbour(self):
+    def get_neighbours(self, ent_id):
         pass
     
+    def set_neighbour_sensor(self, ent_id, radius, aperture):
+        '''
+        Defines a sensor for neighbor entities.
+        '''
+        
+        pass
     def get_in_cone_of_vision(self, ent_id, radius, aperture, get_CM=True, get_heading=False, get_set=False):
         '''
         Calculates averages for all entities in a cone of vision of the given entity.
         Returns the average of the requested magnitudes in the following order (skiped if not requested):
         CM, Heading
         and an optional set of entity on the cone.
+        TO BE DELETED FROM INTERFACE
         '''
         position=self.entities[ent_id].position
         
