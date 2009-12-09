@@ -432,24 +432,48 @@ class PhysicsModel(Model):
                 
                 
     def get_neighbour_average_heading(self, ent_id):
-        pass
+        try:
+            heading=self._heading[ent_id]
+        except KeyError:
+            self.precalculate(ent_id)
+            heading=self._heading[ent_id]
+            
+        return heading
     
-    def get_neighbour_direction(self, ent_id):
-        pass
+    def get_neighbour_average_direction(self, ent_id):
+        try:
+            direction =self._direction[ent_id]
+        except KeyError:
+            self.precalculate(ent_id)
+            direction =self._direction[ent_id]
+        
+        return direction
     
-    def get_neighbour_CM(self, ent_id):
-        pass
+    def get_neighbour_centroid(self, ent_id):
+        try:
+            centroid =self._centroid[ent_id]
+        except KeyError:
+            self.precalculate(ent_id)
+            centroid =self._centroid[ent_id]
+        
+        return centroid
     
     def get_neighbours(self, ent_id):
-        pass
+        try:
+            nb =self._neighbours[ent_id]
+        except KeyError:
+            self.precalculate(ent_id)
+            nb =self._neighbours[ent_id]
+        
+        return nb
     
     def set_neighbour_sensor(self, ent_id, radius, aperture):
         '''
         Defines a sensor for neighbor entities.
         '''
+        self.sensors[ent_id]=radius, aperture
         
-        pass
-    def get_in_cone_of_vision(self, ent_id, radius, aperture, get_CM=True, get_heading=False, get_set=False):
+    def precalculate(self, ent_id):
         '''
         Calculates averages for all entities in a cone of vision of the given entity.
         Returns the average of the requested magnitudes in the following order (skiped if not requested):
@@ -457,6 +481,7 @@ class PhysicsModel(Model):
         and an optional set of entity on the cone.
         TO BE DELETED FROM INTERFACE
         '''
+        
         position=self.entities[ent_id].position
         
         try:
