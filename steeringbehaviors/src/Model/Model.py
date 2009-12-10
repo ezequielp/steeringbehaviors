@@ -15,7 +15,9 @@ verlet_v_integrator=True
 verlet_friction=False
 
 Heun_f_integrator=False
-MAXSPEED=300
+MAXSPEED=300.0
+MAXFORCE=60.0 # 60 N/kg, universal law! :D
+DAMPING=1.0
 
 class Model(object):
     '''
@@ -71,6 +73,7 @@ class Model_Entity(object):
         self.total_relative_force=copy.deepcopy(zero_vector)
         self.zero_vector=zero_vector
         self.ang=0
+        self.max_force=MAXFORCE
         
     
     def apply_force(self, force):
@@ -154,6 +157,9 @@ class PhysicsModel(Model):
     def get_max_speed(self, entity_id):
         return MAXSPEED
 
+    def get_max_force(self,entity_id):
+        return self.entities[entity_id].max_force
+        
     def get_position(self, entity_id):
         return self.get_entity(entity_id).position
     
@@ -258,11 +264,7 @@ class PhysicsModel(Model):
     def update(self, dt):
         '''
         dt in seconds
-        Using:
-        1. actualize velocidad con aceleracion actual dt/2 -> v(t+1/2)=v(t)+a(t)*dt/2
-        2. actualize posicion x(t+1)=x(t)+v(t+1/2)*dt
-        3. actualize acclereacion a(t+1)=f(x(t+1))/m
-        4. actualize velocidad v(t+1)=v(t+1/2)+a(t+1)*dt/2
+        integrates equations of motion
         '''
         rel2global_f=np.array([0.0,0.0])
         grabbed=self.grabbed
@@ -295,7 +297,7 @@ class PhysicsModel(Model):
             rel2global_f = np.dot(R, ent.total_relative_force)                
 
             # Update the total force                    
-            force = (ent.total_force + rel2global_f)
+            force = (ent.total_force + rel2global_f) - DAMPING*ent.velocity
             
             if verlet_v_integrator:
                 # Update vel(t+1/2) and position pos(t+1)
@@ -306,7 +308,7 @@ class PhysicsModel(Model):
                 ang = ent.ang = vector2angle(v_2)
                 R = rotv(array((0,0,1)), ang)[0:2,0:2]
                 rel2global_f = np.dot(R, ent.total_relative_force)
-                force = (ent.total_force + rel2global_f)
+                force = (ent.total_force + rel2global_f) - DAMPING*ent.velocity
                
                 # Update vel(t+1)
                 ent.velocity = v_2 + force*dt_2
@@ -330,7 +332,7 @@ class PhysicsModel(Model):
                 ang=vector2angle(pvel)
                 R=rotv(array((0.0,0.0,1.0)), ang)[0:2,0:2]
                 rel2global_f=np.dot(R, ent.total_relative_force)
-                force=(ent.total_force + rel2global_f)
+                force=(ent.total_force + rel2global_f)- DAMPING*ent.velocity
                 
                 cvel=ent.velocity+force*dt_sec
 
