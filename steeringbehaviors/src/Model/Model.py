@@ -290,27 +290,27 @@ class PhysicsModel(Model):
             # Put the forces given in the entity frame into the global frame
             # TODO: Put this in a function. Soon the entties wont be points 
             #       anymore and more projections/rotations will be needed.
-            ang=ent.ang=vector2angle(ent.velocity)
-            R=rotv(array((0,0,1)), ang)[0:2,0:2]
-            rel2global_f=np.dot(R, ent.total_relative_force)                
+            ang = ent.ang = vector2angle(ent.velocity)
+            R = rotv(array((0,0,1)), ang)[0:2,0:2]
+            rel2global_f = np.dot(R, ent.total_relative_force)                
 
             # Update the total force                    
-            force=(ent.total_force + rel2global_f)
+            force = (ent.total_force + rel2global_f)
             
             if verlet_v_integrator:
                 # Update vel(t+1/2) and position pos(t+1)
-                v_2=ent.velocity+force*dt_2
-                ent.position=ent.position+v_2*dt_sec
+                v_2 = ent.velocity + force*dt_2
+                ent.position = ent.position + v_2*dt_sec
                
                 # Update forces
-                ang=ent.ang=vector2angle(v_2)
-                R=rotv(array((0,0,1)), ang)[0:2,0:2]
-                rel2global_f=np.dot(R, ent.total_relative_force)
-                force=(ent.total_force + rel2global_f)
+                ang = ent.ang = vector2angle(v_2)
+                R = rotv(array((0,0,1)), ang)[0:2,0:2]
+                rel2global_f = np.dot(R, ent.total_relative_force)
+                force = (ent.total_force + rel2global_f)
                
                 # Update vel(t+1)
-                ent.velocity=v_2+force*dt_2
-                ent.ang=vector2angle(v_2)
+                ent.velocity = v_2 + force*dt_2
+                ent.ang = vector2angle(v_2)
                 
             elif Heun_f_integrator:
                 '''
@@ -344,10 +344,11 @@ class PhysicsModel(Model):
                 try:
                     ent.old_position
                 except:
-                    ent.old_position=ent.position-ent.velocity*dt_sec
+                    ent.old_position = ent.position - ent.velocity*dt_sec
                     
                
-                new_position=ent.position+ent.velocity*dt_sec+0.5*force*dt_sec*dt_sec
+                new_position = ent.position + \
+                                   ent.velocity*dt_sec + 0.5*force*dt_sec*dt_sec
             
                 ent.velocity=(new_position-ent.old_position)*dt_2
                 

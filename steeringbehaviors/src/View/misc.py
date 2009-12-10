@@ -61,7 +61,8 @@ class TextOutputView(View2D):
                 except TypeError:
                     return [value,]
             
-            row.append(map(str,sum(map(entity_getter, log_fields), []) ))
+            #row.append(map(str,sum(map(entity_getter, log_fields), []) ))
+            row.append(map(repr,sum(map(entity_getter, log_fields), []) ))
             
         self.log.append(sum(row, []))
         
