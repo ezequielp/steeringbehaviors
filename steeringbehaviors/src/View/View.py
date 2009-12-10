@@ -220,7 +220,7 @@ class PygameViewer(View2D):
             self.rect.center=self._project.transform(self.model.position)
             if PERIODIC_HACK:
                 pos= self.rect.center
-                self.rect.center=(pos[0]%config.screen_size[0],pos[1]%config.screen_size[0])
+                self.rect.center=(pos[0]%config.screen_size[0],pos[1]%config.screen_size[1])
             
         def get_rotated_image(self, image, angle):
             from pygame import transform

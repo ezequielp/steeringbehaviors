@@ -453,7 +453,10 @@ class PhysicsModel(Model):
         heading=heading/sqrt(dot(heading, heading))
         self._heading[ent_id]=heading
         direction=average[4:6]
-        direction=direction/sqrt(dot(direction, direction))
+        try:
+            direction=direction/sqrt(dot(direction, direction))
+        except FloatingPointError:
+            pass
         self._direction[ent_id]=direction
         self._neighbours[ent_id]=in_range
         
