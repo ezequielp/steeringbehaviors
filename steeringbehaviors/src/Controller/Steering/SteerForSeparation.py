@@ -2,7 +2,7 @@
 Created on Sunday, November 29 2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal 
-Last Edit: Wednesday, December 02 2009
+Last Edit: Thursday, December 10 2009
 '''
 from __future__ import division
 from numpy import sqrt, dot, array
@@ -44,7 +44,11 @@ class SteerForSeparation(SteerController):
             except FloatingPointError:
                 pass
         
-        
+        # Check for limit       
+        fnorm=sqrt(dot(force,force))       
+        if fnorm > self.max_force:
+            force = force*self.max_force/fnorm
+
         #Return the force
         return force
                

@@ -11,8 +11,6 @@ from SteerController import SteerController
 class SteerForAlign(SteerController):
     '''
     Aligns the unit to the average velocity direction.
-    WARNING: The force is normalized
-    Verified: Thursday, December 10 2009 - Not working
     '''
     def __init__(self, model, entity_id):
         SteerController.__init__(self, model, entity_id)
@@ -28,12 +26,11 @@ class SteerForAlign(SteerController):
         # Apply a force that turns the entity in that direction
         force=course-self.get_course_vec(self.entity_id)
         
-        # Normalize
-        try:
-            force= force/sqrt(dot(force,force))
-        except FloatingPointError:
-            pass
-        
+        # Check for limit       
+        fnorm=sqrt(dot(force,force))       
+        if fnorm > self.max_force:
+            force = force*self.max_force/fnorm
+
         #Return the force
         return force
                

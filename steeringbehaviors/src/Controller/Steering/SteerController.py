@@ -17,7 +17,7 @@ class SteerController(Controller):
         self.model=model
         self.entity_id=entity_id
         self.max_speed=model.get_max_speed(entity_id)
-    
+        self.max_force=model.get_max_force(entity_id)    
 
     def update(self, event=None):
         '''
@@ -60,14 +60,6 @@ class SteerController(Controller):
         model=self.model
         entity_id=self.entity_id
         
-        # Normalize the relative position vector
-        # JPi: Idem as below, this is not needed
-        '''
-        try:
-            rel_position=rel_position*1.0/sqrt(dot(rel_position, rel_position))
-        except FloatingPointError:
-            pass
-        '''    
         try:
             model.detach_force(entity_id, self.last_force)
             
@@ -138,7 +130,7 @@ class SteerController(Controller):
             pass
             
         return course
-        
+     
      ########
      # Getters for group based steering
      

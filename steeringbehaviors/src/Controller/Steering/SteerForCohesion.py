@@ -11,8 +11,6 @@ from SteerController import SteerController
 class SteerForCohesion(SteerController):
     '''
     Steers the entity towards the centriod of its neighbors.
-    WARNING: At the moment the force is normalized
-    Verified: WThursday, December 10 2009 - Is working
     '''
 
     def __init__(self, model, entity_id):
@@ -33,14 +31,16 @@ class SteerForCohesion(SteerController):
         
         # Gets the vector pointing to the target
         rel_position=self.get_relative_position(self.target_entity)
-       
-        # Normalize
-        try:
-            rel_position=rel_position/sqrt(dot(rel_position, rel_position))
-        except FloatingPointError:
-            
-            pass
+    
+        # Apply force in that direction
+        force=rel_position*self.max_force
+
+        # Check for limit       
+        fnorm=sqrt(dot(force,force))       
+        if fnorm > self.max_force:
+            force = force*self.max_force/fnorm
+
         #Return the force
-        return rel_position
+        return force
 
 

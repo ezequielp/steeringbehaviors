@@ -11,8 +11,7 @@ from SteerController import SteerController
 class SteerForFlock(SteerController):
     '''
     A controller that flocks.
-    Verified: Wednesday, December 02 2009 - Not working
-      TODO: How to distribute the intensities?
+    TODO: How to distribute the intensities?
     '''
     from SteerForCohesion import SteerForCohesion
     from SteerForSeparation import SteerForSeparation
@@ -25,15 +24,20 @@ class SteerForFlock(SteerController):
         self.avoid=self.SteerForSeparation(model, entity_id)
                
     def update(self, event=None):
-        force=self.get_force()
+        force=self.get_force([0,0,100])
         
         self.set_force(1*force-0.0*self.get_abs_velocity(self.entity_id))
         
-    def get_force(self):
+    def get_force(self,weights=[1,1,1]):
         
-        force= 0*self.group.get_force() + \
-               0*self.avoid.get_force()+ \
-               100*self.align.get_force()
-        
+        force= weights[0]*self.group.get_force() + \
+               weights[1]*self.avoid.get_force()+ \
+               weights[2]*self.align.get_force()
+
+        # Check for limit       
+        fnorm=sqrt(dot(force,force))       
+        if fnorm > self.max_force:
+            force = force*self.max_force/fnorm
+
         return force
                
