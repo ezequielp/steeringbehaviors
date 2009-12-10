@@ -12,7 +12,7 @@ import config
 
 # Colormap
 from colormap import *
-
+PERIODIC_HACK=True
 
 class View(object):
     '''
@@ -56,8 +56,8 @@ class View2D(View):
         # But it is private to the child I think.
         #self._sprites=np.array([])
         self._project=rp.Transformation()
-        self._n_of_entities+=self.n_of_entities
-        self._entities[eid]
+        self._n_of_entities=0
+        self._entities=dict()
  
     
     def set_transform(self,move=np.array([0,0]), 
@@ -218,6 +218,9 @@ class PygameViewer(View2D):
             self.set_orientation(-self.model.ang*57.296)
             self.rect=self.image.get_rect()
             self.rect.center=self._project.transform(self.model.position)
+            if PERIODIC_HACK:
+                pos= self.rect.center
+                self.rect.center=(pos[0]%config.screen_size[0],pos[1]%config.screen_size[0])
             
         def get_rotated_image(self, image, angle):
             from pygame import transform
