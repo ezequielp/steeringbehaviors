@@ -443,8 +443,7 @@ class PhysicsModel(Model):
                 in_range.add(ent.id)
         
         # Perform the averaging    
-        #TODO: When to_average is empty reduce() gives an error 
-        average=reduce(add, to_average)*1.0/len(to_average)
+        average=reduce(add, to_average,0)*1.0/len(to_average)
               
         self._centroid[ent_id]=average[0:2]
         heading=average[2:4]

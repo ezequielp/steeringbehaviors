@@ -2,7 +2,7 @@
 Created on Sunday, November 29 2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal 
-Last Edit: Tuesday, December 08 2009
+Last Edit: Thursday, December 10 2009
 '''
 
 from numpy import sqrt, dot,array
@@ -10,9 +10,9 @@ from SteerController import SteerController
 
 class SteerForAlign(SteerController):
     '''
-    Alings the unit to the average aligment.
+    Aligns the unit to the average velocity direction.
     WARNING: The force is normalized
-    Verified: Tuesday, December 08 2009 - Is working
+    Verified: Thursday, December 10 2009 - Not working
     '''
     def __init__(self, model, entity_id):
         SteerController.__init__(self, model, entity_id)
