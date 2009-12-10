@@ -9,6 +9,8 @@ from __future__ import division
 import numpy as np
 from Tools import real2pix as rp
 import config
+import os
+path = os.path.dirname(__file__)
 
 # Colormap
 from colormap import *
@@ -57,7 +59,7 @@ class View2D(View):
         #self._sprites=np.array([])
         self._project=rp.Transformation()
         self._n_of_entities=0
-        self._entities=dict()
+        self.entities=dict()
  
     
     def set_transform(self,move=np.array([0,0]), 
@@ -87,7 +89,7 @@ class View2D(View):
     def delete_entity(self, model_entity_id):  
         assert False, "Not implemented"
         
-    def add_text_entity(self, text, position , font=None, size=10):
+    def add_text_entity(self, text, position , font=None, size=10,color=(0,0,0)):
         '''
         Adds text with top left corner located at position.
         If font is None, default font will be used.
@@ -110,12 +112,15 @@ class View2D(View):
         assert False, "Not implemented"
 
     def add_view_entity(self, entity):
-        eid=self.n_of_entities
-        self.n_of_entities+=self.n_of_entities
+        eid=self._n_of_entities
+        self._n_of_entities+=self._n_of_entities
         self.entities[eid]=entity
         
     def delete_view_entity(self, eid):
         del self.entities[eid]
+    
+    def get_view_entity(self, eid):
+        return self.entities[eid]
     
 class TopDownSprite(object):
     '''
@@ -320,7 +325,7 @@ class PygameViewer(View2D):
         except TypeError:
             return None
         
-    def add_text_entity(self, text, position , filename=None, size=10):
+    def add_text_entity(self, text, position , filename=None, size=10, color=(0,0,0)):
         '''
         Adds text with top left corner located at position.
         If filename is None, default font will be used.
@@ -332,10 +337,11 @@ class PygameViewer(View2D):
         from pygame import font, sprite
         
         if filename==None:
-            filename=os.path.join([".", "Font", "JuraLight.ttf"])
+            filename=os.path.join(path, "Font", "JuraLight.ttf")
         
+        print filename
         font=font.Font(filename, size)
-        rendered_text=font.render(text)
+        rendered_text=font.render(text, True, color)
         
         text_sprite=sprite.Sprite()
         text_sprite.image=rendered_text
@@ -343,7 +349,8 @@ class PygameViewer(View2D):
         text_sprite.rect.topleft=position
         
         self._sprites.add(text_sprite)
-        
+        self._untraced_sprites.add(text_sprite)
+
         return self.add_view_entity(text_sprite)
 
 
@@ -358,7 +365,8 @@ class PygameViewer(View2D):
         To move a model entity use the model.
         
         '''
-        assert False, "Not implemented"
+        sprite=self.get_view_entity(view_entity_id)
+        sprite.rect.topleft=new_pos
    
         
         

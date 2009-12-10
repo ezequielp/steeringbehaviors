@@ -35,6 +35,8 @@ class ShootTheFliesApp(object):
         
         for listener_obj in [world, view, mouse, keyboard]:
             event_handler.bind(listener_obj.on_update, self.spinner.TICK)
+            
+        text_entity_id=view.add_text_entity("Shooting app", (0,0), size=20)
         
         
     def add_flee_behavior(self, group):
