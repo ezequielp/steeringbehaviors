@@ -69,14 +69,18 @@ class TextOutputView(View2D):
         filename=self.filename
         lab=list()
         log=self.log
+        
+        # Building the Header of the file
         lab=[map('_'.join, zip([x[0]]*x[1], map(str,range(x[1])))) for x in zip(self.log_fields, self.len_of_fields)]
+
         lab=sum(lab,[])
        
         from itertools import product
-        lab=['_'.join(x) for x in product(map(str, self.saving_entities), lab ) ]
+        lab=['_'.join(x) for x in product(map(str, self.saving_entities), lab) ]
         
         lab=', '.join(lab)+'\n'
 
+        # Building data string
         data='\n'.join(map(', '.join, log))
         file=open(filename, 'w')
         
