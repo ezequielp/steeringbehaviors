@@ -147,7 +147,7 @@ class SteerController(Controller):
         return course
         
      ########
-     # Getters for grupal based steering
+     # Getters for group based steering
      
     def get_neighbors_id(self):
         neighbors = self.model.get_neighbours(self.entity_id)
@@ -163,5 +163,6 @@ class SteerController(Controller):
 
     def get_neighbors_course(self,weights=None):
         course = self.model.get_neighbour_average_direction(self.entity_id)
+        print self.entity_id,course
         return course
 

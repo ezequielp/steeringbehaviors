@@ -33,8 +33,7 @@ class FlockTestApp():
         for i in xrange(1,number,1):
             pos=round((rnd.uniform(100,400),rnd.uniform(100,400)))
             seeking_entity=self.world.add_entity(pos,(0, 0))
-            #I commented this because I didn't knew why it was there...
-            #self.world.apply_relative_force(seeking_entity, pi/2, (2*(i%2)-1)*200)
+            self.world.set_neighbour_sensor(seeking_entity, 500,pi)
             self.screen.add_entity(seeking_entity, trace=False,size=5,color=color, shape='s')
             flock=Behavior(self.world, seeking_entity)
             self.steering_entities.add(flock)
@@ -44,6 +43,7 @@ class FlockTestApp():
         side=50.0
         for pos in [(side,side),(2*side,side),(side,2*side),(2*side,2*side)]:
             seeking_entity=self.world.add_entity(pos,array([80,70])-array(pos))
+            self.world.set_neighbour_sensor(seeking_entity, 500,pi)            
             self.screen.add_entity(seeking_entity)
             flock=Behavior(self.world, seeking_entity)
             self.steering_entities.add(flock)

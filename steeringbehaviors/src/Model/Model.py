@@ -412,6 +412,7 @@ class PhysicsModel(Model):
         higher_angle=aperture
         sin_ang=sin(angle)
         cos_ang=cos(angle)
+
         for ent in self.entities:
             if ent.id==ent_id:
                 continue
@@ -419,27 +420,30 @@ class PhysicsModel(Model):
             dx=rel_position[0]
             dy=rel_position[1]
                 
+            #Skip if entity is outside a box that contains the circle of radius radius
             if dx>radius or dx<-radius or dy>radius or dy<-radius:
-                #Skip if entity is outside a box that contains the circle of radius radius
                 continue
+                
+            #Skip if outside the circle of radius radius                
             distance2=dx*dx+dy*dy
-                
             if distance2>radius*radius:
-                #skip if outside the circle of radius radius
                 continue
-                      
-            rot_rel_pos=array((rel_position[0]*cos_ang+rel_position[1]*sin_ang, -rel_position[0]*sin_ang +rel_position[1]*cos_ang ))
+            
+            # Rotate the relative position vector to have 0 angle at entity direction          
+            rot_rel_pos=array((rel_position[0]*cos_ang+rel_position[1]*sin_ang, \
+                              -rel_position[0]*sin_ang +rel_position[1]*cos_ang ))
                 
-            #relative_ang=vector2angle(rel_position)
+            # If unit is in sensor area add to do avergae
             rot_rel_ang=vector2angle(rot_rel_pos)
-                
             if lower_angle<=rot_rel_ang<=higher_angle:
                     
-                to_average.append(concatenate((ent.position, array((cos(ent.ang), sin(ent.ang))), ent.velocity)))
+                to_average.append(concatenate(\
+              (ent.position, array((cos(ent.ang), sin(ent.ang))),ent.velocity)))
+              
                 in_range.add(ent.id)
-            
+        
+        # Perform the averaging    
         #TODO: When to_average is empty reduce() gives an error 
-         
         average=reduce(add, to_average)*1.0/len(to_average)
               
         self._centroid[ent_id]=average[0:2]
@@ -450,6 +454,5 @@ class PhysicsModel(Model):
         direction=direction/sqrt(dot(direction, direction))
         self._direction[ent_id]=direction
         self._neighbours[ent_id]=in_range
-
         
         
