@@ -56,7 +56,8 @@ class View2D(View):
         # But it is private to the child I think.
         #self._sprites=np.array([])
         self._project=rp.Transformation()
-    
+        self._n_of_entities+=self.n_of_entities
+        self._entities[eid]
  
     
     def set_transform(self,move=np.array([0,0]), 
@@ -78,7 +79,44 @@ class View2D(View):
         Returns the entity id at the requested position or None if there isn't any.
         '''
         assert False, "Not implemented"
+        
+    def add_entity(self, model_entity_id, trace=False, color='k', shape='o',
+                   size=3):
+        assert False, "Not implemented"
+        
+    def delete_entity(self, model_entity_id):  
+        assert False, "Not implemented"
+        
+    def add_text_entity(self, text, position , font=None, size=10):
+        '''
+        Adds text with top left corner located at position.
+        If font is None, default font will be used.
+        Size is in view units. 
+        
+        returns: View entity entity id
+        '''
+        assert False, "Not implemented"
+    def delete_text_entity(self, id):
+        assert False, "Not implemented"
 
+   
+    def move_entity(self, view_entity_id, new_pos):
+        '''
+        Moves entity given by view_entity_id to new_pos
+        
+        To move a model entity use the model.
+        
+        '''
+        assert False, "Not implemented"
+
+    def add_view_entity(self, entity):
+        eid=self.n_of_entities
+        self.n_of_entities+=self.n_of_entities
+        self.entities[eid]=entity
+        
+    def delete_view_entity(self, eid):
+        del self.entities[eid]
+    
 class TopDownSprite(object):
     '''
     A sprite for a top down view.
@@ -279,6 +317,45 @@ class PygameViewer(View2D):
         except TypeError:
             return None
         
+    def add_text_entity(self, text, position , filename=None, size=10):
+        '''
+        Adds text with top left corner located at position.
+        If filename is None, default font will be used.
+        Size is in view units. 
         
+        returns: View entity entity id
+        '''
+        import os
+        from pygame import font, sprite
+        
+        if filename==None:
+            filename=os.path.join([".", "Font", "JuraLight.ttf"])
+        
+        font=font.Font(filename, size)
+        rendered_text=font.render(text)
+        
+        text_sprite=sprite.Sprite()
+        text_sprite.image=rendered_text
+        text_sprite.rect=rendered_text.get_rect()
+        text_sprite.rect.topleft=position
+        
+        self._sprites.add(text_sprite)
+        
+        return self.add_view_entity(text_sprite)
+
+
+    def get_new_id(self):
+        self.view_ids+=self.view_ids
+        return self.view_ids
+    
+    def move_entity(self, view_entity_id, new_pos):
+        '''
+        Moves entity given by view_entity_id to new_pos
+        
+        To move a model entity use the model.
+        
+        '''
+        assert False, "Not implemented"
+   
         
         
