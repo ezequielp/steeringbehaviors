@@ -34,12 +34,12 @@ class SteerForEvasion(SteerController):
         # Applies a force repeling from that direction
         future_target_pos=rel_position+target_velocity*event['dt']
         
-        force=(-1)*future_target_pos*self.max_force
+        force=(-1.0)*future_target_pos*self.max_force
         
         # Check for limit       
         fnorm=sqrt(dot(force,force))       
         if fnorm > self.max_force:
             force = force*self.max_force/fnorm
             
-        return 
+        return force
 
