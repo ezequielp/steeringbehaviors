@@ -75,20 +75,13 @@ class SteerController(Controller):
             pass
         
         # store the current id of the force for future references
-        # JPi: Changed this based on the e-mail of Wednesday, December 02 2009
-        # it comes from the refactoring of SteerForSeek
-#        self.last_force = model.apply_force(entity_id, rel_position*max_speed -\
- #                       model.get_velocity(entity_id))
- 
-        self.last_force = model.apply_force(entity_id, rel_position)
+         self.last_force = model.apply_force(entity_id, rel_position)
 
     ###################
 
     # Getter methods        
     
-    # JPi: The default argument is to ensure that this function works with
-    # the new interface. All default arguments should go away!
-    def get_relative_position(self,target_id=None):
+    def get_relative_position(self,target_id):
         if self.targeting_entity:
             rel_position = self.model.get_relative_position(self.entity_id, 
                            target_id)
@@ -99,10 +92,10 @@ class SteerController(Controller):
                                                       
         return rel_position
         
-    def get_abs_velocity(self,entity_id=None):
+    def get_abs_velocity(self,entity_id):
         return self.model.get_velocity(entity_id)
         
-    def get_rel_velocity(self,target_id=None):
+    def get_rel_velocity(self,target_id):
         '''
             TODO: THe if is for functionality. Is not efficient to do it this
             way. The best would be that the default value of 
