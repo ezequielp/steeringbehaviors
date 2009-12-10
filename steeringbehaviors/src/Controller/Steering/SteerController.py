@@ -75,7 +75,7 @@ class SteerController(Controller):
             pass
         
         # store the current id of the force for future references
-         self.last_force = model.apply_force(entity_id, rel_position)
+        self.last_force = model.apply_force(entity_id, rel_position)
 
     ###################
 

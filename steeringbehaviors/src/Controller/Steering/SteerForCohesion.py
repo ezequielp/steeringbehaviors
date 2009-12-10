@@ -32,7 +32,7 @@ class SteerForCohesion(SteerController):
         self.set_target_position(center)
         
         # Gets the vector pointing to the target
-        rel_position=self.get_relative_position()
+        rel_position=self.get_relative_position(self.entity_id)
        
         # Normalize
         try:
