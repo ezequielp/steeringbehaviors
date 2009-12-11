@@ -15,6 +15,7 @@ path = os.path.dirname(__file__)
 # Colormap
 from colormap import *
 PERIODIC_HACK=False
+DEFAULT_FONT="JuraLight.ttf"
 
 class View(object):
     '''
@@ -355,7 +356,7 @@ class PygameViewer(View2D):
         from pygame import font, sprite
         
         if filename==None:
-            filename=os.path.join(path, "Font", "JuraLight.ttf")
+            filename=os.path.join(path, "Font", DEFAULT_FONT)
         
         font=font.Font(filename, size)
         rendered_text=font.render(text, True, color)
