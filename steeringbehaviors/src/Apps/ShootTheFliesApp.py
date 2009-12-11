@@ -51,7 +51,7 @@ class ShootTheFliesApp(object):
             self.labels=set()
             
             def pretty_rep(entity_id):
-                return int(self.world.get_ang(entity_id)*57)
+                return str(self.world.get_ang(entity_id))
             
             for entity in self.flies:
                 
