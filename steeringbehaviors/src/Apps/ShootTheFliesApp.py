@@ -14,7 +14,7 @@ class ShootTheFliesApp(object):
 
     def __init__(self, world, view, spinner, event_handler, mouse, keyboard):
         
-        from Controller.Steering.SteerForOffset import SteerForOffset
+        from Controller.Steering.SteerForArrive import SteerForArrive as Beh
 
         mouse.hide()
         self.crosshair=Crosshair(view, world, event_handler)
@@ -26,7 +26,7 @@ class ShootTheFliesApp(object):
         
         flies=set()
         for i in range(10):
-            flies.add(self.add_steering_entity(SteerForOffset, self.crosshair.get_entity_id()))
+            flies.add(self.add_steering_entity(Beh, self.crosshair.get_entity_id()))
             
         self.flies=flies
         #self.add_flee_behavior(flies)
@@ -40,6 +40,8 @@ class ShootTheFliesApp(object):
             
         text_entity_id=view.add_text_entity("Shooting app", (0,0), size=20)
         
+        
+        
     def on_toggle_id(self, event):
         try:
             showing_id=self.showing_id=not self.showing_id
@@ -51,7 +53,7 @@ class ShootTheFliesApp(object):
             self.labels=set()
             
             def pretty_rep(entity_id):
-                return str(self.world.get_ang(entity_id))
+                return str(self.world.get_entity(entity_id).total_force)
             
             for entity in self.flies:
                 

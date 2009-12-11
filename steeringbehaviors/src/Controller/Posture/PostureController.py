@@ -138,5 +138,5 @@ class PostureController(Controller):
     def check_torque(self,torque):
         if torque > self.max_torque:
             return self.max_torque
-    return torque
+        return torque
     
