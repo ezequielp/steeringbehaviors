@@ -111,6 +111,12 @@ class View2D(View):
         '''
         assert False, "Not implemented"
 
+    def change_text_entity(self, entity_id, new_text):
+        '''
+        Changes text to new_text
+        '''
+        assert False, "Not implemented"
+       
     def add_view_entity(self, entity):
         eid=self._n_of_entities
         self._n_of_entities+=self._n_of_entities
@@ -347,12 +353,20 @@ class PygameViewer(View2D):
         text_sprite.image=rendered_text
         text_sprite.rect=rendered_text.get_rect()
         text_sprite.rect.topleft=position
-        
+        text_sprite.font=font
+        text_sprite.color=color
         self._sprites.add(text_sprite)
         self._untraced_sprites.add(text_sprite)
 
         return self.add_view_entity(text_sprite)
 
+    def change_text_entity(self, entity_id, new_text):
+        old_text=self.get_view_entity(entity_id)
+        position=old_text.rect.topleft
+        new_image=self.old_text.font.render(new_text, True, old_text.color)
+        old_text.image=new_image
+        old_text.rect=new_image.get_rect()
+        old_text.rect.topleft=position
 
     def get_new_id(self):
         self.view_ids+=self.view_ids
