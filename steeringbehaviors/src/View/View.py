@@ -15,7 +15,7 @@ path = os.path.dirname(__file__)
 # Colormap
 from colormap import *
 PERIODIC_HACK=False
-DEFAULT_FONT="JuraLight.ttf"
+DEFAULT_FONT="JuraDemiBold.ttf"
 
 class View(object):
     '''

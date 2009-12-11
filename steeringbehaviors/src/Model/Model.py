@@ -395,7 +395,8 @@ class PhysicsModel(Model):
             # Put the forces given in the entity frame into the global frame
             # TODO: Put this in a function. Soon the entties wont be points 
             #       anymore and more projections/rotations will be needed.
-            ang = ent.ang = vector2angle(ent.velocity)
+            #ang = ent.ang = vector2angle(ent.velocity)
+            ang = vector2angle(ent.velocity)
             R = rotv(array((0,0,1)), ang)[0:2,0:2]
             rel2global_f = np.dot(R, ent.total_relative_force)                
 
@@ -408,8 +409,9 @@ class PhysicsModel(Model):
             torque = ent.total_torque - DAMPING*ent.angspeed
             
             verletV_step(ent,force,torque) 
-    
-                
+        
+        print self.entities[0].ang
+        
     def get_neighbour_average_heading(self, ent_id):
         try:
             heading=self._heading[ent_id]
