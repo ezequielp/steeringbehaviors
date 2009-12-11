@@ -34,7 +34,7 @@ class FlockTestApp():
             pos=round((rnd.uniform(0,640),rnd.uniform(0,480)))
             vel=round((rnd.uniform(-100,100),rnd.uniform(-100,100)))
             seeking_entity=self.world.add_entity(pos,vel)
-            self.world.set_neighbour_sensor(seeking_entity, 100,pi)            
+            self.world.set_neighbour_sensor(seeking_entity, 500,pi)            
             self.screen.add_entity(seeking_entity, 
                                       trace=False,size=5,color=color, shape='s')
                                       
