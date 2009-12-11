@@ -14,7 +14,7 @@ path = os.path.dirname(__file__)
 
 # Colormap
 from colormap import *
-PERIODIC_HACK=True
+PERIODIC_HACK=False
 
 class View(object):
     '''
@@ -75,6 +75,12 @@ class View2D(View):
         '''
         return self._project.inverse_transform(view_position)
 
+    def get_view_position(self, world_position):
+        '''
+        Returns the position in world coordinates for the 
+        point view_position
+        '''
+        return self._project.transform(world_position)
 
     def get_entity_at(self, view_position):
         '''
@@ -119,8 +125,9 @@ class View2D(View):
        
     def add_view_entity(self, entity):
         eid=self._n_of_entities
-        self._n_of_entities+=self._n_of_entities
+        self._n_of_entities+=1
         self.entities[eid]=entity
+        return eid
         
     def delete_view_entity(self, eid):
         del self.entities[eid]
@@ -330,6 +337,11 @@ class PygameViewer(View2D):
             return [sprite.model.id for sprite in colliding_sprites if sprite.model.id!=entity_id]
         except TypeError:
             return None
+     
+    def delete_text_entity(self, eid):
+        text_sprite=self.get_view_entity(eid)
+        text_sprite.kill()
+        self.delete_view_entity(eid)
         
     def add_text_entity(self, text, position , filename=None, size=10, color=(0,0,0)):
         '''
@@ -345,7 +357,6 @@ class PygameViewer(View2D):
         if filename==None:
             filename=os.path.join(path, "Font", "JuraLight.ttf")
         
-        print filename
         font=font.Font(filename, size)
         rendered_text=font.render(text, True, color)
         

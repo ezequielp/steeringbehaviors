@@ -21,22 +21,43 @@ class ShootTheFliesApp(object):
         self.spinner=spinner
         self.view=view
         self.world=world
+        
         self.event_handler=event_handler
         
         flies=set()
         for i in range(10):
             flies.add(self.add_steering_entity(SteerForOffset, self.crosshair.get_entity_id()))
             
+        self.flies=flies
         #self.add_flee_behavior(flies)
             
         event_handler.bind(self.crosshair.mouse_move_cb, mouse.MOUSE_MOVE)
         event_handler.bind(self.crosshair.fire_cb, keyboard.register_event_type('Space', 'UP'))
         event_handler.bind(self.on_quit, keyboard.register_event_type('Left Ctrl-Q', 'DOWN'))
-        
+        event_handler.bind(self.on_toggle_id, keyboard.register_event_type('i', 'UP'))
         for listener_obj in [world, view, mouse, keyboard]:
             event_handler.bind(listener_obj.on_update, self.spinner.TICK)
             
         text_entity_id=view.add_text_entity("Shooting app", (0,0), size=20)
+        
+    def on_toggle_id(self, event):
+        try:
+            showing_id=self.showing_id=not self.showing_id
+        except AttributeError:
+            showing_id=self.showing_id=True
+        
+        if showing_id:
+            from Controller.Labelers import ConstantLabel
+            self.labels=set()
+            for entity in self.flies:
+                
+                label=ConstantLabel(self.world, self.view,entity)
+                self.labels.add(label)
+                label.set_text(str(entity))
+                self.event_handler.bind(label.update, self.spinner.TICK)
+                
+        else:
+            del self.labels
         
         
     def add_flee_behavior(self, group):
