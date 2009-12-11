@@ -14,7 +14,7 @@ class ShootTheFliesApp(object):
 
     def __init__(self, world, view, spinner, event_handler, mouse, keyboard):
         
-        from Controller.Steering.SteerForArrive import SteerForArrive as Beh
+        from Controller.Steering.SteerForOffset import SteerForOffset as Beh
 
         mouse.hide()
         self.crosshair=Crosshair(view, world, event_handler)
