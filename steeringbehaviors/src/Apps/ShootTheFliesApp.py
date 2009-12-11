@@ -47,11 +47,16 @@ class ShootTheFliesApp(object):
             showing_id=self.showing_id=True
         
         if showing_id:
-            from Controller.Labelers import ConstantLabel
+            from Controller.Labelers import DynamicLabel
             self.labels=set()
+            
+            def pretty_rep(entity_id):
+                return int(self.world.get_ang(entity_id)*57)
+            
             for entity in self.flies:
                 
-                label=ConstantLabel(self.world, self.view,entity)
+                label=DynamicLabel(self.world, self.view,entity)
+                label.set_getter_callback(pretty_rep)
                 self.labels.add(label)
                 label.set_text(str(entity))
                 self.event_handler.bind(label.update, self.spinner.TICK)

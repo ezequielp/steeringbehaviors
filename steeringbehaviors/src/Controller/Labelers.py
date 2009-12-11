@@ -42,3 +42,22 @@ class ConstantLabel(object):
         except AttributeError:
             assert False, "Label not initiated!"
             
+class DynamicLabel(ConstantLabel):
+    def __init__(self, model, view, follow_entity_id, view_size=10, color=(0,0,0), getter_callback_function=False):
+        ConstantLabel.__init__(self, model, view, follow_entity_id, view_size, color)
+        if getter_callback_function:
+            self.set_getter_callback(getter_callback_function)
+        
+    def set_getter_callback(self, function):
+        '''
+        function must accept model_id as parameter and return a representable object to
+        use as label
+        '''
+        self._cb_function=function
+        
+    def update(self, event):
+        text=self._cb_function(self.follow_entity_id)
+        
+        self.set_text(text)
+            
+        ConstantLabel.update(self, event)
