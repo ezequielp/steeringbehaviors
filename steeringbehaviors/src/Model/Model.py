@@ -13,9 +13,9 @@ from Tools.LinAlgebra_extra import rotv, vector2angle
 np.seterr(all='raise')
 MAXSPEED=300.0
 MAXSANGPEED=6.0
-MAXFORCE=160.0 # 60 N/kg, universal law! :D
+MAXFORCE=300.0 # 60 N/kg, universal law! :D
 MAXTORQUE=60.0 # 60 m * N/kg
-DAMPING=0.0
+DAMPING=0.9
 
 class Model(object):
     '''
