@@ -17,7 +17,7 @@ verlet_friction=False
 Heun_f_integrator=False
 MAXSPEED=300.0
 MAXFORCE=60.0 # 60 N/kg, universal law! :D
-DAMPING=1.0
+DAMPING=0.0
 
 class Model(object):
     '''
@@ -446,8 +446,11 @@ class PhysicsModel(Model):
                 in_range.add(ent.id)
         
         # Perform the averaging    
-        average=reduce(add, to_average,0)*1.0/len(to_average)
-              
+        try:
+            average=reduce(add, to_average,0)*1.0/len(to_average)
+        except ZeroDivisionError:
+            average=array([0.0, 0.0, cos_ang, sin_ang, cos_ang, sin_ang])
+     
         self._centroid[ent_id]=average[0:2]
         heading=average[2:4]
         heading=heading/sqrt(dot(heading, heading))

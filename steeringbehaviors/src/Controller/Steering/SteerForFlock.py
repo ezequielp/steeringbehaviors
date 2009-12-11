@@ -28,7 +28,7 @@ class SteerForFlock(SteerController):
         
         self.set_force(1*force-0.0*self.get_abs_velocity(self.entity_id))
         
-    def get_force(self,weights=[1,1,1]):
+    def get_force(self,weights=[20,1,100]):
         
         force= weights[0]*self.group.get_force() + \
                weights[1]*self.avoid.get_force()+ \

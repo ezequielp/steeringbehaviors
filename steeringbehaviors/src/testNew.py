@@ -22,7 +22,7 @@ class Test():
         
     
     def run(self):
-        for test in [ self.FlockTest, self.FlockDebug, self.RestartModelView, self.AddRemoveEntities, self.RandomMove, self.DragNDrop, self.PursuitTest, self.CombinedTest, self.ShootingTest]:
+        for test in [ self.OffsetTest, self.FlockTest, self.FlockDebug, self.RestartModelView, self.AddRemoveEntities, self.RandomMove, self.DragNDrop, self.CombinedTest, self.ShootingTest]:
             self.prepareWorld(self.EventManager, self.PhysicsModel, self.Viewer, self.MouseController, self.CPUSpinner, self.KeyboardController)
             test()
         
@@ -94,10 +94,10 @@ class Test():
         test.run()
         print "...OK"
 
-    def PursuitTest(self):
+    def OffsetTest(self):
         print "Look how they behave!\nRight-click to end this test"
-        from Apps.PursuitTest import PursuitTestApp
-        test=PursuitTestApp(self.event_handler, self.world, self.screen, 
+        from Apps.OffsetTest import OffsetTestApp
+        test=OffsetTestApp(self.event_handler, self.world, self.screen, 
         self.mouse, self.spinner, self.keyboard)
         test.run()
         print "...OK"

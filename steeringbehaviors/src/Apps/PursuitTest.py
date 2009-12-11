@@ -35,10 +35,10 @@ class PursuitTestApp():
         for listener_obj in [self.mouse, self.world, self.screen, self.keyboard ]:
             event_handler.bind(listener_obj.on_update, self.spinner.TICK)
             
-    def AddSteeringEntity(self, Behavior,color='r'):
+    def AddSteeringEntity(self, Behavior,color='r',vel=(0.0,0.0,)):
         spinner=self.spinner
         #Create and apply Seeking Behavior controller to entity
-        seeking_entity=self.world.add_entity((200,200),(0, 0))
+        seeking_entity=self.world.add_entity((200,200),vel)
         self.screen.add_entity(seeking_entity, trace=False,size=3,color=color)
         seek=Behavior(self.world, seeking_entity)
         seek.target_entity(self.entity_list[0])
