@@ -374,7 +374,10 @@ class PygameViewer(View2D):
     def change_text_entity(self, entity_id, new_text):
         old_text=self.get_view_entity(entity_id)
         position=old_text.rect.topleft
-        new_image=old_text.font.render(new_text, True, old_text.color)
+        try:
+            new_image=old_text.font.render(new_text, True, old_text.color)
+        except TypeError:
+            new_image=old_text.font.render(str(new_text), True, old_text.color)
         old_text.image=new_image
         old_text.rect=new_image.get_rect()
         old_text.rect.topleft=position
