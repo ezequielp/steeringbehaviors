@@ -13,7 +13,7 @@ from Tools.LinAlgebra_extra import rotv, vector2angle
 np.seterr(all='raise')
 MAXSPEED=300.0
 MAXSANGPEED=6.0
-MAXFORCE=60.0 # 60 N/kg, universal law! :D
+MAXFORCE=160.0 # 60 N/kg, universal law! :D
 MAXTORQUE=60.0 # 60 m * N/kg
 DAMPING=0.0
 
@@ -409,8 +409,6 @@ class PhysicsModel(Model):
             torque = ent.total_torque - DAMPING*ent.angspeed
             
             verletV_step(ent,force,torque) 
-        
-        print self.entities[0].ang
         
     def get_neighbour_average_heading(self, ent_id):
         try:
