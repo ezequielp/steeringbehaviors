@@ -160,7 +160,7 @@ class TopDownSprite(object):
             
     
     def set_orientation(self, angle):
-        
+
         i=round(((angle-self._initial_angle)*self._N*1.0/360)) % self._N
         
         #print angle, self._initial_angle, self._N, i
@@ -176,29 +176,29 @@ class PygameViewer(View2D):
     def __init__(self, Model):
         View2D.__init__(self, Model)
 
-        pygame=self.pygame
-        self.pygsprites=pygame.sprite
+        pygame = self.pygame
+        self.pygsprites = pygame.sprite
         
         pygame.init()
         
-        self.Sprite._project=self._project
+        self.Sprite._project = self._project
         
-        self._sprites=pygame.sprite.RenderUpdates()
-        self._untraced_sprites=pygame.sprite.RenderUpdates()
-        self._traced_sprites=pygame.sprite.RenderUpdates()
+        self._sprites = pygame.sprite.RenderUpdates()
+        self._untraced_sprites = pygame.sprite.RenderUpdates()
+        self._traced_sprites = pygame.sprite.RenderUpdates()
 
-        self._clock=pygame.time.Clock()
+        self._clock = pygame.time.Clock()
         
         from weakref import WeakKeyDictionary
-        self.sprite_from_model=WeakKeyDictionary()
+        self.sprite_from_model = WeakKeyDictionary()
         
         '''
         Starts a simple black screen.        TODO: improve to be configurable        '''
-        self.screen=pygame.display.set_mode(config.screen_size)
+        self.screen = pygame.display.set_mode(config.screen_size)
         background = pygame.Surface(self.screen.get_size())
         background = background.convert()
         background.fill(tuple(cmap[ckey['w']]))
-        self.background=background
+        self.background = background
         self.screen.blit(background, (0,0))
         pygame.display.flip()
 
@@ -211,10 +211,11 @@ class PygameViewer(View2D):
             pygame=PygameViewer.pygame
             PygameViewer.SpriteParent.__init__(self)
             
-            self.model=model_entity
+            self.model = model_entity
             
-            self.rect=pygame.Rect(self._project.transform(model_entity.position)
-                                  , (size,size))
+            self.rect = pygame.Rect(
+                self._project.transform(model_entity.position), 
+                                  (size,size))
             
             '''
             TODO: continue refactoring imaging capabilities to TopDownSprite
@@ -232,7 +233,6 @@ class PygameViewer(View2D):
             
         def update(self):
             PygameViewer.SpriteParent.update(self)
-            
             self.set_orientation(-self.model.ang*57.296)
             self.rect=self.image.get_rect()
             self.rect.center=self._project.transform(self.model.position)

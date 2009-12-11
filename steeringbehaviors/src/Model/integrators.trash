@@ -1,0 +1,65 @@
+'''
+verlet_v_integrator=True
+verlet_friction=False
+
+Heun_f_integrator=False
+
+            if verlet_v_integrator:
+                # Update vel(t+1/2) and position pos(t+1)
+                v_2 = ent.velocity + force*dt_2
+                ent.position = ent.position + v_2*dt_sec
+               
+                # Update forces
+                ang = ent.ang = vector2angle(v_2)
+                R = rotv(array((0,0,1)), ang)[0:2,0:2]
+                rel2global_f = np.dot(R, ent.total_relative_force)
+                force = (ent.total_force + rel2global_f) - DAMPING*ent.velocity
+               
+                # Update vel(t+1)
+                ent.velocity = v_2 + force*dt_2
+                ent.ang = vector2angle(v_2)
+                
+            elif Heun_f_integrator:
+
+                The so-call "Improved Euler" method, also known as the trapezoidal 
+                or bilinear or predictor/corrector or Heun Formula method, is a 
+                second order integrator.
+
+                # I don't think is the algorithm above, but lets see.
+                # I think the algorithm is keeping track of the predictor and
+                # the corrector, while I am just doing it for one time step.
+                
+                
+                ppos=ent.position+ent.velocity*dt_sec
+                pvel=ent.velocity+force*dt_sec
+                cpos=ent.position+pvel*dt_sec
+                
+                ang=vector2angle(pvel)
+                R=rotv(array((0.0,0.0,1.0)), ang)[0:2,0:2]
+                rel2global_f=np.dot(R, ent.total_relative_force)
+                force=(ent.total_force + rel2global_f)- DAMPING*ent.velocity
+                
+                cvel=ent.velocity+force*dt_sec
+
+                ent.position=(ppos + cpos)*0.5
+                ent.velocity=(pvel + cvel)*0.5
+                ent.ang=vector2angle(ent.velocity)
+            else:
+
+                verlet normal
+
+                try:
+                    ent.old_position
+                except:
+                    ent.old_position = ent.position - ent.velocity*dt_sec
+                    
+               
+                new_position = ent.position + \
+                                   ent.velocity*dt_sec + 0.5*force*dt_sec*dt_sec
+            
+                ent.velocity=(new_position-ent.old_position)*dt_2
+                
+                ent.old_position=ent.position
+                ent.position=new_position
+'''        
+        

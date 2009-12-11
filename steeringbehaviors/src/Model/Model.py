@@ -11,12 +11,10 @@ from numpy import add, dot, array, concatenate, sqrt, sin, cos
 from Tools.LinAlgebra_extra import rotv, vector2angle
 
 np.seterr(all='raise')
-verlet_v_integrator=True
-verlet_friction=False
-
-Heun_f_integrator=False
 MAXSPEED=300.0
+MAXSANGPEED=6.0
 MAXFORCE=60.0 # 60 N/kg, universal law! :D
+MAXTORQUE=60.0 # 60 m * N/kg
 DAMPING=0.0
 
 class Model(object):
@@ -67,18 +65,39 @@ class Model_Entity(object):
         '''
         import copy
 
-        self.forces=[]
-        self.relative_forces=[]
-        self.total_force=copy.deepcopy(zero_vector)
-        self.total_relative_force=copy.deepcopy(zero_vector)
-        self.zero_vector=zero_vector
-        self.ang=0
-        self.max_force=MAXFORCE
+        ##################
+        # Force Realted attributes
+        self.forces = []
+        self.relative_forces = []
+        self.total_force = copy.deepcopy(zero_vector)
+        self.total_relative_force = copy.deepcopy(zero_vector)
+        self.max_force = MAXFORCE
+
+        ##################
+        # Misc   
+        self.id = None
+        self.zero_vector = zero_vector
+
+        ##################
+        # Torque Realted attributes
+        self.torques = []
+        self.total_torque = 0.0
+        self.max_torque = MAXFORCE
+
+        ##################
+        # State related attributes
+        self.position = copy.deepcopy(zero_vector)
+        self.velocity = copy.deepcopy(zero_vector)
+        self.ang = None
+        self.angspeed = None
         
+    ##################
+    # Force related methods
     
     def apply_force(self, force):
         '''
-        Adds a force to the entity, can be deleted by calling remove_force with return id as parameter
+        Adds a force to the entity, can be deleted by calling remove_force with
+        return id as parameter
         TODO: Allow variable forces.
         '''
         self.forces.append(force)
@@ -88,7 +107,8 @@ class Model_Entity(object):
     
     def apply_relative_force(self, force):
         '''
-        Adds a force to the entity, the force will be always expressed in the entity's internal coordinates
+        Adds a force to the entity, the force will be always expressed in the
+        entity's internal coordinates
         Returns the id of the relative force
         '''
         self.relative_forces.append(force)
@@ -107,6 +127,28 @@ class Model_Entity(object):
     def remove_relative_force(self, relative_force_id):
         del self.relative_forces[relative_force_id]
         self.total_relative_force=reduce(add, self.relative_forces)
+
+    ##################
+    # Torque related methods
+    
+    def apply_torque(self, torque):
+        '''
+        Adds a torque to the entity, can be deleted by calling remove_torque with
+        return id as parameter
+        TODO: Allow variable torques.
+        '''
+        self.torques.append(torque)
+        self.total_torque=add(self.total_torque, torque)
+
+        return len(self.torque)-1
+    
+    def remove_torque(self, torque_id):
+        '''
+        Removes a torque previously applied.
+        '''
+        del self.torques[torque_id]
+        self.total_torque=reduce(add, self.torques, 0.0)
+        
     
 class VelocityEstimator(object):
     '''
@@ -157,8 +199,14 @@ class PhysicsModel(Model):
     def get_max_speed(self, entity_id):
         return MAXSPEED
 
+    def get_max_angspeed(self, entity_id):
+        return MAXANGSPEED
+
     def get_max_force(self,entity_id):
         return self.entities[entity_id].max_force
+
+    def get_max_torque(self,entity_id):
+        return self.entities[entity_id].max_torque
         
     def get_position(self, entity_id):
         return self.get_entity(entity_id).position
@@ -176,6 +224,9 @@ class PhysicsModel(Model):
     
     def get_ang(self, entity_id):
         return self.entities[entity_id].ang
+
+    def get_angspeed(self, entity_id):
+        return self.entities[entity_id].angspeed
     
     ###################
     # Entity related
@@ -210,13 +261,15 @@ class PhysicsModel(Model):
         '''
         return self.entities[entity_id]
 
-    def add_entity(self, position, velocity):
-        entity=Model_Entity(array((0.0,0.0)))
+    def add_entity(self, position, velocity,ang=0.0,angspeed=0.0):
+        entity = Model_Entity( array((0.0,0.0)) )
         self.entities.append(entity)
-        entity.position=array(position)
-        entity.velocity=array(velocity)
+        entity.position = array(position)
+        entity.velocity = array(velocity)
+        entity.ang = ang
+        entity.angspeed = angspeed
         entity.id=len(self.entities)-1
-        entity.ang=vector2angle(velocity)
+#        entity.ang=vector2angle(velocity)
         return len(self.entities) -1
 
     def on_damage(self, event):
@@ -252,12 +305,31 @@ class PhysicsModel(Model):
         
         force_id=self.entities[entity_id].apply_relative_force(force)
         return force_id
-        #self.total_relative_forces[entity_id]+=
         
     def detach_force(self, entity_id, force_id):
         self.entities[entity_id].remove_force(force_id)
         
- 
+    def apply_torque(self, entity_id, torque):
+        '''
+        Applies a torque relative to an inertial frame. You
+        can think about a frame fixed to the floor.        '''
+        torque_id=self.entities[entity_id].apply_torque(torque)
+                
+        return torque_id
+    
+    # Forcing Setters
+    def set_ang(self,entity_id,ang):
+        self.entities[entity_id].ang=ang
+        
+    def set_vel(self,entity_id,vel):
+        self.entities[entity_id].velocity=vel
+
+    def set_pos(self,entity_id,pos):
+        self.entities[entity_id].position=pos
+        
+    def set_angspeed(self,entity_id,angspeed):
+        self.entities[entity_id].angspeed=angspeed
+            
     ###################   
     #Update
              
@@ -281,7 +353,38 @@ class PhysicsModel(Model):
         self.reference_clock+=dt
         dt_2=dt_sec/2
         
-        
+        def verletV_step(ent,force,torque):
+            '''
+                Perform one step of the verlet velocity algorithm
+                Not vectorized
+            '''
+            # Update vel(t+1/2) and position pos(t+1)
+            v_2 = ent.velocity + force*dt_2
+            ent.position = ent.position + v_2*dt_sec
+            
+            w_2 = ent.angspeed + torque*dt_2
+
+            ent.ang = ent.ang + w_2*dt_sec
+                
+            # Update forces
+            #ang = ent.ang = vector2angle(v_2)
+            ang = vector2angle(v_2)
+            R = rotv(array((0,0,1)), ang)[0:2,0:2]
+            rel2global_f = np.dot(R, ent.total_relative_force)
+            force = (ent.total_force + rel2global_f) - DAMPING*v_2
+            
+            # Update total torque
+            # TODO: A factor accounting for the effective radius of the entity 
+            #       is missing in the dmaping factor
+            torque = ent.total_torque - DAMPING*w_2
+                
+            # Update vel(t+1)
+            ent.velocity = v_2 + force*dt_2
+            
+            ent.angspeed = w_2 + torque*dt_2
+            
+            #ent.ang = vector2angle(v_2)        
+            
         for ent in self.entities:
             #TODO: Store the state of all the entities in a matrix and update
             #      all of them in a single operation.
@@ -299,64 +402,13 @@ class PhysicsModel(Model):
             # Update the total force                    
             force = (ent.total_force + rel2global_f) - DAMPING*ent.velocity
             
-            if verlet_v_integrator:
-                # Update vel(t+1/2) and position pos(t+1)
-                v_2 = ent.velocity + force*dt_2
-                ent.position = ent.position + v_2*dt_sec
-               
-                # Update forces
-                ang = ent.ang = vector2angle(v_2)
-                R = rotv(array((0,0,1)), ang)[0:2,0:2]
-                rel2global_f = np.dot(R, ent.total_relative_force)
-                force = (ent.total_force + rel2global_f) - DAMPING*ent.velocity
-               
-                # Update vel(t+1)
-                ent.velocity = v_2 + force*dt_2
-                ent.ang = vector2angle(v_2)
-                
-            elif Heun_f_integrator:
-                '''
-                The so-call "Improved Euler" method, also known as the trapezoidal 
-                or bilinear or predictor/corrector or Heun Formula method, is a 
-                second order integrator.
-                '''
-                # I don't think is the algorithm above, but lets see.
-                # I think the algorithm is keeping track of the predictor and
-                # the corrector, while I am just doing it for one time step.
-                
-                
-                ppos=ent.position+ent.velocity*dt_sec
-                pvel=ent.velocity+force*dt_sec
-                cpos=ent.position+pvel*dt_sec
-                
-                ang=vector2angle(pvel)
-                R=rotv(array((0.0,0.0,1.0)), ang)[0:2,0:2]
-                rel2global_f=np.dot(R, ent.total_relative_force)
-                force=(ent.total_force + rel2global_f)- DAMPING*ent.velocity
-                
-                cvel=ent.velocity+force*dt_sec
-
-                ent.position=(ppos + cpos)*0.5
-                ent.velocity=(pvel + cvel)*0.5
-                ent.ang=vector2angle(ent.velocity)
-            else:
-                '''
-                verlet normal
-                '''
-                try:
-                    ent.old_position
-                except:
-                    ent.old_position = ent.position - ent.velocity*dt_sec
-                    
-               
-                new_position = ent.position + \
-                                   ent.velocity*dt_sec + 0.5*force*dt_sec*dt_sec
+            # Update total torque
+            # TODO: A factor accounting for the effective radius of the entity 
+            #       is missing in the dmaping factor
+            torque = ent.total_torque - DAMPING*ent.angspeed
             
-                ent.velocity=(new_position-ent.old_position)*dt_2
-                
-                ent.old_position=ent.position
-                ent.position=new_position
- 
+            verletV_step(ent,force,torque) 
+    
                 
     def get_neighbour_average_heading(self, ent_id):
         try:
@@ -462,5 +514,6 @@ class PhysicsModel(Model):
             pass
         self._direction[ent_id]=direction
         self._neighbours[ent_id]=in_range
-        
-        
+
+
+

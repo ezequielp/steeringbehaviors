@@ -95,7 +95,7 @@ class Test():
         print "...OK"
 
     def OffsetTest(self):
-        print "Look how they behave!\nRight-click to end this test"
+        print "OffSet TEST!\nRight-click to end this test"
         from Apps.OffsetTest import OffsetTestApp
         test=OffsetTestApp(self.event_handler, self.world, self.screen, 
         self.mouse, self.spinner, self.keyboard)
