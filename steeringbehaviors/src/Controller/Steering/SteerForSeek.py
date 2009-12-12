@@ -23,16 +23,11 @@ class SteerForSeek(SteerController):
         force=self.get_force()
         self.set_force(force)
     
-    def get_force(self):
+    def get_force(self,event=None):
         # Gets the vector pointing to the target
         rel_position=self.get_relative_position(self.target_entity_id)
         
         force=rel_position*self.max_force
 
-        # Check for limit       
-        fnorm=sqrt(dot(force,force))       
-        if fnorm > self.max_force:
-            force = force*self.max_force/fnorm
-        
-        return force
+        return self.check_force(force)
 

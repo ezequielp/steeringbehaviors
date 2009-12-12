@@ -6,15 +6,15 @@ Last Edit: Saturday, December 12 2009
 '''
 
 from numpy import sqrt, dot
-from SteerForSeek import SteerForSeek
+from SteerForPursuit import SteerForPursuit
 
-class SteerForArrive(SteerForSeek):
+class SteerForArrive(SteerForPursuit):
     '''
       Stops on arrival
     '''
     def __init__(self,model, entity_id):
-        SteerForSeek.__init__(self, model, entity_id)
-        self.slowing_distance=500
+        SteerForPursuit.__init__(self, model, entity_id)
+        self.slowing_distance=50
         self.breaking_intensity=10
         
     def update(self, event=None):
@@ -28,16 +28,9 @@ class SteerForArrive(SteerForSeek):
         rel_position=self.get_relative_position(self.target_entity_id)
         distance=sqrt(dot(rel_position, rel_position))
         
-        '''        
-                if distance>slowing_distance:
-                    force=SteerForSeek.get_force(self)
-                else:
-                    #force=rel_position/slowing_distance
-                    force=
-        '''
-        force=SteerForSeek.get_force(self)
+        force=SteerForPursuit.get_force(self,event)
         if distance<self.slowing_distance:
-            force = rel_position/self.slowing_distance - \
+            force = force + \
                                 self.breaking_intensity * \
                                     self.get_rel_velocity(self.target_entity_id)
 

@@ -22,7 +22,8 @@ class FollowCamera(object):
 
         
     def set_target(self, entity_id):
-        from Steering.SteerForPursuit import SteerForPursuit as Steer
+#        from Steering.SteerForPursuit import SteerForPursuit as Steer
+        from Steering.SteerForArrive import SteerForArrive as Steer
         
         arrive_behavior=Steer(self.model, self.center_id)
         arrive_behavior.target_entity(entity_id)

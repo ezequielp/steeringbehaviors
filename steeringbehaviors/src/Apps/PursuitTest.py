@@ -1,9 +1,9 @@
-from Controller.Steering.SteerForSeek import SteerForSeek
 from Controller.Steering.SteerForFlee import SteerForFlee
 from Controller.Steering.SteerForArrive import SteerForArrive
 from Controller.Steering.SteerForPursuit import SteerForPursuit
 from Controller.Steering.SteerForEvasion import SteerForEvasion
 from Controller.Steering.SteerForOffset import SteerForOffset
+from Controller.Steering.SteerForTrack import SteerForTrack
 import random
 from numpy import pi
 
@@ -28,7 +28,7 @@ class PursuitTestApp():
         self.camera=FollowCamera(screen, world)
         self.camera.set_target(self.entity_list[0])
        
-        self.AddSteeringEntity(SteerForSeek,'g')
+        # Seek entites are green
         self.AddSteeringEntity(SteerForPursuit,'g')
         arrive_id = self.AddSteeringEntity(SteerForArrive,color=[0,255,150])
         self.steering_entities[arrive_id].set_slowing_distance(100.0)
@@ -39,8 +39,11 @@ class PursuitTestApp():
         flee_id = self.AddSteeringEntity(SteerForFlee,'r')
         self.steering_entities[flee_id].set_safe_distance(10.0)
         
+        #Track entites are Yellow
+        yellow=(255,255,1)
+        track_id=self.AddSteeringEntity(SteerForTrack,yellow)
         
-        offset_id = self.AddSteeringEntity(SteerForOffset,'w')
+        offset_id = self.AddSteeringEntity(SteerForOffset,yellow)
         self.steering_entities[offset_id].set_offset(100.0)
         
         #Left click ends app
