@@ -2,7 +2,7 @@
 Created on Saturday, November 28 2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal 
-Last Edit: Thursday, December 10 2009
+Last Edit: Saturday, December 12 2009
 '''
 
 from numpy import sqrt, dot

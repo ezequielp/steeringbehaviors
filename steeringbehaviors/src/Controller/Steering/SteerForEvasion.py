@@ -2,7 +2,7 @@
 Created on Saturday, November 28 2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal 
-Last Edit: Thursday, December 10 2009
+Last Edit: Saturday, December 12 2009
 '''
 
 from numpy import sqrt, dot
@@ -11,12 +11,11 @@ from SteerController import SteerController
 class SteerForEvasion(SteerController):
     '''
     Steers the entity away form the estimated next position of the target
-    TODO: Improve the repulsion when target is approaching
     '''
 
     def __init__(self, model, entity_id):
         SteerController.__init__(self, model, entity_id)
-    
+
     def update(self, event=None):
         force=self.get_force(event)
         self.set_force(force)
@@ -31,15 +30,11 @@ class SteerForEvasion(SteerController):
         target_velocity=self.get_rel_velocity(target_id)
         
         # Estimates the position of the target in the next time step and
-        # Applies a force repeling from that direction
+        # Applies a force repeling from that direction decreasing with distance
         future_target_pos=rel_position+target_velocity*event['dt']
+        norm2=dot(future_target_pos,future_target_pos)
         
-        force=(-1.0)*future_target_pos*self.max_force
+        force=(-1.0)*(future_target_pos/norm2)
         
-        # Check for limit       
-        fnorm=sqrt(dot(force,force))       
-        if fnorm > self.max_force:
-            force = force*self.max_force/fnorm
-            
-        return force
+        return self.check_force(force)
 

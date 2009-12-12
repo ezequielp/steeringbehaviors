@@ -2,7 +2,7 @@
 Created on Sunday, November 29 2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal 
-Last Edit: Thursday, December 10 2009
+Last Edit: Saturday, December 12 2009
 '''
 from numpy import sqrt, dot
 from SteerController import SteerController
@@ -10,8 +10,6 @@ from SteerController import SteerController
 class SteerForFlee(SteerController):
     '''
        Is just the opposite of SteerForSeek
-       Verified: Wednesday, December 02 2009 - Is working
-       TODO: Here damping is in the force itself... 
     '''
     def __init__(self, model, entity_id):
         SteerController.__init__(self, model, entity_id)
@@ -24,11 +22,7 @@ class SteerForFlee(SteerController):
         # Gets the vector pointing to the entity from the target
         rel_position=(-1)*self.get_relative_position(self.target_entity_id)
         
-        force=rel_position*self.max_force
-        
-        # Check for limit       
-        fnorm=sqrt(dot(force,force))       
-        if fnorm > self.max_force:
-            force = force*self.max_force/fnorm
+        norm2=dot(rel_position,rel_position)
+        force=(rel_position/norm2)*self.max_force
 
-        return force
+        return self.check_force(force)
