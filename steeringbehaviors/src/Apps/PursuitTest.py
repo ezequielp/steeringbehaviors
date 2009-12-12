@@ -7,10 +7,6 @@ from Controller.Steering.SteerForOffset import SteerForOffset
 import random
 from numpy import pi
 
-# JPi: Got the path rules from here
-# http://www.python.org/dev/peps/pep-0328/
-# Saturday, December 12 2009
-
 FPS=40 #Same FPS for all for the moment
 
 class PursuitTestApp():
@@ -33,19 +29,27 @@ class PursuitTestApp():
         self.camera.set_target(self.entity_list[0])
        
         self.AddSteeringEntity(SteerForSeek,'g')
-        self.AddSteeringEntity(SteerForPursuit,'g')        
-        self.AddSteeringEntity(SteerForFlee,'r')
+        self.AddSteeringEntity(SteerForPursuit,'g')
+        arrive_id = self.AddSteeringEntity(SteerForArrive,color=[0,255,150])
+        self.steering_entities[arrive_id].set_slowing_distance(100.0)
+
+        #Evade entities are red
+        evade_id = self.AddSteeringEntity(SteerForEvasion,'r')
+        self.steering_entities[evade_id].set_safe_distance(5.0)        
+        flee_id = self.AddSteeringEntity(SteerForFlee,'r')
+        self.steering_entities[flee_id].set_safe_distance(10.0)
         
         
-        arrive_id=self.AddSteeringEntity(SteerForArrive,color=[0,255,150])
-        self.steering_entities[arrive_id].set_slowing_distance(1000)
-        
-        self.AddSteeringEntity(SteerForEvasion,'r')        
-        self.AddSteeringEntity(SteerForOffset,'k')
+        offset_id = self.AddSteeringEntity(SteerForOffset,'w')
+        self.steering_entities[offset_id].set_offset(100.0)
         
         #Left click ends app
         event_handler.bind(self.on_mouse_left_up, mouse.MOUSE_BTN3_UP)
-         
+
+        # Debug information
+        event_handler.bind(self.on_toggle_id, 
+                                 keyboard.register_event_type('i', 'UP'))
+                                 
         for listener_obj in [self.mouse, self.world, self.screen, self.keyboard,
                                                                    self.camera]:
             event_handler.bind(listener_obj.on_update, self.spinner.TICK)
@@ -67,7 +71,32 @@ class PursuitTestApp():
 
     def on_mouse_left_up(self, event):
         self.spinner.stop()    	
-
+    
+    def on_toggle_id(self, event):
+        try:
+            showing_id=self.showing_id=not self.showing_id
+        except AttributeError:
+            showing_id=self.showing_id=True
+        
+        if showing_id:
+            from Controller.Labelers import DynamicLabel
+            self.labels=set()
+            
+            def pretty_rep(entity_id):
+                return str(self.world.get_entity(entity_id).total_force)
+            
+            for entity in self.steering_entities:
+                ent_id=entity.get_slave_id()
+                label=DynamicLabel(self.world,self.screen,ent_id,
+                                                            color=(255,255,255))
+                label.set_getter_callback(pretty_rep)
+                self.labels.add(label)
+                label.set_text(str(ent_id))
+                self.event_handler.bind(label.update, self.spinner.TICK)
+                
+        else:
+            del self.labels
+            
 if __name__ == '__main__':
     from View.View import PygameViewer
     from Model.Model import PhysicsModel

@@ -86,8 +86,13 @@ class ShootTheFliesApp(object):
         spinner=self.spinner
         #Create and apply Seeking Behavior controller to entity
         seeking_entity=self.world.add_entity((random.randint(0,640) ,random.randint(0,480)),(100, 100))
-        self.view.add_entity(seeking_entity, trace=False,size=8,shape='s')
+        
+        self.view.add_entity(seeking_entity, trace=False,size=8,shape='s',
+                                                                      color='r')
         seek=Behavior(self.world, seeking_entity)
+        # Only works with Offset
+        seek.set_side(-1.0)
+
         seek.target_entity(target)
         try:
             self.steering_entities.add(seek)

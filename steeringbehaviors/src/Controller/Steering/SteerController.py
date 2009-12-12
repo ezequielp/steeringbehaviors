@@ -125,6 +125,20 @@ class SteerController(Controller):
             pass
             
         return course
+
+    def get_rel_course_vec(self,entity_id):
+        '''
+         Returns the normalized vector representing the relative course of the
+         entity respect to the caller, i.e. the normalized relative velocity
+        '''
+        course=self.get_rel_velocity(entity_id)
+        try:
+            course=course/sqrt(dot(course,course))
+        except FloatingPointError:
+            # If course is zero leave it zero
+            pass
+            
+        return course
      
     def get_slave_id(self):
         return self.entity_id 

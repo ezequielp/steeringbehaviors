@@ -11,7 +11,6 @@ from SteerController import SteerController
 class SteerForPursuit(SteerController):
     '''
     Steers the entity towards the estimated next positionof the target
-    Verified: Wednesday, December 02 2009 - Is working
     '''
 
     def __init__(self, model, entity_id):
@@ -35,11 +34,5 @@ class SteerForPursuit(SteerController):
         direction=rel_position+target_velocity*event['dt']
         force=direction*self.max_force
         
-        # Check for limit       
-        fnorm=sqrt(dot(force,force))       
-        if fnorm > self.max_force:
-            force = force*self.max_force/fnorm
-
-
-        return force
+        return self.check_force(force)
 

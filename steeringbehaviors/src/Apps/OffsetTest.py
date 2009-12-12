@@ -18,18 +18,22 @@ class OffsetTestApp():
         self.entity_list=[self.world.add_entity((320,240),(0,0))]
         self.screen.add_entity(self.entity_list[0], trace=False,size=5,color="g")
 
-        self.AddSteeringEntity(SteerForOffset,'k',pos=(0,200,),vel=(0,-10,))
+        offset1 = self.AddSteeringEntity(SteerForOffset,'g',
+                                                      pos=(0,200,),vel=(0,-10,))
 
-        self.AddSteeringEntity(SteerForOffset,'r',pos=(500,300,),vel=(-5,-8,))
+        offset2 = self.AddSteeringEntity(SteerForOffset,'r',
+                                                      pos=(0,200,),vel=(0,-10,))
         
-        self.steering_entities[1].target_entity(
+        self.steering_entities[offset1].target_entity(
                                             self.entity_list[0])
-        self.steering_entities[1].offset_distance=50.0
-                                     
-        self.steering_entities[0].target_entity(
+        self.steering_entities[offset1].set_offset(200.0)
+        self.steering_entities[offset1].set_side(1.0)
+        
+        self.steering_entities[offset2].target_entity(
                                             self.entity_list[0])  
-        self.steering_entities[0].offset_distance=50.0
-               
+        self.steering_entities[offset2].set_offset(200.0)
+        self.steering_entities[offset2].set_side(-1.0)       
+        
         event_handler.bind(self.on_mouse_left_up, mouse.MOUSE_BTN3_UP) #Left click ends app
         for listener_obj in [self.mouse, self.world, self.screen, self.keyboard ]:
             event_handler.bind(listener_obj.on_update, self.spinner.TICK)
@@ -44,7 +48,8 @@ class OffsetTestApp():
         self.steering_entities.append(seek)
         
         self.event_handler.bind(seek.update, spinner.TICK)
-
+        return len(self.steering_entities)-1
+        
     def run(self):
         self.spinner.run()
 

@@ -1,7 +1,8 @@
 '''
 Created on 11/12/2009
 
-@author: Ezequiel N. Pozzo
+@author: Ezequiel N. Pozzo, JuanPi Carbajal
+Last Edit: Saturday, December 12 2009
 '''
 offset=(-20,20)
 class ConstantLabel(object):
@@ -34,24 +35,31 @@ class ConstantLabel(object):
         self.view.change_text_entity(text_id, text)
         
     def create_label(self, text):
-        self.text_id=self.view.add_text_entity(text, self.view.get_view_position(self.model.get_position(self.follow_entity_id))+offset,size=self.font_size, color=self.color)
+        self.text_id=self.view.add_text_entity(text, 
+                         self.view.get_view_position(
+                         self.model.get_position(self.follow_entity_id))+offset,
+                         size=self.font_size, color=self.color)
         
     def update(self, event):
         try:
-            self.view.move_entity(self.text_id, offset+self.view.get_view_position(self.model.get_position(self.follow_entity_id)))
+            self.view.move_entity(self.text_id, 
+            offset+self.view.get_view_position(
+                                self.model.get_position(self.follow_entity_id)))
         except AttributeError:
             assert False, "Label not initiated!"
             
 class DynamicLabel(ConstantLabel):
-    def __init__(self, model, view, follow_entity_id, view_size=10, color=(0,0,0), getter_callback_function=False):
-        ConstantLabel.__init__(self, model, view, follow_entity_id, view_size, color)
+    def __init__(self, model, view, follow_entity_id, 
+                   view_size=10, color=(0,0,0), getter_callback_function=False):
+        ConstantLabel.__init__(self, model, view, follow_entity_id, view_size,
+                                                                          color)
         if getter_callback_function:
             self.set_getter_callback(getter_callback_function)
         
     def set_getter_callback(self, function):
         '''
-        function must accept model_id as parameter and return a representable object to
-        use as label
+        Function must accept model_id as parameter and return a representable
+        object to use as label
         '''
         self._cb_function=function
         
