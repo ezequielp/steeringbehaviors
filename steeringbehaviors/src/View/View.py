@@ -271,9 +271,10 @@ class PygameViewer(View2D):
         from pygame.transform import scale
         
         filename=os.path.join(path, "Images", "1144.jpg")
+
         sc_size=self.screen.get_size()
         background=image.load(filename)
-        background=scale(background, sc_size)
+        background=scale(background, sc_size).convert()
         '''background = self.pygame.Surface(sc_size)
         background = background.convert()
         background.fill(tuple(cmap[ckey['k']]))
@@ -284,6 +285,7 @@ class PygameViewer(View2D):
             circle(background, tuple(cmap[ckey['w']]), (x,y), 1)'''
         
         background_entity=PygSimpleBackground(background, zero_position=(sc_size[0]/2, sc_size[1]/2))
+
         return background_entity
         
 
