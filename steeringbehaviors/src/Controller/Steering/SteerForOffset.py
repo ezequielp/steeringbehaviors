@@ -2,7 +2,7 @@
 Created on Monday, November 30 2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal 
-Last Edit: Thursday, December 10 2009
+Last Edit: Saturday, December 12 2009
 '''
 
 from numpy import sqrt, dot
@@ -12,8 +12,8 @@ class SteerForOffset(SteerController):
     '''
      The entity approaches the target keeping a minimum distance
      Attribute offset is the distance
-     Attribute side defines either left (1) or right(-1) respect to te direction
-     of motion of the target
+     Attribute side defines either left (1) or right(-1) respect to the 
+     direction of motion of the target
     '''
     
     def __init__(self, model, entity_id):

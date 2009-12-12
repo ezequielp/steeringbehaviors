@@ -2,7 +2,7 @@
 Created on Saturday, November 28 2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal 
-Last Edit: Thursday, December 10 2009
+Last Edit: Saturday, December 12 2009
 '''
 
 from numpy import sqrt, dot
@@ -20,6 +20,8 @@ class SteerForPursuit(SteerController):
         force=self.get_force(event)
         self.set_force(force)
         
+    ##############
+    # Getters    
     def get_force(self,event=None):
         model=self.model
         target_id=self.target_entity_id

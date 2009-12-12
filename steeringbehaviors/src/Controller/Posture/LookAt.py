@@ -1,7 +1,8 @@
 '''
 Created on Friday, December 11 2009
 
-@author: JuanPi Carbajal 
+@author: Ezequiel N. Pozzo, JuanPi Carbajal
+
 Last Edit: Friday, December 11 2009
 '''
 

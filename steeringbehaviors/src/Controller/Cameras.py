@@ -1,7 +1,8 @@
 '''
 Created on 11/12/2009
 
-@author: Ezequiel N. Pozzo
+@author: Ezequiel N. Pozzo, JuanPi Carbajal
+Last edit: Saturday, December 12 2009
 '''
 
 class FollowCamera(object):
@@ -18,7 +19,8 @@ class FollowCamera(object):
         self.view=view
         center=view.get_screen_center()
         self.center_id=model.add_entity(center, (0,0))
-        self.LCD_display_id=view.add_text_entity("[REC]", (0, center[1]*1.9), size=20, color=(255,0,0))
+        self.LCD_display_id=view.add_text_entity("[REC]", (0, center[1]*1.9),
+                                                       size=20, color=(255,0,0))
 
         
     def set_target(self, entity_id):

@@ -108,10 +108,10 @@ class Test():
         test=PursuitTestApp(self.event_handler, self.world, self.screen, 
         self.mouse, self.spinner, self.keyboard)
         
-        self.spinner=self.CPUSpinner(FPS, self.event_handler)
-        from Apps.DragAndDrop import DragAndDropApp
-        test=DragAndDropApp(self.event_handler, self.world, self.screen, 
-        self.mouse, self.spinner, self.keyboard)	
+        #self.spinner=self.CPUSpinner(FPS, self.event_handler)
+        #from Apps.DragAndDrop import DragAndDropApp
+        #test=DragAndDropApp(self.event_handler, self.world, self.screen, 
+        #self.mouse, self.spinner, self.keyboard)	
         test.run()
         
         print "...OK"

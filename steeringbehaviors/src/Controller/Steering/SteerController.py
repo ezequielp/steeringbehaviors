@@ -97,7 +97,7 @@ class SteerController(Controller):
             
         return rel_vel
      
-    def get_force(self):
+    def get_force(self,event=None):
         '''
         This method is used for combining behaviors. When a behavior is composed
         with other behaviors, instead of using the function update, we use the
