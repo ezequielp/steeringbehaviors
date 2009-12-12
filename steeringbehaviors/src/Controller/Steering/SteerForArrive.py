@@ -27,7 +27,7 @@ class SteerForArrive(SteerForSeek):
         slowing_distance=self.slowing_distance
         
         if distance>slowing_distance:
-            force=SteerForSeek.get_force(self, event)
+            force=SteerForSeek.get_force(self)
         else:
             force=rel_position*self.max_force/slowing_distance
 

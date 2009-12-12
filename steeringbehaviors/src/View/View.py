@@ -68,7 +68,9 @@ class View2D(View):
                            scale=np.array([1,1])):
         self._project.set_transform(move, rotate, scale)
         
-
+    def camera_center(self, new_center):
+        self.set_transform(move=self.screen_center-new_center)
+        
     def get_world_position(self, view_position):
         '''
         Returns the position in world coordinates for the 
@@ -196,6 +198,7 @@ class PygameViewer(View2D):
         '''
         Starts a simple black screen.        TODO: improve to be configurable        '''
         self.screen = pygame.display.set_mode(config.screen_size)
+        self.screen_center=(config.screen_size[0]*1.0/2, config.screen_size[1]*1.0/2)
         background = pygame.Surface(self.screen.get_size())
         background = background.convert()
         background.fill(tuple(cmap[ckey['w']]))
@@ -237,6 +240,7 @@ class PygameViewer(View2D):
             self.set_orientation(-self.model.ang*57.296)
             self.rect=self.image.get_rect()
             self.rect.center=self._project.transform(self.model.position)
+            
             if PERIODIC_HACK:
                 pos= self.rect.center
                 self.rect.center=(pos[0]%config.screen_size[0],pos[1]%config.screen_size[1])
@@ -280,7 +284,9 @@ class PygameViewer(View2D):
                                                      .5*size,1.5*size,1.5*size))
                 
             
-        
+      
+    def get_screen_center(self):
+        return self.screen_center  
     def on_update(self, event):
         self.update()
         

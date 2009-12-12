@@ -24,7 +24,7 @@ class SteerForFlock(SteerController):
         self.avoid=self.SteerForSeparation(model, entity_id)
                
     def update(self, event=None):
-        force=self.get_force([1,300,500])
+        force=self.get_force([1,500,500])
         
         self.set_force(1*force-0.0*self.get_abs_velocity(self.entity_id))
         

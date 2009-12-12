@@ -16,16 +16,25 @@ class FlockTestApp():
         self.keyboard=keyboard
         
         self.steering_entities=set()
-       
+        self.entities=list()
         #self.add_in_square(SteerForFlock)
         self.AddSteeringEntity(SteerForFlock,number=10,color='g')
         self.AddSteeringEntity(SteerForFlock,number=6,color='r')
+        PJ=self.entities[0]
+        
+        #Creates camera
+        from Controller.Cameras import FollowCamera
+        self.camera=FollowCamera(screen, world)
+        self.camera.set_target(PJ)
         
         #Left click ends app
         event_handler.bind(self.on_mouse_left_up, mouse.MOUSE_BTN3_UP)
          
-        for listener_obj in [self.mouse, self.world, self.screen, self.keyboard ]:
+        for listener_obj in [self.mouse, self.world, self.screen, self.keyboard, self.camera ]:
             event_handler.bind(listener_obj.on_update, self.spinner.TICK)
+         
+         
+        self.text_entity_id=screen.add_text_entity("Flocking app (with follow cam!)", (0,0), size=20)
             
     def AddSteeringEntity(self, Behavior,number=1,color='r'):
       
@@ -41,6 +50,8 @@ class FlockTestApp():
             flock=Behavior(self.world, seeking_entity)
             self.steering_entities.add(flock)
             self.event_handler.bind(flock.update, self.spinner.TICK)
+            
+            self.entities.append(seeking_entity)
 
     def add_in_square(self, Behavior, color='r', shape='s'):
         side=50.0

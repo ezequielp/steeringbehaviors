@@ -7,6 +7,7 @@ Last edit: Wednesday, November 18 2009
 from __future__ import division
 import numpy as np
 from numpy import array, diag, eye, concatenate, dot, pi, sqrt, ones, sin, transpose, kron, cos, zeros, vstack
+from numpy.linalg import inv
 from LinAlgebra_extra import rotv
 
 
@@ -23,7 +24,6 @@ class Transformation:
     def transform(self,Rcoord):
         
         v=concatenate((Rcoord,[1.0]))  
-        
         return np.round(np.dot(self.T,np.transpose(v)))[:2]
        
     def inverse_transform(self, Scoord):
@@ -36,7 +36,7 @@ class Transformation:
      
     def set_transform(self,move=array([0,0]), rotate=array([0]),scale=array([1,1])):
         # Works only in 2D for the moment                                 
-                    
+        
         # Rotation
         R = rotv(array([0,0,1]),rotate[0])
         # Scale
@@ -47,7 +47,10 @@ class Transformation:
         for i in xrange(0,2):
             A[i,-1]=move[i]*scale[i]
 
+        
         self.T=dot(R,S)+A
-        self.T_inv=self.T.getI()
-    
+       
+        
+        self.T_inv=inv(self.T)
+        
 
