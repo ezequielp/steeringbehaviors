@@ -1,7 +1,8 @@
 '''
 Created on 29/11/2009
 
-@author: Ezequiel N. Pozzo
+@author: Ezequiel N. Pozzo, JuanPi Carbajal
+Last edit: Saturday, December 12 2009
 '''
 from Controller.Crosshair import Crosshair
 

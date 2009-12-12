@@ -422,6 +422,51 @@ class PhysicsModel(Model):
             
             #ent.ang = vector2angle(v_2)        
             
+        def ERM_step(ent):
+            '''
+                Euler-Richardson Method step
+                "Numerical integration of Newton's equations including velocity
+                dependent forces". 
+                Ian R. Gatland. Am. J. Phys., Vol. 62, No. 3, March 1994
+            '''
+            ang = vector2angle(ent.velocity)
+            R = rotv(array((0,0,1)), ang)[0:2,0:2]
+            rel2global_f = np.dot(R, ent.total_relative_force)                
+
+            # Update the total force                    
+            force = (ent.total_force + rel2global_f) - DAMPING*ent.velocity
+            
+            # Update total torque
+            # TODO: A factor accounting for the effective radius of the entity 
+            #       is missing in the dmaping factor
+            torque = ent.total_torque - DAMPING*ent.angspeed
+            
+            # Update vel(t+1/2) and position pos(t+1/2)
+            v_2 = ent.velocity + force*dt_2/ent.mass
+            ent.position = ent.position + v_2*dt_2
+            
+            w_2 = ent.angspeed + torque*dt_2/ent.inertia_moment
+            ent.ang = ent.ang + w_2*dt_2
+                
+            # Update forces
+            #ang = ent.ang = vector2angle(v_2)
+            ang = vector2angle(v_2)
+            R = rotv(array((0,0,1)), ang)[0:2,0:2]
+            rel2global_f = np.dot(R, ent.total_relative_force)
+            force = (ent.total_force + rel2global_f) - DAMPING*v_2
+            
+            # Update total torque
+            # TODO: A factor accounting for the effective radius of the entity 
+            #       is missing in the dmaping factor
+            torque = ent.total_torque - DAMPING*w_2
+                
+            # Update vel(t+1)
+            ent.velocity = ent.velocity + force*dt_sec/ent.mass
+            ent.angspeed = ent.angspeed + torque*dt_sec/ent.inertia_moment
+            
+            ent.position = ent.position + v_2*dt_sec
+            ent.ang = ent.ang + w_2*dt_sec
+                  
         for ent in self.entities:
             #TODO: Store the state of all the entities in a matrix and update
             #      all of them in a single operation.
@@ -429,7 +474,8 @@ class PhysicsModel(Model):
             if ent.id in grabbed:
                 continue
            
-            verletV_step(ent) 
+            #verletV_step(ent) 
+            ERM_step(ent)
         
     def get_neighbour_average_heading(self, ent_id):
         try:
