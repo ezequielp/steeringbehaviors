@@ -26,12 +26,12 @@ class OffsetTestApp():
         
         self.steering_entities[offset1].target_entity(
                                             self.entity_list[0])
-        self.steering_entities[offset1].set_offset(200.0)
+        self.steering_entities[offset1].set_offset(100.0)
         self.steering_entities[offset1].set_side(1.0)
         
         self.steering_entities[offset2].target_entity(
                                             self.entity_list[0])  
-        self.steering_entities[offset2].set_offset(200.0)
+        self.steering_entities[offset2].set_offset(100.0)
         self.steering_entities[offset2].set_side(-1.0)       
         
         event_handler.bind(self.on_mouse_left_up, mouse.MOUSE_BTN3_UP) #Left click ends app

@@ -26,7 +26,6 @@ class SteerForArrive(SteerForSeek):
         
     def get_force(self, event=None):
         rel_position=self.get_relative_position(self.target_entity_id)
-           
         distance=sqrt(dot(rel_position, rel_position))
         
         '''        
@@ -38,7 +37,8 @@ class SteerForArrive(SteerForSeek):
         '''
         force=SteerForSeek.get_force(self)
         if distance<self.slowing_distance:
-            force = force - self.breaking_intensity * \
+            force = rel_position/self.slowing_distance - \
+                                self.breaking_intensity * \
                                     self.get_rel_velocity(self.target_entity_id)
 
         return self.check_force(force)
