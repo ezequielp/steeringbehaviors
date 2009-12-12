@@ -126,6 +126,12 @@ class SteerController(Controller):
             
         return course
      
+    def get_slave_id(self):
+        return self.entity_id 
+        
+    def get_target_id(self):
+        return self.target_entity_id
+    
      ########
      # Getters for group based steering
      
@@ -146,3 +152,11 @@ class SteerController(Controller):
           
         return course
 
+    ########
+    # Limit checkers   
+    def check_force(self,force):
+        fnorm=sqrt(dot(force,force))       
+        if fnorm > self.max_force:
+            force = force*self.max_force/fnorm
+            
+        return force

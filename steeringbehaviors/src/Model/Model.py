@@ -77,7 +77,9 @@ class Model_Entity(object):
         # Misc   
         self.id = None
         self.zero_vector = zero_vector
-
+        self.mass = None
+        self.inertia_moment = None
+        
         ##################
         # Torque Realted attributes
         self.torques = []
@@ -228,54 +230,11 @@ class PhysicsModel(Model):
     def get_angspeed(self, entity_id):
         return self.entities[entity_id].angspeed
     
-    ###################
-    # Entity related
-    def delete_entity(self, entity_id):
-        del self.entities[entity_id]
-        
-    def grab_entity(self, entity_id):
-        self.grabbed.add(entity_id)
-        
-    def drop_entity(self, entity_id):
-        self.grabbed.remove(entity_id)
-        
-    def move_entity(self, entity_id, position):
-        '''
-        Moves the entity to its new position. 
-        It also updates the velocity to an average velocity using a simple estimator.
-        '''
-        estimator=self.velocity_estimator
-        try:
-            estimator[entity_id].append(self.reference_clock, position)
-        except KeyError:
-            estimator[entity_id]=VelocityEstimator()
-            estimator[entity_id].append(self.reference_clock, position)
-            
-        entity=self.get_entity(entity_id)
-        entity.position=position
-        entity.velocity=estimator[entity_id].get_velocity_estimation()
-        
-    def get_entity(self, entity_id):
-        '''
-        Returns the list of entities
-        '''
-        return self.entities[entity_id]
+    def get_mass(self, entity_id):
+        return self.entities[entity_id].mass
 
-    def add_entity(self, position, velocity,ang=0.0,angspeed=0.0):
-        entity = Model_Entity( array((0.0,0.0)) )
-        self.entities.append(entity)
-        entity.position = array(position)
-        entity.velocity = array(velocity)
-        entity.ang = ang
-        entity.angspeed = angspeed
-        entity.id=len(self.entities)-1
-#        entity.ang=vector2angle(velocity)
-        return len(self.entities) -1
-
-    def on_damage(self, event):
-        entity_id=event['Damaged entity']
-        self.grab_entity(entity_id)
-
+    def get_moment(self, entity_id):
+        return self.entities[entity_id].intertia_moment
     ###################    
     # Setters
     
@@ -329,7 +288,69 @@ class PhysicsModel(Model):
         
     def set_angspeed(self,entity_id,angspeed):
         self.entities[entity_id].angspeed=angspeed
+
+    def set_mass(self,entity_id,mass):
+        self.entities[entity_id].mass=mass
+        # TODO: to fix when shapes are defined
+        R=0.1
+        self.entities[entity_id].inertia_moment=mass*R
             
+    ###################
+    # Entity related
+    def delete_entity(self, entity_id):
+        del self.entities[entity_id]
+        
+    def grab_entity(self, entity_id):
+        self.grabbed.add(entity_id)
+        
+    def drop_entity(self, entity_id):
+        self.grabbed.remove(entity_id)
+        
+    def move_entity(self, entity_id, position):
+        '''
+        Moves the entity to its new position. 
+        It also updates the velocity to an average velocity using a simple estimator.
+        '''
+        estimator=self.velocity_estimator
+        try:
+            estimator[entity_id].append(self.reference_clock, position)
+        except KeyError:
+            estimator[entity_id]=VelocityEstimator()
+            estimator[entity_id].append(self.reference_clock, position)
+            
+        entity=self.get_entity(entity_id)
+        entity.position=position
+        entity.velocity=estimator[entity_id].get_velocity_estimation()
+        
+    def get_entity(self, entity_id):
+        '''
+        Returns the list of entities
+        '''
+        return self.entities[entity_id]
+
+    def add_entity(self, position, velocity,ang=0.0,angspeed=0.0,
+    mass=1.0):
+        entity = Model_Entity( array((0.0,0.0)) )
+        self.entities.append(entity)
+
+        # Set identitty
+        entity.id=len(self.entities)-1
+        
+        # Set state
+        entity.position = array(position)
+        entity.velocity = array(velocity)
+        entity.ang = ang
+        entity.angspeed = angspeed
+
+        # Set physics
+        self.set_mass(entity.id,mass)
+
+        return len(self.entities) -1
+
+    def on_damage(self, event):
+        entity_id=event['Damaged entity']
+        self.grab_entity(entity_id)
+
     ###################   
     #Update
              
@@ -353,45 +374,11 @@ class PhysicsModel(Model):
         self.reference_clock+=dt
         dt_2=dt_sec/2
         
-        def verletV_step(ent,force,torque):
+        def verletV_step(ent):
             '''
                 Perform one step of the verlet velocity algorithm
                 Not vectorized
             '''
-            # Update vel(t+1/2) and position pos(t+1)
-            v_2 = ent.velocity + force*dt_2
-            ent.position = ent.position + v_2*dt_sec
-            
-            w_2 = ent.angspeed + torque*dt_2
-
-            ent.ang = ent.ang + w_2*dt_sec
-                
-            # Update forces
-            #ang = ent.ang = vector2angle(v_2)
-            ang = vector2angle(v_2)
-            R = rotv(array((0,0,1)), ang)[0:2,0:2]
-            rel2global_f = np.dot(R, ent.total_relative_force)
-            force = (ent.total_force + rel2global_f) - DAMPING*v_2
-            
-            # Update total torque
-            # TODO: A factor accounting for the effective radius of the entity 
-            #       is missing in the dmaping factor
-            torque = ent.total_torque - DAMPING*w_2
-                
-            # Update vel(t+1)
-            ent.velocity = v_2 + force*dt_2
-            
-            ent.angspeed = w_2 + torque*dt_2
-            
-            #ent.ang = vector2angle(v_2)        
-            
-        for ent in self.entities:
-            #TODO: Store the state of all the entities in a matrix and update
-            #      all of them in a single operation.
-            
-            if ent.id in grabbed:
-                continue
-            
             # Put the forces given in the entity frame into the global frame
             # TODO: Put this in a function. Soon the entties wont be points 
             #       anymore and more projections/rotations will be needed.
@@ -408,7 +395,41 @@ class PhysicsModel(Model):
             #       is missing in the dmaping factor
             torque = ent.total_torque - DAMPING*ent.angspeed
             
-            verletV_step(ent,force,torque) 
+            # Update vel(t+1/2) and position pos(t+1)
+            v_2 = ent.velocity + force*dt_2/ent.mass
+            ent.position = ent.position + v_2*dt_sec
+            
+            w_2 = ent.angspeed + torque*dt_2/ent.inertia_moment
+
+            ent.ang = ent.ang + w_2*dt_sec
+                
+            # Update forces
+            #ang = ent.ang = vector2angle(v_2)
+            ang = vector2angle(v_2)
+            R = rotv(array((0,0,1)), ang)[0:2,0:2]
+            rel2global_f = np.dot(R, ent.total_relative_force)
+            force = (ent.total_force + rel2global_f) - DAMPING*v_2
+            
+            # Update total torque
+            # TODO: A factor accounting for the effective radius of the entity 
+            #       is missing in the dmaping factor
+            torque = ent.total_torque - DAMPING*w_2
+                
+            # Update vel(t+1)
+            ent.velocity = v_2 + force*dt_2/ent.mass
+            
+            ent.angspeed = w_2 + torque*dt_2/ent.inertia_moment
+            
+            #ent.ang = vector2angle(v_2)        
+            
+        for ent in self.entities:
+            #TODO: Store the state of all the entities in a matrix and update
+            #      all of them in a single operation.
+            
+            if ent.id in grabbed:
+                continue
+           
+            verletV_step(ent) 
         
     def get_neighbour_average_heading(self, ent_id):
         try:

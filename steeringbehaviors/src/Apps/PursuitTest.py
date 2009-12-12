@@ -7,6 +7,9 @@ from Controller.Steering.SteerForOffset import SteerForOffset
 import random
 from numpy import pi
 
+# JPi: Got the path rules from here
+# http://www.python.org/dev/peps/pep-0328/
+# Saturday, December 12 2009
 
 FPS=40 #Same FPS for all for the moment
 
@@ -19,10 +22,12 @@ class PursuitTestApp():
         self.spinner=spinner
         self.keyboard=keyboard
         
-        self.steering_entities=set()
+        self.steering_entities=[]
         self.entity_list=[self.world.add_entity((100,100),(100, 0)) for i in xrange(1)]
-        [self.screen.add_entity(entity, trace=False,shape='s',color='b',size=5) for entity in self.entity_list]
-        [self.world.apply_relative_force(entity, pi/2, 100) for entity in self.entity_list]
+        [self.screen.add_entity(entity, trace=False,shape='s',color='b',size=5)
+                                                 for entity in self.entity_list]
+        [self.world.apply_relative_force(entity, pi/2, 100) for entity in
+                                                               self.entity_list]
         from Controller.Cameras import FollowCamera
         self.camera=FollowCamera(screen, world)
         self.camera.set_target(self.entity_list[0])
@@ -30,12 +35,19 @@ class PursuitTestApp():
         self.AddSteeringEntity(SteerForSeek,'g')
         self.AddSteeringEntity(SteerForPursuit,'g')        
         self.AddSteeringEntity(SteerForFlee,'r')
-        self.AddSteeringEntity(SteerForArrive,color=[0,255,150])
+        
+        
+        arrive_id=self.AddSteeringEntity(SteerForArrive,color=[0,255,150])
+        self.steering_entities[arrive_id].set_slowing_distance(1000)
+        
         self.AddSteeringEntity(SteerForEvasion,'r')        
         self.AddSteeringEntity(SteerForOffset,'k')
         
-        event_handler.bind(self.on_mouse_left_up, mouse.MOUSE_BTN3_UP) #Left click ends app
-        for listener_obj in [self.mouse, self.world, self.screen, self.keyboard, self.camera]:
+        #Left click ends app
+        event_handler.bind(self.on_mouse_left_up, mouse.MOUSE_BTN3_UP)
+         
+        for listener_obj in [self.mouse, self.world, self.screen, self.keyboard,
+                                                                   self.camera]:
             event_handler.bind(listener_obj.on_update, self.spinner.TICK)
             
     def AddSteeringEntity(self, Behavior,color='r',vel=(0.0,0.0,)):
@@ -45,10 +57,11 @@ class PursuitTestApp():
         self.screen.add_entity(seeking_entity, trace=False,size=3,color=color)
         seek=Behavior(self.world, seeking_entity)
         seek.target_entity(self.entity_list[0])
-        self.steering_entities.add(seek)
+        self.steering_entities.append(seek)
         
         self.event_handler.bind(seek.update, spinner.TICK)
-
+        return len(self.steering_entities)-1
+        
     def run(self):
         self.spinner.run()
 
