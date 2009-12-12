@@ -110,7 +110,7 @@ class Test():
         
         self.spinner=self.CPUSpinner(FPS, self.event_handler)
         from Apps.DragAndDrop import DragAndDropApp
-        test2=DragAndDropApp(self.event_handler, self.world, self.screen, 
+        test=DragAndDropApp(self.event_handler, self.world, self.screen, 
         self.mouse, self.spinner, self.keyboard)	
         test.run()
         
