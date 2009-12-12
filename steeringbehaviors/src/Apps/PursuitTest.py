@@ -8,7 +8,7 @@ import random
 from numpy import pi
 
 
-FPS=30 #Same FPS for all for the moment
+FPS=40 #Same FPS for all for the moment
 
 class PursuitTestApp():
     def __init__(self, event_handler, world, screen, mouse, spinner, keyboard):
@@ -23,6 +23,9 @@ class PursuitTestApp():
         self.entity_list=[self.world.add_entity((100,100),(100, 0)) for i in xrange(1)]
         [self.screen.add_entity(entity, trace=False,shape='s',color='b',size=5) for entity in self.entity_list]
         [self.world.apply_relative_force(entity, pi/2, 100) for entity in self.entity_list]
+        from Controller.Cameras import FollowCamera
+        self.camera=FollowCamera(screen, world)
+        self.camera.set_target(self.entity_list[0])
        
         self.AddSteeringEntity(SteerForSeek,'g')
         self.AddSteeringEntity(SteerForPursuit,'g')        
@@ -32,7 +35,7 @@ class PursuitTestApp():
         self.AddSteeringEntity(SteerForOffset,'k')
         
         event_handler.bind(self.on_mouse_left_up, mouse.MOUSE_BTN3_UP) #Left click ends app
-        for listener_obj in [self.mouse, self.world, self.screen, self.keyboard ]:
+        for listener_obj in [self.mouse, self.world, self.screen, self.keyboard, self.camera]:
             event_handler.bind(listener_obj.on_update, self.spinner.TICK)
             
     def AddSteeringEntity(self, Behavior,color='r',vel=(0.0,0.0,)):

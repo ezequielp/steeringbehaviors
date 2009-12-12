@@ -34,14 +34,14 @@ class FlockTestApp():
             event_handler.bind(listener_obj.on_update, self.spinner.TICK)
          
          
-        self.text_entity_id=screen.add_text_entity("Flocking app (with follow cam!)", (0,0), size=20)
+        self.text_entity_id=screen.add_text_entity("Flocking app (with follow cam!)", (0,0), size=20, color=(200,200,200))
             
     def AddSteeringEntity(self, Behavior,number=1,color='r'):
       
         #Create and apply Seeking Behavior controller to entity
         for i in xrange(1,number,1):
             pos=round((rnd.uniform(0,640),rnd.uniform(0,480)))
-            vel=round((rnd.uniform(-100,100),rnd.uniform(-100,100)))
+            vel=round((rnd.uniform(-100,100),rnd.uniform(-10,10)))
             seeking_entity=self.world.add_entity(pos,vel)
             self.world.set_neighbour_sensor(seeking_entity, 500,pi)            
             self.screen.add_entity(seeking_entity, 

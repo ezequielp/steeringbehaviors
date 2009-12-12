@@ -22,7 +22,7 @@ class FollowCamera(object):
 
         
     def set_target(self, entity_id):
-        from Steering.SteerForSeek import SteerForSeek as Steer
+        from Steering.SteerForPursuit import SteerForPursuit as Steer
         
         arrive_behavior=Steer(self.model, self.center_id)
         arrive_behavior.target_entity(entity_id)
@@ -32,9 +32,10 @@ class FollowCamera(object):
     def on_update(self, event):
         self.autocenter.update(event)
         view=self.view
-        
+        from numpy import dot
         move_vec=self.model.get_position(self.center_id)
-        new_text="[REC] position: (%07d , %07d)"%tuple(move_vec)
+        vel=self.model.get_velocity(self.center_id)
+        new_text="[REC] squared velocity: %07d"%(dot(vel,vel),)
         view.change_text_entity(self.LCD_display_id,new_text)
 
         self.view.camera_center(move_vec)

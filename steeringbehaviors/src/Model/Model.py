@@ -11,11 +11,11 @@ from numpy import add, dot, array, concatenate, sqrt, sin, cos
 from Tools.LinAlgebra_extra import rotv, vector2angle
 
 np.seterr(all='raise')
-MAXSPEED=300.0
-MAXSANGPEED=6.0
-MAXFORCE=300.0 # 60 N/kg, universal law! :D
+MAXSPEED=100.0
+MAXSANGSPEED=6.0
+MAXFORCE=1000.0 # 60 N/kg, universal law! :D
 MAXTORQUE=60.0 # 60 m * N/kg
-DAMPING=0.9
+DAMPING=0.0
 
 class Model(object):
     '''

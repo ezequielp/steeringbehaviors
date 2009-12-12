@@ -61,6 +61,7 @@ class View2D(View):
         self._project=rp.Transformation()
         self._n_of_entities=0
         self.entities=dict()
+        self.using_background=False
  
     
     def set_transform(self,move=np.array([0,0]), 
@@ -70,6 +71,7 @@ class View2D(View):
         
     def camera_center(self, new_center):
         self.set_transform(move=self.screen_center-new_center)
+        self.background.scroll_to(new_center)
         
     def get_world_position(self, view_position):
         '''
@@ -138,6 +140,62 @@ class View2D(View):
     def get_view_entity(self, eid):
         return self.entities[eid]
     
+    def set_background(self, background_entity):
+        self.background=background_entity
+        self.using_background=True
+    
+    
+class BackgroundEntity(object):
+    '''
+    A background manager entity. 
+    '''
+    def __init__(self, zero_position=(0,0)):
+        self.zero_position=zero_position
+        self.has_changed=True
+        self.render_offset=zero_position
+        
+    def scroll_to(self, new_position):
+        scroll=new_position-self.zero_position
+        self.scroll(*scroll)
+        
+    
+        
+        
+class PygSimpleBackground(BackgroundEntity):
+    '''
+    Background entity ready to be used with a pygame view
+    '''
+    def __init__(self, image,zero_position=(0,0)):
+        '''
+        image must be a pygame surface
+        '''
+        BackgroundEntity.__init__(self, zero_position)
+        
+        real_siz=image.get_size()
+        self._real_size=real_siz
+        self._virtual_size=(real_siz[0]*2, real_siz[1]*2)
+        
+        from pygame import Surface, Rect
+        v_i=self._virtual_image=Surface(self._virtual_size)
+        v_i.blit(image, (0,0))
+        v_i.blit(image, (real_siz[0],0))
+        v_i.blit(image, (0,real_siz[1]))
+        v_i.blit(image, (real_siz[0],real_siz[1]))
+        
+        viewport=Rect(zero_position, real_siz)
+        self._vp=viewport
+        self.image=self._virtual_image.subsurface(viewport)
+        
+    def scroll(self, dx, dy):
+        viewport=self._vp
+        vsize=viewport.size
+        vpos=self.zero_position
+        
+        viewport.topleft=((vpos[0]+dx)%vsize[0], (vpos[1]+dy)%vsize[1])
+        self.image=self._virtual_image.subsurface(viewport)
+        self.has_changed=True
+        
+        
 class TopDownSprite(object):
     '''
     A sprite for a top down view.
@@ -176,7 +234,7 @@ class PygameViewer(View2D):
     from pygame.sprite import Sprite as SpriteParent
     import pygame
     
-    def __init__(self, Model):
+    def __init__(self, Model, background=None):
         View2D.__init__(self, Model)
 
         pygame = self.pygame
@@ -199,13 +257,37 @@ class PygameViewer(View2D):
         Starts a simple black screen.        TODO: improve to be configurable        '''
         self.screen = pygame.display.set_mode(config.screen_size)
         self.screen_center=(config.screen_size[0]*1.0/2, config.screen_size[1]*1.0/2)
-        background = pygame.Surface(self.screen.get_size())
-        background = background.convert()
-        background.fill(tuple(cmap[ckey['w']]))
-        self.background = background
-        self.screen.blit(background, (0,0))
+        
+        if background==None:
+            self.set_background(self.get_dummy_background())
+        
+        self.screen.blit(self.background.image, (0,0))
+
         pygame.display.flip()
 
+    def get_dummy_background(self):
+        from pygame.draw import circle
+        from pygame import image
+        from pygame.transform import scale
+        
+        filename=os.path.join(path, "Images", "1144.jpg")
+
+        sc_size=self.screen.get_size()
+        background=image.load(filename)
+        background=scale(background, sc_size)
+        '''background = self.pygame.Surface(sc_size)
+        background = background.convert()
+        background.fill(tuple(cmap[ckey['k']]))
+        
+        for i in range(1000):
+            x=randint(0, sc_size[0])
+            y=randint(0, sc_size[1])
+            circle(background, tuple(cmap[ckey['w']]), (x,y), 1)'''
+        
+        background_entity=PygSimpleBackground(background, zero_position=(sc_size[0]/2, sc_size[1]/2))
+
+        return background_entity
+        
 
     class Sprite(SpriteParent, TopDownSprite):
         def __init__(self, model_entity,shape='o',size=3,color='k'):
@@ -287,19 +369,29 @@ class PygameViewer(View2D):
       
     def get_screen_center(self):
         return self.screen_center  
+    
     def on_update(self, event):
         self.update()
         
     def update(self):
         #self.pygame.event.pump()
-
-        self._untraced_sprites.clear(self.screen, self.background)
-        
         self._sprites.update()
         
-        self.pygame.display.update(self._traced_sprites.draw(self.screen))
-
-        self.pygame.display.update(self._untraced_sprites.draw(self.screen))
+        if self.background.has_changed:
+            self.background.has_changed=False
+            self.screen.blit(self.background.image, (0,0))
+            
+            self.pygame.display.update(self._traced_sprites.draw(self.screen))
+            self.pygame.display.update(self._untraced_sprites.draw(self.screen))
+            self.pygame.display.flip()
+        else:
+            
+            self._untraced_sprites.clear(self.screen, self.background.image)
+            
+            self.pygame.display.update(self._traced_sprites.draw(self.screen))
+            self.pygame.display.update(self._untraced_sprites.draw(self.screen))
+        
+        
         
         
     def add_entity(self, model_entity_id, trace=False, color='k', shape='o',
