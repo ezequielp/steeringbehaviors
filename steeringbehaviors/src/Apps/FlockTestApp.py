@@ -23,15 +23,22 @@ class FlockTestApp():
         self.AddSteeringEntity(SteerForFlock,number=6,color='r')
         PJ=self.entities[0]
         
+        
         #Creates camera
         from Controller.Cameras import FollowCamera
         self.camera=FollowCamera(screen, world)
         self.camera.set_target(PJ)
         
+        #Shows target
+        from Controller.Labelers import ConstantLabel
+        label=ConstantLabel(world, screen, PJ, color=(255,0,0))
+        label.set_text("Target")
+        self.label=label
+        
         #Left click ends app
         event_handler.bind(self.on_mouse_left_up, mouse.MOUSE_BTN3_UP)
          
-        for listener_obj in [self.mouse, self.world, self.screen, self.keyboard, self.camera ]:
+        for listener_obj in [self.mouse, self.keyboard, self.world, label, self.screen,self.camera]:
             event_handler.bind(listener_obj.on_update, self.spinner.TICK)
          
          
@@ -42,7 +49,7 @@ class FlockTestApp():
         #Create and apply Seeking Behavior controller to entity
         for i in xrange(1,number,1):
             pos=round((rnd.uniform(0,640),rnd.uniform(0,480)))
-            vel=round((rnd.uniform(-100,100),rnd.uniform(-10,10)))
+            vel=round((rnd.uniform(-100,100),rnd.uniform(-0,0)))
             seeking_entity=self.world.add_entity(pos,vel)
             self.world.set_neighbour_sensor(seeking_entity, 500,pi)            
             self.screen.add_entity(seeking_entity, 

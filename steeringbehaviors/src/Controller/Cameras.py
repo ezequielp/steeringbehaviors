@@ -21,19 +21,25 @@ class FollowCamera(object):
         self.center_id=model.add_entity(center, (0,0))
         self.LCD_display_id=view.add_text_entity("[REC]", (0, center[1]*1.9),
                                                        size=20, color=(255,0,0))
-
+        
         
     def set_target(self, entity_id):
+        '''
+        Must be called before using camera. Sets the target the camera should follow.
+        '''
 #        from Steering.SteerForPursuit import SteerForPursuit as Steer
         from Steering.SteerForArrive import SteerForArrive as Steer
         
         arrive_behavior=Steer(self.model, self.center_id)
         arrive_behavior.target_entity(entity_id)
         self.autocenter=arrive_behavior
+        self.target_id=entity_id
         
+
         
     def on_update(self, event):
         self.autocenter.update(event)
+            
         view=self.view
         from numpy import dot
         move_vec=self.model.get_position(self.center_id)

@@ -234,7 +234,7 @@ class PygameViewer(View2D):
     from pygame.sprite import Sprite as SpriteParent
     import pygame
     
-    def __init__(self, Model, background=None):
+    def __init__(self, Model, background=None, fullscreen=False):
         View2D.__init__(self, Model)
 
         pygame = self.pygame
@@ -255,7 +255,11 @@ class PygameViewer(View2D):
         
         '''
         Starts a simple black screen.        TODO: improve to be configurable        '''
-        self.screen = pygame.display.set_mode(config.screen_size)
+        if fullscreen:
+            fs=pygame.FULLSCREEN
+        else:
+            fs=0
+        self.screen = pygame.display.set_mode(config.screen_size, fs)
         self.screen_center=(config.screen_size[0]*1.0/2, config.screen_size[1]*1.0/2)
         
         if background==None:

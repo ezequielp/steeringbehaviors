@@ -21,6 +21,7 @@ class ConstantLabel(object):
         self.follow_entity_id=follow_entity_id
         self.font_size=view_size
         self.color=color
+        self.on_update=self.update
         
     def __del__(self):
         self.view.delete_text_entity(self.text_id)
@@ -40,6 +41,7 @@ class ConstantLabel(object):
                          self.model.get_position(self.follow_entity_id))+offset,
                          size=self.font_size, color=self.color)
         
+    
     def update(self, event):
         try:
             self.view.move_entity(self.text_id, 
