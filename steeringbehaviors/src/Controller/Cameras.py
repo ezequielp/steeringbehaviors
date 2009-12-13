@@ -23,24 +23,18 @@ class FollowCamera(object):
                                                        size=20, color=(255,0,0))
         self.autocenter=None
         
-<<<<<<< .mine
-=======
-        
     def set_target(self, entity_id):
         '''
-        Must be called before using camera. Sets the target the camera should follow.
+        Must be called before using camera. Sets the target the camera should
+         follow.
         '''
-#        from Steering.SteerForPursuit import SteerForPursuit as Steer
         from Steering.SteerForArrive import SteerForArrive as Steer
         
         arrive_behavior=Steer(self.model, self.center_id)
         arrive_behavior.target_entity(entity_id)
         self.autocenter=arrive_behavior
         self.target_id=entity_id
-        
-
-        
->>>>>>> .r214
+     
     def on_update(self, event):
         self.autocenter.update(event)
             
