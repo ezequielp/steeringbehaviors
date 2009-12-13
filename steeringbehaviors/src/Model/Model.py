@@ -12,7 +12,7 @@ from Tools.LinAlgebra_extra import rotv, vector2angle
 
 np.seterr(all='raise')
 MAXSPEED=100.0
-MAXSANGSPEED=6.0
+MAXANGSPEED=6.0
 MAXFORCE=1000.0 # 60 N/kg, universal law! :D
 MAXTORQUE=60.0 # 60 m * N/kg
 DAMPING=0.0
@@ -368,8 +368,7 @@ class PhysicsModel(Model):
         self._heading=dict()
         self._direction=dict()
         self._neighbours=dict()
-        # TODO: Where do we put this?
-        # Ezequiel: Here?
+        
         dt_sec=dt
         self.reference_clock+=dt
         dt_2=dt_sec/2
@@ -438,7 +437,7 @@ class PhysicsModel(Model):
             
             # Update total torque
             # TODO: A factor accounting for the effective radius of the entity 
-            #       is missing in the dmaping factor
+            #       is missing in the damping factor
             torque = ent.total_torque - DAMPING*ent.angspeed
             
             # Update vel(t+1/2) and position pos(t+1/2)
@@ -457,7 +456,7 @@ class PhysicsModel(Model):
             
             # Update total torque
             # TODO: A factor accounting for the effective radius of the entity 
-            #       is missing in the dmaping factor
+            #       is missing in the damping factor
             torque = ent.total_torque - DAMPING*w_2
                 
             # Update vel(t+1)

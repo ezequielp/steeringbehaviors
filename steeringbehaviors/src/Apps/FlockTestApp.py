@@ -5,6 +5,7 @@ from numpy import pi,round
 
 
 FPS=30 #Same FPS for all for the moment
+PROFILE=False
 
 class FlockTestApp():
     def __init__(self, event_handler, world, screen, mouse, spinner, keyboard):
@@ -85,8 +86,15 @@ if __name__ == '__main__':
     spinner=PygCPUSpinner(FPS, event_handler)	
     keyboard=PygameKeyboardController(event_handler)
     python_app=FlockTestApp(event_handler, world, screen, mouse, spinner, keyboard)	
-    python_app.run()
-       
+    
+    if PROFILE:
+        import cProfile
+        cProfile.run('python_app.run()', 'profile_flocktestapp')
+    else:
+        python_app.run()
+    
+
+    
 
 
 
