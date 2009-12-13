@@ -128,7 +128,7 @@ class Model_Entity(object):
 
     def remove_relative_force(self, relative_force_id):
         del self.relative_forces[relative_force_id]
-        self.total_relative_force=reduce(add, self.relative_forces)
+        self.total_relative_force=reduce(add, self.relative_forces,0)
 
     ##################
     # Torque related methods
@@ -259,15 +259,28 @@ class PhysicsModel(Model):
         entity's orientation.
         The entity's orientation is the last non 0 velocity's direction.
         TODO: Make orientation independent of velocity?
+        DEPRECATED (?)
         '''
         force=np.array((cos(relative_angle), sin(relative_angle)))*magnitude
         
         force_id=self.entities[entity_id].apply_relative_force(force)
         return force_id
-        
+    
+    def apply_rel_vec_force(self, entity_id, force):
+        '''
+        Applies a force relative to the entity's frame of reference.
+        x component in the direction of the velocity
+        y component in the direction perpendicular to the velocity 
+        '''
+        force_id=self.entities[entity_id].apply_relative_force(force)
+        return force_id
+            
     def detach_force(self, entity_id, force_id):
         self.entities[entity_id].remove_force(force_id)
-        
+
+    def detach_relative_force(self, entity_id, force_id):
+        self.entities[entity_id].remove_relative_force(force_id)
+                
     def apply_torque(self, entity_id, torque):
         '''
         Applies a torque relative to an inertial frame. You
@@ -381,7 +394,23 @@ class PhysicsModel(Model):
             # Put the forces given in the entity frame into the global frame
             # TODO: Put this in a function. Soon the entties wont be points 
             #       anymore and more projections/rotations will be needed.
-            #ang = ent.ang = vector2angle(ent.velocity)
+            # There are three frames of reference:
+            #       Global: 
+            #               X axis horizontal pointing right,
+            #               Y axis vertical  pointing down
+            #       LocalVel (or LocalCourse):
+            #               X axis parallel to velocity,
+            #               Y axis perpendicular to velocity
+            #       LocalHeading:
+            #               X axis parallel to the direction the unit is
+            #                pointing,
+            #               Y axis perpendicular to that (defines the left of 
+            #               the entity)
+            #       We could define a transfrom in the model too using what is
+            #       in real2pix.py
+
+            # WARNING: The follwoing computation assumes relatives forces are
+            # ginven in LocalCourse frame            
             ang = vector2angle(ent.velocity)
             R = rotv(array((0,0,1)), ang)[0:2,0:2]
             rel2global_f = np.dot(R, ent.total_relative_force)                
@@ -428,6 +457,23 @@ class PhysicsModel(Model):
                 dependent forces". 
                 Ian R. Gatland. Am. J. Phys., Vol. 62, No. 3, March 1994
             '''
+            # There are three frames of reference:
+            #       Global: 
+            #               X axis horizontal pointing right,
+            #               Y axis vertical  pointing down
+            #       LocalVel (or LocalCourse):
+            #               X axis parallel to velocity,
+            #               Y axis perpendicular to velocity
+            #       LocalHeading:
+            #               X axis parallel to the direction the unit is
+            #                pointing,
+            #               Y axis perpendicular to that (defines the left of 
+            #               the entity)
+            #       We could define a transfrom in the model too using what is
+            #       in real2pix.py
+            
+            # WARNING: The follwoing computation assumes relatives forces are
+            # ginven in LocalCourse frame            
             ang = vector2angle(ent.velocity)
             R = rotv(array((0,0,1)), ang)[0:2,0:2]
             rel2global_f = np.dot(R, ent.total_relative_force)                

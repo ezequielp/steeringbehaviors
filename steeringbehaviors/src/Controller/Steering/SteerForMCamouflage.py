@@ -28,14 +28,17 @@ class SteerForMC(SteerController):
         
     def update(self, event=None):
         force=self.get_force(event)
-        self.set_force(force)        
+        self.set_relative_force(force)
+        #self.set_force(force)        
 
     ########
     # Getters
         
     def get_force(self, event=None):
+        # The force generated is in the frame of reference that has
+        # the velocity as X axis
         
-        # Vector form target to seeker and normalization
+        # Vector form target to seeker and normalization and perpendicular
         r =  (-1)*self.get_relative_position(self.target_entity_id)
         r_hat=r
         try:
@@ -43,27 +46,18 @@ class SteerForMC(SteerController):
         except FloatingPointError:
             # If zero leave it zero
             pass
+        perp2rhat=array((-r_hat[1],r_hat[0]))
         
         # Relative velocity, perpendicular to it and normalization
         v = self.get_rel_velocity(self.target_entity_id)
-        perp2v = array((-v[1],v[0]))
-        norm=sqrt(dot(v,v))
-
-        n2v_hat=v
-        v_hat=v
-        try:
-            n2v_hat = perp2v / norm
-            v_hat = v / norm
-        except FloatingPointError:
-            # If zero leave it zero
-            pass
-            
-        
+       
         # control action and force
-        action = -self.gain*(dot(r_hat,perp2v))
-        force = (n2v_hat - v_hat)*action
+        # Basically: Keep the relative velocity parallel to the 
+        # relaitve position
+        action = self.gain*(dot(-perp2rhat,v))
+        rel_force = array((0.0, action))
 
-        return self.check_force(force)
+        return self.check_force(rel_force)
     
     def get_gain(self):
         return self.gain

@@ -21,7 +21,10 @@ class FollowCamera(object):
         self.center_id=model.add_entity(center, (0,0))
         self.LCD_display_id=view.add_text_entity("[REC]", (0, center[1]*1.9),
                                                        size=20, color=(255,0,0))
+        self.autocenter=None
         
+<<<<<<< .mine
+=======
         
     def set_target(self, entity_id):
         '''
@@ -37,6 +40,7 @@ class FollowCamera(object):
         
 
         
+>>>>>>> .r214
     def on_update(self, event):
         self.autocenter.update(event)
             
@@ -48,4 +52,25 @@ class FollowCamera(object):
         view.change_text_entity(self.LCD_display_id,new_text)
 
         self.view.camera_center(move_vec)
+    
+    ##############
+    # Setters
+    def set_target(self, entity_id):
+        from Steering.SteerForArrive import SteerForArrive as Steer
+        
+        arrive_behavior=Steer(self.model, self.center_id)
+        arrive_behavior.target_entity(entity_id)
+        self.autocenter=arrive_behavior
+        self.set_properties()
+
+    def set_properties(self, fov_radius=200, smoothness=50.0):
+        '''
+            The bigger the fov_radius, the more the target can scape from the
+            center.
+            The lower the smoothness, the more oscillations observed and the
+            higher the maximum speed of the camera motons
+        '''
+        
+        self.autocenter.set_slowing_distance(fov_radius)
+        self.autocenter.set_breaking_intensity(smoothness)
         

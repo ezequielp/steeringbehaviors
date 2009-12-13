@@ -64,6 +64,22 @@ class SteerController(Controller):
         # store the current id of the force for future references
         self.last_force = model.apply_force(entity_id, force)
 
+    def set_relative_force(self, force):
+        '''
+        This function receives the force vector to be applied
+        '''
+        model=self.model
+        entity_id=self.entity_id
+        
+        try:
+            model.detach_relative_force(entity_id, self.last_force)
+            
+        except AttributeError:
+            pass
+        
+        # store the current id of the force for future references
+        self.last_force = model.apply_rel_vec_force(entity_id, force)
+
     ###################
 
     # Getter methods        

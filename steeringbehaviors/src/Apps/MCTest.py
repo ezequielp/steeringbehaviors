@@ -17,16 +17,20 @@ class MCTestApp():
         self.entity_list=[]
         
         # Add circling entity
-        self.entity_list.append(self.world.add_entity((300,300),(50, 0)))
+        self.entity_list.append(self.world.add_entity((500,500),(50, 0)))
         self.screen.add_entity(self.entity_list[0],
                                          trace=False,shape='s',color='b',size=5)
-        self.world.apply_relative_force(self.entity_list[0], pi/2, 50)
+        self.world.apply_relative_force(self.entity_list[0], pi/2, 10)
+       
+        # Seek entity
+        mc_entity = self.AddSteeringEntity(SteerForMC,'g',(-10,0))
+        self.steering_entities[mc_entity].set_gain(10)
+        
+        # Camera
         from Controller.Cameras import FollowCamera
         self.camera = FollowCamera(screen, world)
         self.camera.set_target(self.entity_list[0])
-       
-        # Seek entity
-        mc_entity = self.AddSteeringEntity(SteerForMC,'g')
+        #self.camera.set_target(self.steering_entities[0].entity_id)
         
         #Left click ends app
         event_handler.bind(self.on_mouse_left_up, mouse.MOUSE_BTN3_UP)

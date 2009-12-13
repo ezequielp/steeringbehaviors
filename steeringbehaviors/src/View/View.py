@@ -1,9 +1,8 @@
 '''
 Created on 16/11/2009
 
-@author: Ezequiel N. Pozzo
-Edited by JuanPi Carbajal
-Last edit: Wednesday, November 18 2009
+@author: Ezequiel N. Pozzo, JuanPi Carbajal
+Last edit: Sunday, December 13 2009
 '''
 from __future__ import division
 import numpy as np
@@ -57,42 +56,25 @@ class View2D(View):
         # 18.11.09 : Prefix "_" means private
         # It is not really private. You can still access it if you have an instance of the obj
         # But it is private to the child I think.
+
         #self._sprites=np.array([])
         self._project=rp.Transformation()
         self._n_of_entities=0
         self.entities=dict()
         self.using_background=False
  
+    #######
+    # Setters
     
     def set_transform(self,move=np.array([0,0]), 
                            rotate=np.array([0]),
                            scale=np.array([1,1])):
         self._project.set_transform(move, rotate, scale)
-        
-    def camera_center(self, new_center):
-        self.set_transform(move=self.screen_center-new_center)
-        self.background.scroll_to(new_center)
-        
-    def get_world_position(self, view_position):
-        '''
-        Returns the position in world coordinates for the 
-        point view_position
-        '''
-        return self._project.inverse_transform(view_position)
 
-    def get_view_position(self, world_position):
-        '''
-        Returns the position in world coordinates for the 
-        point view_position
-        '''
-        return self._project.transform(world_position)
+    def set_background(self, background_entity):
+        self.background=background_entity
+        self.using_background=True
 
-    def get_entity_at(self, view_position):
-        '''
-        Returns the entity id at the requested position or None if there isn't any.
-        '''
-        assert False, "Not implemented"
-        
     def add_entity(self, model_entity_id, trace=False, color='k', shape='o',
                    size=3):
         assert False, "Not implemented"
@@ -101,11 +83,9 @@ class View2D(View):
         assert False, "Not implemented"
         
     def add_text_entity(self, text, position , font=None, size=10,color=(0,0,0)):
-        '''
-        Adds text with top left corner located at position.
+        '''        Adds text with top left corner located at position.
         If font is None, default font will be used.
         Size is in view units. 
-        
         returns: View entity entity id
         '''
         assert False, "Not implemented"
@@ -115,10 +95,7 @@ class View2D(View):
    
     def move_entity(self, view_entity_id, new_pos):
         '''
-        Moves entity given by view_entity_id to new_pos
-        
-        To move a model entity use the model.
-        
+        Moves entity given by view_entity_id to new_pos        To move a model entity use the model.
         '''
         assert False, "Not implemented"
 
@@ -136,13 +113,53 @@ class View2D(View):
         
     def delete_view_entity(self, eid):
         del self.entities[eid]
-    
+        
+    #######
+    # Getters
+            
+    def get_world_position(self, view_position):
+        '''
+        Returns the position in world coordinates for the 
+        point view_position
+        '''
+        return self._project.inverse_transform(view_position)
+
+    def get_view_position(self, world_position):
+        '''
+        Returns the position in world coordinates for the 
+        point view_position
+        '''
+        return self._project.transform(world_position)
+
+    def get_entity_at(self, view_position):
+        '''
+        Returns the entity id at the requested position or None if there isn't
+         any.
+        '''
+        assert False, "Not implemented"
+   
     def get_view_entity(self, eid):
         return self.entities[eid]
+
+    ##########
+    # Camera controls
+        
+    def camera_center(self, new_center):
+        self.set_transform(move=self.screen_center-new_center)
+        self.background.scroll_to(new_center)
     
-    def set_background(self, background_entity):
-        self.background=background_entity
-        self.using_background=True
+    def camera_zoom_in(self, zoom_factor):
+        # self.set_transform(scale=zoom_factor)
+        # self.background  ???
+        
+        pass
+
+    def camera_zoom_out(self, zoom_factor):
+        # self.set_transform(scale=1.0/zoom_factor)
+        # self.background  ???
+        
+        pass
+    
     
     
 class BackgroundEntity(object):
