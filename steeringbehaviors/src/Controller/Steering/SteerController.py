@@ -128,6 +128,14 @@ class SteerController(Controller):
         heading=self.model.get_ang(entity_id)
         return array((cos(heading),sin(heading)))
 
+    def get_rel_heading_vec(self,entity_id):
+        '''
+         Returns the normalized vector representing the relative heading of the
+         entity
+        '''
+        heading=self.model.get_ang(entity_id)-self.model.get_ang(self.entity_id)
+        return array((cos(heading),sin(heading)))
+
     def get_course_vec(self,entity_id):
         '''
          Returns the normalized vector representing the course of the entity, 

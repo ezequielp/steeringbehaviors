@@ -142,7 +142,7 @@ class Model_Entity(object):
         self.torques.append(torque)
         self.total_torque=add(self.total_torque, torque)
 
-        return len(self.torque)-1
+        return len(self.torques)-1
     
     def remove_torque(self, torque_id):
         '''
@@ -488,13 +488,13 @@ class PhysicsModel(Model):
             
             # Update vel(t+1/2) and position pos(t+1/2)
             v_2 = ent.velocity + force*dt_2/ent.mass
-            ent.position = ent.position + v_2*dt_2
+            p_2 = ent.position + v_2*dt_2
             
             w_2 = ent.angspeed + torque*dt_2/ent.inertia_moment
-            ent.ang = ent.ang + w_2*dt_2
+            a_2 = ent.ang + w_2*dt_2
                 
             # Update forces
-            #ang = ent.ang = vector2angle(v_2)
+#            ang = ent.ang = vector2angle(v_2)
             ang = vector2angle(v_2)
             R = rotv(array((0,0,1)), ang)[0:2,0:2]
             rel2global_f = np.dot(R, ent.total_relative_force)

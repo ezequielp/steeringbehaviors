@@ -1,6 +1,6 @@
-from Controller.Steering.SteerForMCamouflage import SteerForMC
+from Controller.Steering.SteerForMCamouflage import SteerForMC,SteerForMCHeading
 import random
-from numpy import pi
+from numpy import pi,dot,sqrt
 
 FPS=30 #Same FPS for all for the moment
 
@@ -17,20 +17,27 @@ class MCTestApp():
         self.entity_list=[]
         
         # Add circling entity
-        self.entity_list.append(self.world.add_entity((500,500),(50, 0)))
+        v=(50.0,0)
+        self.entity_list.append(self.world.add_entity((300,300),v))
         self.screen.add_entity(self.entity_list[0],
                                          trace=False,shape='s',color='b',size=5)
-        self.world.apply_relative_force(self.entity_list[0], pi/2, 10)
-       
+        f=20.0
+        w=f/50.0
+        self.world.apply_relative_force(self.entity_list[0], pi/2, f)
+        self.world.set_angspeed(self.entity_list[0], w)       
+        
         # Seek entity
         mc_entity = self.AddSteeringEntity(SteerForMC,'g',(-10,0))
-        self.steering_entities[mc_entity].set_gain(10)
+        self.steering_entities[mc_entity].set_gain(160)
+        # Not working
+#        mch_entity = self.AddSteeringEntity(SteerForMCHeading,'r',(-10,0))
+#        self.steering_entities[mch_entity].set_gain(160)
         
         # Camera
         from Controller.Cameras import FollowCamera
         self.camera = FollowCamera(screen, world)
         self.camera.set_target(self.entity_list[0])
-        #self.camera.set_target(self.steering_entities[0].entity_id)
+#        self.camera.set_target(self.steering_entities[1].entity_id)
         
         #Left click ends app
         event_handler.bind(self.on_mouse_left_up, mouse.MOUSE_BTN3_UP)

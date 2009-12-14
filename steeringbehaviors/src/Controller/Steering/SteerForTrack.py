@@ -40,6 +40,22 @@ class SteerForTrack(SteerForSeek):
         force = -self.correction_intensity*delta_d*rel_position/distance + \
                  self.breaking_intensity * vel
                                     
+        return self.check_force(force)
+    
+    def get_rel_force(self, event=None):
+        '''
+        Gives the force in the LC (local course) frame. The X component is
+        parallel to the velocity of the entity
+        '''
+        rel_position=self.get_relative_position(self.target_entity_id)
+        distance=sqrt(dot(rel_position, rel_position))
+        delta_d=self.tracking_distance - distance
+        
+        vel=self.get_rel_velocity(self.target_entity_id)
+        vel=sqrt(dot(vel,vel))
+        
+        force = array((-self.correction_intensity * delta_d +\
+        self.breaking_intensity * vel,0.0))
 
         return self.check_force(force)
     

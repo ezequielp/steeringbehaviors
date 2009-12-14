@@ -25,7 +25,8 @@ class View(object):
         
     def add_new_entity(self, model_entity):
         ''' 
-        Ugly hack that will be solved when using events. Implement in concrete class
+        Ugly hack that will be solved when using events. Implement in concrete
+        class
         TODO: implement as a event handler function add_new_entity(self, event)
         '''
         assert False, "Not implemented"
