@@ -1,5 +1,6 @@
 from xml.sax.handler import ContentHandler
 from xml.sax import parse
+from re import search
 
 class Dispatcher:
 
@@ -8,14 +9,14 @@ class Dispatcher:
         
         # Method Name
         mname = prefix + name.capitalize()
-        
+
         # Default Method Name
         dname = 'default' + prefix.capitalize()
         
         method = getattr(self, mname, None)
         
         # If the method is there use it, if not use the default
-        if callable(method): args = ()
+        if callable(method): args = name,
         else:
             method = getattr(self, dname, None)
             args = name,
@@ -25,9 +26,11 @@ class Dispatcher:
         if callable(method): method(*args)
 
     def startElement(self, name, attrs):
+#        print name
         self.dispatch('start', name, attrs)
         
     def endElement(self, name):
+#        print name,">"
         self.dispatch('end', name)
 
 class SVGParser(Dispatcher, ContentHandler):
@@ -37,60 +40,103 @@ class SVGParser(Dispatcher, ContentHandler):
         self.LABEL='inkscape:label'
         self.LINK='xlink:href'
         
-        self.__current=dict()
-        
+        self.__current=dict(parent=[],element=str(),data=str())
+                
         self.view=dict()
+        self.model=dict()
+        self.controller=dict()
         
         #self.layers_count = 0
     
-    def startG(self, attrs):
+    # Group Elements ##################
+    def startG(self,name, attrs):
         '''
-            Dispatches the different ethods for the different layers
+            Dispatches the different methods for the different layers
         '''
-        if  self.getValue(attrs,self.LAYER):
-            self.dispatch('start',self.getValue(attrs,self.LABEL),attrs)
+        txt=self.getValue(attrs,self.LABEL)
+        print txt
+        print self.__current["parent"]
+        if txt:
+            self.dispatch('start',txt,attrs)
+        else:
+            txt=self.getValue(attrs,"id")
+            self.dispatch('start',txt,attrs)
             
-    def endG(self):
-        if self.__current:
-            self.dispatch('end',self.__current["layer"])
-            
-    def startView(self,attrs):
-#        self.__current.update(attrs)
-        self.__current.update(layer="View")
-        print "Parsing View"
-    
-    def endView(self):
-        self.__current.clear()
-        print "Ending View"
+    def endG(self,name):
+#        print self.__current["parent"]
+        self.dispatch('end',self.__current["parent"][-1])
         
-    def startImage(self,attrs):
-        if self.__current['layer'] == "View":
+    # Default ##################            
+    def defaultStart(self,name,attrs):
+        self.__current["parent"].append(name)
+        print "defaultStart ", name
+
+    def defaultEnd(self,name):
+        print "defaultEnd ", self.__current["parent"].pop()
+   
+    # Leafs: text, image, path ##################                    
+    def startImage(self,name,attrs):
+        print "Reading image data"
+        self.__current.update(element="image")
+        if self.__current['parent'][-1] == "View":
             self.view["avatar"]=attrs[self.LINK][7:] # Erase file://
+
+    def endImage(self,name):
+        pass
+        
+    def startText(self,name,attrs):
+        pass
+    def endText(self,name):
+        pass
             
+    def startTspan(self,name,attrs):
+        self.__current.update(element="tspan")
+        self.__current["data"]=""
         
-    def startController(self,attrs):
-        self.__current.update(attrs)
-        self.__current.update(layer="Controller")
-        print "Parsing Controller"
+    def endTspan(self,name):
+        txt=self.__current["data"]
+
+        if self.__current['parent'][-1]=="Physics":
+            print "Reading physics text data"        
+            regexp=r'([a-zA-Z]*)(?:\s|=)*([-+]?\d*\.?\d+(?:[eE][-+]?\d+)?)\s*([a-zA-Z]*)'
+            number=search(regexp,txt)
+            if number:
+                self.model[number.group(1).lower()] = \
+                                       (float(number.group(2)), number.group(3))
+
+        if self.__current['parent'][-1]=="Sensors":
+            print "Reading sensor text data"
+            
+        if self.__current['parent'][-1]=="Intelligence":
+            print "Reading intelligence text data"
+            
+                
+        self.__current["data"]=""
+  
+    def startPath(self,name,attrs):
+        self.__current.update(element="path")
+        self.__current["data"]=""
+            
+    def endPath(self,name):
+        txt=self.__current["data"]
         
-    def endController(self):
-        self.__current.clear()
-        print "Ending Controller"
+        if self.__current['parent'][-1]=="Physics":
+            print "Reading physics path data"
 
-    def startModel(self,attrs):
-        self.__current.update(attrs)
-        self.__current.update(layer="Model")
-        print "Parsing Model"
-                            
-    def endModel(self):
-        self.__current.clear()
-        print "Ending Model"
+        if self.__current['parent'][-1]=="Sensors":
+            print "Reading sensor path data"
 
-    def startDefault(self,attrs):
-        pass
-
-    def endDefault(self):
-        pass
+        if self.__current['parent'][-1]=="CShapes":
+            print "Reading collision shapes path data"
+            
+        if self.__current['parent'][-1]=="Intelligence":
+            print "Reading intelligence path data"
+                
+    def characters(self, string):
+        try: 
+            self.__current["data"]+=string
+        except KeyError:
+            pass                   
         
     def getValue(self,attrs,attrname):
         # Search for an attribute name and return value
