@@ -11,9 +11,6 @@ import config
 import os
 path = os.path.dirname(__file__)
 
-# Colormap
-from colormap import *
-PERIODIC_HACK=False
 DEFAULT_FONT="JuraDemiBold.ttf"
 
 class View(object):
@@ -212,53 +209,22 @@ class PygSimpleBackground(BackgroundEntity):
         viewport.topleft=((vpos[0]+dx)%vsize[0], (vpos[1]+dy)%vsize[1])
         self.image=self._virtual_image.subsurface(viewport)
         self.has_changed=True
-        
-        
-class TopDownSprite(object):
-    '''
-    A sprite for a top down view.
-    '''
-    def __init__(self, image, image_angle):
-        self.set_sprite_for_orientation(image, image_angle)
-        self._sprite=dict()
-        self.image=image
-        
-    def set_sprite_for_orientation(self, image, angle_from_vertical):
-        self._image=image
-        self._initial_angle=angle_from_vertical
-        
-    def allow_angles(self, N):
-        '''
-        Set the sprite to allow N orientation angles in the interval [0, 360)
-        It is better to call this at initialization phase.
-        '''
-        self._N=N
-        for i in range(N):
-            angle=i*360.0/N+self._initial_angle
-            self._sprite[i]=self.get_rotated_image(self._image, angle)
-            
-    
-    def set_orientation(self, angle):
 
-        i=round(((angle-self._initial_angle)*self._N*1.0/360)) % self._N
-        
-        #print angle, self._initial_angle, self._N, i
-        self.image=self._sprite[i]
-    
 class PygameViewer(View2D):
     '''
     A class rendering the actors of the Model into a Pygame window
     '''        
-    from pygame.sprite import Sprite as SpriteParent
+    from Sprite import Sprite
     import pygame
     
     def __init__(self, Model, background=None, fullscreen=False):
         View2D.__init__(self, Model)
 
         pygame = self.pygame
-        self.pygsprites = pygame.sprite
-        
         pygame.init()
+
+        # Sprites ################        
+        self.pygsprites = pygame.sprite
         
         self.Sprite._project = self._project
         
@@ -266,11 +232,13 @@ class PygameViewer(View2D):
         self._untraced_sprites = pygame.sprite.RenderUpdates()
         self._traced_sprites = pygame.sprite.RenderUpdates()
 
-        self._clock = pygame.time.Clock()
-        
         from weakref import WeakKeyDictionary
         self.sprite_from_model = WeakKeyDictionary()
+
+        # Clock ################        
+        self._clock = pygame.time.Clock()
         
+        # Background ################        
         '''
         Starts a simple black screen.        TODO: improve to be configurable        '''
         if fullscreen:
@@ -309,84 +277,6 @@ class PygameViewer(View2D):
         background_entity=PygSimpleBackground(background, zero_position=(sc_size[0]/2, sc_size[1]/2))
 
         return background_entity
-        
-
-    class Sprite(SpriteParent, TopDownSprite):
-        def __init__(self, model_entity,shape='o',size=3,color='k'):
-            '''
-            @model_entity_position: the position of the model object. Use [position] to get reference!!!
-            '''
-            pygame=PygameViewer.pygame
-            PygameViewer.SpriteParent.__init__(self)
-            
-            self.model = model_entity
-            
-            self.rect = pygame.Rect(
-                self._project.transform(model_entity.position), 
-                                  (size,size))
-            
-            '''
-            TODO: continue refactoring imaging capabilities to TopDownSprite
-            '''
-            self._draw_entity(shape,size,color)
-            
-            TopDownSprite.__init__(self, self.original_image, 0)
-            #If the shape is a circle, ignore rotation angles
-            if shape!='o':
-                self.allow_angles(72)
-            else:
-                self.allow_angles(1)
-            
-
-            
-        def update(self):
-            PygameViewer.SpriteParent.update(self)
-            self.set_orientation(-self.model.ang*57.296)
-            self.rect=self.image.get_rect()
-            self.rect.center=self._project.transform(self.model.position)
-            
-            if PERIODIC_HACK:
-                pos= self.rect.center
-                self.rect.center=(pos[0]%config.screen_size[0],pos[1]%config.screen_size[1])
-            
-        def get_rotated_image(self, image, angle):
-            from pygame import transform
-            return transform.rotate(image, angle)
-            
-        def _draw_entity(self,shape='o',size=3,color='k'):
-            '''
-               Draws entity following arguments.
-               shape:
-                    'o' - circle
-                    's' - square
-               color:
-                   Can be a color key
-                   'k' - black
-                   'w' - white
-                   'r' - red
-                   'g' - green
-                   'b' - blue
-                   
-                   or a tuple eith r,g,b values [0,255]
-                   
-                   TODO: still dirty
-            '''  
-            if type(color)==type(str()):
-                color=tuple(cmap[ckey[color]])
-               
-            simple_sprite=PygameViewer.pygame.Surface((2*size,2*size))
-            simple_sprite.fill(tuple(cmap[ckey['w']]))
-            simple_sprite.set_colorkey(tuple(cmap[ckey['w']]),
-                                                  PygameViewer.pygame.RLEACCEL)
-            self.original_image=simple_sprite
-            
-            if shape=='o':
-                PygameViewer.pygame.draw.circle(self.original_image, color,
-                                                              (size,size), size)
-            elif shape=='s':
-                PygameViewer.pygame.draw.rect(self.original_image,color,(.5*size,
-                                                     .5*size,1.5*size,1.5*size))
-                
             
       
     def get_screen_center(self):
@@ -518,4 +408,4 @@ class PygameViewer(View2D):
         sprite.rect.topleft=new_pos
    
         
-        
+

@@ -162,7 +162,7 @@ class Player(object):
             # Call pygame.sprite.Sprite.__init__ to do some internal work
             pygame.sprite.Sprite.__init__(self)
 
-            # Load the stickMan
+            # Load the sprite
             self.image = pygame.image.load(image).convert()
 
             # Create a rectangle
@@ -175,6 +175,7 @@ class Player(object):
     def draw(self):
         pygame=self.pygame
         sys=self.sys
+        
         pygame.init()
         screen = pygame.display.set_mode((256, 256))
         pygame.display.set_caption('Sprite Example')
