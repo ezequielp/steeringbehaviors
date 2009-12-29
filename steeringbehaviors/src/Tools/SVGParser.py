@@ -1,3 +1,10 @@
+'''
+Created on Tuesday, December 29 2009
+
+@author: Ezequiel N. Pozzo, JuanPi Carbajal
+Last edit: Tuesday, December 29 2009
+'''
+
 from xml.sax.handler import ContentHandler
 from xml.sax import parse
 from re import search
@@ -195,10 +202,8 @@ class Player(object):
                 if event.type == pygame.QUIT:
                     sys.exit()
     
-
-test=Player('Player_demo.svg') 
-test.draw()
+if __name__ == '__main__':
+    test=Player('Player_demo.svg') 
+    test.draw()
    
-#layers=SVGParser()
-#parse(,layers)
-#print 'There are ', layers.layers_count, ' layers in the document' 
+
