@@ -4,7 +4,7 @@ Created on Tuesday, December 29 2009
 @author: Ezequiel N. Pozzo, JuanPi Carbajal
 Last edit: Tuesday, December 29 2009
 
-@brief Contains the SVGParser class, also a PLayer class as example of use.
+@brief Contains the SVGParser class, also a Player class as example of use.
 '''
 
 from xml.sax.handler import ContentHandler
@@ -192,6 +192,7 @@ class SVGParser(Dispatcher, ContentHandler):
             The path is assumed ot be be a direction.
             d="M/m xi,yi xf,yf"
         '''
+        print "... Reading Forward Vector"
         path = self.__current["data"]
         # Check if final point is relative
         if path[1][2] == True:
