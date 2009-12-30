@@ -31,10 +31,23 @@ def rotv(v,ang):
 
     return r
     
-def vector2angle(v):
+def vector2angle(v,w=None):
     '''
        Get the angle between the X axis and the direction defined by v.
        The angle is in (-pi, pi] range
+       If w is given then it is taken as the reference
+       TODO: Check efficiency of this implementation
     '''
-    return arctan2(v[1], v[0])
+    if w != None:
+        ang2 = arctan2(v[1], v[0])
+        ang1 = arctan2(w[1], w[0])
+        dang = ang2 - ang1
+        while dang > pi :
+            dang = dang - 2.0*pi
+        while dang < -pi :
+            dang = dang + 2.0*pi
+        
+        return dang     
+    else:  
+        return arctan2(v[1], v[0])
     

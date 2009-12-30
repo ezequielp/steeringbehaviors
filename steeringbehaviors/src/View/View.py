@@ -258,11 +258,11 @@ class PygameViewer(View2D):
         
         
     def add_entity(self, model_entity_id, trace=False, color='k', shape='o',
-                   size=3,image=None):
+                   size=3,image=None,angle=0):
         model_entity=self.model.get_entity(model_entity_id)
         
         if image:
-            new_sprite=self.Sprite(model_entity,image=image)
+            new_sprite=self.Sprite(model_entity,image=image,angle=angle,size=size)
         else:
             new_sprite=self.Sprite(model_entity,shape,size,color)
         

@@ -4,6 +4,7 @@ Monday, December 28 2009
 @author: Ezequiel N. Pozzo, JuanPi Carbajal
 Last edit: Monday, December 28 2009
 '''
+from __future__ import division
 from pygame.sprite import Sprite as SpriteParent
 import pygame
 
@@ -42,9 +43,14 @@ class TopDownSprite(object):
         #print angle, self._initial_angle, self._N, i
         self.image=self._sprite[i]
 
+    def get_rotated_image(self, image, angle):
+        pass # Renderer dependent
+        
+
 # Sprite #################################################
 class Sprite(SpriteParent, TopDownSprite):
-    def __init__(self, model_entity,shape='o',size=3,color='k',image=None):
+    def __init__(self, model_entity,shape='o',size=3,color='k',image=None,
+                                                                angle=0):
         '''
         @model_entity_position: the position of the model object. Use [position] to get reference!!!
         '''
@@ -61,13 +67,15 @@ class Sprite(SpriteParent, TopDownSprite):
         '''
         TODO: continue refactoring imaging capabilities to TopDownSprite
         '''
+        # Here self.original_image is filled
+        # TODO: Some corrections needed here, very complicated function call 
+        # order
         if image:
-            self._draw_avatar_entity(image)
+            self._draw_avatar_entity(image,angle,size)
         else:
             self._draw_entity(shape,size,color)
         
-        # Where is self.orinigal:image defined?
-        TopDownSprite.__init__(self, self.original_image, -90)
+        TopDownSprite.__init__(self, self.original_image,angle)
 
         #If the shape is a circle, ignore rotation angles
         if shape!='o' or image:
@@ -75,7 +83,9 @@ class Sprite(SpriteParent, TopDownSprite):
         else:
             self.allow_angles(1)
         
-
+    def get_rotated_image(self, image, angle):
+#        from pygame import transform
+        return pygame.transform.rotate(image, angle)
         
     def update(self):
         SpriteParent.update(self)
@@ -86,10 +96,6 @@ class Sprite(SpriteParent, TopDownSprite):
         if PERIODIC_HACK:
             pos= self.rect.center
             self.rect.center=(pos[0]%config.screen_size[0],pos[1]%config.screen_size[1])
-        
-    def get_rotated_image(self, image, angle):
-        from pygame import transform
-        return transform.rotate(image, angle)
         
     def _draw_entity(self,shape='o',size=3,color='k'):
         '''
@@ -125,9 +131,20 @@ class Sprite(SpriteParent, TopDownSprite):
             pygame.draw.rect(self.original_image,color,(.5*size,
                                                     .5*size,1.5*size,1.5*size))
 
-    def _draw_avatar_entity(self,image):
+    def _draw_avatar_entity(self,image,angle,scale=1.0):
         # Load the sprite
-        self.original_image = pygame.image.load(image).convert_alpha()
-                                                    
+        self.original_image = pygame.transform.rotate(
+                        pygame.image.load(image).convert_alpha(),angle*57.296)
+                        
+        self.original_image = pygame.transform.smoothscale(
+                           self.original_image,
+                           (scale*self.original_image.get_width(),
+                           scale*self.original_image.get_height()))
+        '''                        
+        self.original_image = pygame.transform.scale(
+                           self.original_image,
+                           (scale*self.original_image.get_width(),
+                           scale*self.original_image.get_height()))
+        '''                                            
 ##################################################                
 

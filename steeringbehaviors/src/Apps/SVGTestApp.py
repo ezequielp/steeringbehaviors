@@ -9,6 +9,7 @@ filepath, filename = os.path.split(os.path.abspath(os.path.dirname(__file__)) )
 sys.path.append(filepath)
 
 from Tools.SVGParser import SVGParser,parse
+from Tools.LinAlgebra_extra import vector2angle
 from numpy import pi
 
 FPS=30 #Same FPS for all for the moment
@@ -27,20 +28,32 @@ class SVGTestApp():
         
         # SVG Parser
         self.SVGdata=SVGParser()
-        filepath, filename = os.path.split(os.path.abspath(os.path.dirname(__file__)) )
         player_file=os.path.join(filepath,'GameData','Player_demo.svg')
         parse(player_file,self.SVGdata)
         avatar=os.path.join(filepath,'GameData',self.SVGdata.view["avatar"])
+        fwdvector=self.SVGdata.view["fwd_dir"]
         
         # Add circling entity
+        # Tangential velocity
         v=(50.0,0)
+        # Rotate th eunit such that tangential velocity an dforward vetor match
+        angle = vector2angle(fwdvector,v)
+        
+        # This comes from the Scale of the Game.
+        # FRomSVG in the future
+        scale=0.6        
+
         self.entity_list.append(self.world.add_entity((300,300),v))
         self.screen.add_entity(self.entity_list[0],trace=False,
-                                              image=avatar)
+                                              image=avatar,
+                                              angle=angle,size=scale)
+                                              
         f=20.0
+        # Angular velocity to match spin with orbit
         w=f/50.0
         self.world.apply_relative_force(self.entity_list[0], pi/2, f)
         self.world.set_angspeed(self.entity_list[0], w)       
+        
         
         #Left click ends app
         event_handler.bind(self.on_mouse_left_up, mouse.MOUSE_BTN3_UP)
