@@ -71,7 +71,7 @@ class Sprite(SpriteParent, TopDownSprite):
 
         #If the shape is a circle, ignore rotation angles
         if shape!='o' or image:
-            self.allow_angles(72)
+            self.allow_angles(144)
         else:
             self.allow_angles(1)
         
