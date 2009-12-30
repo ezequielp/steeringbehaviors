@@ -30,12 +30,13 @@ class SVGTestApp():
         filepath, filename = os.path.split(os.path.abspath(os.path.dirname(__file__)) )
         player_file=os.path.join(filepath,'GameData','Player_demo.svg')
         parse(player_file,self.SVGdata)
+        avatar=os.path.join(filepath,'GameData',self.SVGdata.view["avatar"])
         
         # Add circling entity
         v=(50.0,0)
         self.entity_list.append(self.world.add_entity((300,300),v))
         self.screen.add_entity(self.entity_list[0],trace=False,
-                                              image=self.SVGdata.view["avatar"])
+                                              image=avatar)
         f=20.0
         w=f/50.0
         self.world.apply_relative_force(self.entity_list[0], pi/2, f)

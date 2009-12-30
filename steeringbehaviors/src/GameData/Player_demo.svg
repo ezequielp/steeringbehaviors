@@ -47,10 +47,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.02"
-     inkscape:cx="5823.0801"
+     inkscape:cx="-601.9199"
      inkscape:cy="7812.4646"
      inkscape:document-units="m"
-     inkscape:current-layer="layer5"
+     inkscape:current-layer="layer4"
      showgrid="false"
      inkscape:window-width="1440"
      inkscape:window-height="822"
@@ -237,22 +237,23 @@
      id="layer4"
      inkscape:label="View"
      transform="translate(0,-10629.92)"
-     style="opacity:0.75903614;display:inline"
-     sodipodi:insensitive="true">
+     style="opacity:0.75903614;display:inline">
     <image
        y="11214.715"
        x="536.06055"
        id="image10134"
        height="16546.945"
        width="13101.106"
-       xlink:href="file:///home/juanpi/Projects/Eze/steeringbehaviors/steeringbehaviors/src/GameData/Avatar.png" />
+       xlink:href="file:///home/juanpi/Projects/Eze/steeringbehaviors/steeringbehaviors/src/GameData/Avatar.png"
+       sodipodi:absref="/home/juanpi/Projects/Eze/steeringbehaviors/steeringbehaviors/src/GameData/GameData/Avatar.png" />
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer5"
      inkscape:label="Controller"
      transform="translate(0,-10629.92)"
-     style="display:inline">
+     style="display:inline"
+     sodipodi:insensitive="true">
     <g
        id="Intelligence"
        inkscape:label="Intelligence">

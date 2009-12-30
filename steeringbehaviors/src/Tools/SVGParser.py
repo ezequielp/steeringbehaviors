@@ -10,6 +10,7 @@ Last edit: Tuesday, December 29 2009
 from xml.sax.handler import ContentHandler
 from xml.sax import parse
 from re import search as RegSearch
+import os
 
 class Dispatcher:
     '''
@@ -105,8 +106,10 @@ class SVGParser(Dispatcher, ContentHandler):
         print "Reading image data"
         self.__current.update(element="image")
         if self.__current['parent'][-1] == "View":
-            self.view["avatar"]=attrs[self.LINK][7:] # Erase file://
-
+            abspath=attrs[self.LINK][7:] # Erase file://
+            basepath, filename = os.path.split(abspath)
+            self.view["avatar"]=filename
+            
     def endImage(self,name):
         pass
         
