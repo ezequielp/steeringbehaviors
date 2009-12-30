@@ -70,7 +70,7 @@
      inkscape:cx="-2933.1748"
      inkscape:cy="7559.8546"
      inkscape:document-units="m"
-     inkscape:current-layer="layer4"
+     inkscape:current-layer="layer3"
      showgrid="false"
      inkscape:window-width="1440"
      inkscape:window-height="822"
@@ -95,8 +95,7 @@
      id="layer3"
      inkscape:label="Model"
      transform="translate(0,16664.536)"
-     style="display:none"
-     sodipodi:insensitive="true">
+     style="display:inline">
     <g
        id="Vision_Cone"
        inkscape:label="Sensors">
@@ -219,7 +218,7 @@
            y="-8827.2764"
            x="8294.8721"
            sodipodi:role="line"
-           id="tspan10712-0">Mass = 2000 kg</tspan><tspan
+           id="tspan10712-0">Mass = 2 kg</tspan><tspan
            id="tspan10754"
            y="-7969.5103"
            x="8294.8721"
@@ -257,7 +256,8 @@
      id="layer4"
      inkscape:label="View"
      transform="translate(0,-10629.92)"
-     style="opacity:0.75903614;display:inline">
+     style="opacity:0.75903614;display:none"
+     sodipodi:insensitive="true">
     <image
        y="11214.715"
        x="536.06055"

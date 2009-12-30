@@ -10,7 +10,7 @@ sys.path.append(filepath)
 
 from Tools.SVGParser import SVGParser,parse
 from Tools.LinAlgebra_extra import vector2angle
-from numpy import pi
+from numpy import pi,sqrt,dot
 
 FPS=30 #Same FPS for all for the moment
 
@@ -30,27 +30,57 @@ class SVGTestApp():
         self.SVGdata=SVGParser()
         player_file=os.path.join(filepath,'GameData','Player_demo.svg')
         parse(player_file,self.SVGdata)
+
+        # View realted information
         avatar=os.path.join(filepath,'GameData',self.SVGdata.view["avatar"])
         fwdvector=self.SVGdata.view["fwd_dir"]
+        #####
         
-        # Add circling entity
-        # Tangential velocity
+        # Model Related information
+        # Physical properties
+        mass=self.SVGdata.model["mass"][0]
+        masunits=self.SVGdata.model["mass"][1] 
+        #####
+
+        # Kinematical information
+        # Initial velocity
+        # TODO: Comes from SVG. Where (Intelligence?)??
         v=(50.0,0)
-        # Rotate th eunit such that tangential velocity an dforward vetor match
+        
+        # Initial position
+        # TODO: Comes from SVG, Map
+        p=(300,300)
+
+        # Initial angle
+        # TODO: Comes from SVG, Where (Intelligence?)??
+        # Rotate the unit such that tangential velocity an dforward vetor match
         angle = vector2angle(fwdvector,v)
         
+        # Initial angular speed
+        # TODO: Comes from SVG, Where (Intelligence?)??
+        angspeed=0.0
+        
+        #####
+
+        # Add circling entity
+        
+        
         # This comes from the Scale of the Game.
-        # FRomSVG in the future
+        # TODO: Comes form SVG, Map (??)
         scale=0.6        
 
-        self.entity_list.append(self.world.add_entity((300,300),v))
+        self.entity_list.append(self.world.add_entity(position=p,
+                                                      velocity=v,
+                                                      ang=0.0,
+                                                      angspeed=angspeed,
+                                                      mass=mass))
         self.screen.add_entity(self.entity_list[0],trace=False,
                                               image=avatar,
                                               angle=angle,size=scale)
                                               
         f=20.0
         # Angular velocity to match spin with orbit
-        w=f/50.0
+        w=f/(mass*sqrt(dot(v,v)))
         self.world.apply_relative_force(self.entity_list[0], pi/2, f)
         self.world.set_angspeed(self.entity_list[0], w)       
         

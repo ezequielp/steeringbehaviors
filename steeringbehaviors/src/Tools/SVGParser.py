@@ -127,23 +127,7 @@ class SVGParser(Dispatcher, ContentHandler):
         self.__current["data"]=""
         
     def endTspan(self,name,attrs):
-        txt=self.__current["data"]
-
-        if self.__current['parent'][-1]=="Physics":
-            print "Reading physics text data"        
-            regexp=r'([a-zA-Z]*)(?:\s|=)*([-+]?\d*\.?\d+(?:[eE][-+]?\d+)?)\s*([a-zA-Z]*)'
-            number=RegSearch(regexp,txt)
-            if number:
-                self.model[number.group(1).lower()] = \
-                                       (float(number.group(2)), number.group(3))
-
-        if self.__current['parent'][-1]=="Sensors":
-            print "Reading sensor text data"
-            
-        if self.__current['parent'][-1]=="Intelligence":
-            print "Reading intelligence text data"
-            
-                
+        self.dispatch('read',self.__current['parent'][-1] + 'text',attrs)
         self.__current["data"]=""
   
     def startPath(self,name,attrs):
@@ -163,13 +147,13 @@ class SVGParser(Dispatcher, ContentHandler):
             print "Reading physics path data"
 
         if self.__current['parent'][-1]=="Sensors":
-            print "Reading sensor path data"
+            print "Reading collision sensors path data"            
 
         if self.__current['parent'][-1]=="CShapes":
             print "Reading collision shapes path data"
             
         if self.__current['parent'][-1]=="Intelligence":
-            print "Reading intelligence path data"
+            print "Reading collision intelligence path data"            
         
         self.__current["data"]=""
             
@@ -208,7 +192,27 @@ class SVGParser(Dispatcher, ContentHandler):
                         
         if self.__current['parent'][-1]=="Physics":
             self.model["fwd_dir"]=fwd_dir
-       
+            
+    def readPhysicstext(self,name,attrs):
+        '''
+            Reads physical data from text fields
+        '''    
+        txt=self.__current["data"]
+        regexp = \
+          r'([a-zA-Z]*)(?:\s|=)*([-+]?\d*\.?\d+(?:[eE][-+]?\d+)?)\s*([a-zA-Z]*)'
+        number=RegSearch(regexp,txt)
+        if number:
+            self.model[number.group(1).lower()] = \
+                                       (float(number.group(2)), number.group(3))
+        print "... Read Physics data " + number.group(1).lower()
+        
+    def readSensorstext(self,name,attrs):
+        print "Reading sensor text data"
+    
+    def readIntelligencetext(self,name,attrs):
+        print "Reading intelligence text data"        
+
+
 class Path:
   """
   The following code is adapted from SVGFIG REFERENCE NEEDED

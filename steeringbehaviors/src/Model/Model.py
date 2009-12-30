@@ -341,8 +341,8 @@ class PhysicsModel(Model):
         '''
         return self.entities[entity_id]
 
-    def add_entity(self, position, velocity,ang=0.0,angspeed=0.0,
-    mass=1.0):
+    def add_entity(self, position=array((0.0,0.0)), velocity=array((0.0,0.0)),
+                         ang=0.0,angspeed=0.0,mass=1.0):
         entity = Model_Entity( array((0.0,0.0)) )
         self.entities.append(entity)
 
