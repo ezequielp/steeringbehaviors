@@ -196,7 +196,8 @@ class PygameViewer(View2D):
         else:
             fs=0
         self.screen = pygame.display.set_mode(config.screen_size, fs)
-        self.screen_center=(config.screen_size[0]*1.0/2, config.screen_size[1]*1.0/2)
+        self.screen_center=(config.screen_size[0]*1.0/2, config.screen_size[1]\
+        *1.0/2)
         
         if background==None:
             self.set_background(self.get_dummy_background())
@@ -257,9 +258,13 @@ class PygameViewer(View2D):
         
         
     def add_entity(self, model_entity_id, trace=False, color='k', shape='o',
-                   size=3):
+                   size=3,image=None):
         model_entity=self.model.get_entity(model_entity_id)
-        new_sprite=self.Sprite(model_entity,shape,size,color)
+        
+        if image:
+            new_sprite=self.Sprite(model_entity,image=image)
+        else:
+            new_sprite=self.Sprite(model_entity,shape,size,color)
         
         self.sprite_from_model[model_entity]=new_sprite
         self._sprites.add(new_sprite)

@@ -5,6 +5,10 @@ Created on Wednesday, November 25 2009
 @author: JuanPi Carbajal, Ezequiel N. Pozzo
 Last edit: Wednesday, November 25 2009
 '''
+import sys,os
+filepath, filename = os.path.split(os.path.abspath(os.path.dirname(__file__)) )
+sys.path.append(filepath)
+
 # Test all the functions from the class PygameViewer
 FPS=30 #Same FPS for all for the moment
 

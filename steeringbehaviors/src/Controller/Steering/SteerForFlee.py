@@ -24,7 +24,7 @@ class SteerForFlee(SteerController):
     #######
     # Getters
 
-    def get_force(self):
+    def get_force(self,event=None):
         # Gets the vector pointing to the entity from the target
         rel_position=self.get_relative_position(self.target_entity_id)
         

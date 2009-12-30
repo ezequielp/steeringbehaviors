@@ -44,11 +44,13 @@ class TopDownSprite(object):
 
 # Sprite #################################################
 class Sprite(SpriteParent, TopDownSprite):
-    def __init__(self, model_entity,shape='o',size=3,color='k'):
+    def __init__(self, model_entity,shape='o',size=3,color='k',image=None):
         '''
         @model_entity_position: the position of the model object. Use [position] to get reference!!!
         '''
         SpriteParent.__init__(self)
+        
+        self.original_image = None
         
         self.model = model_entity
         
@@ -59,13 +61,16 @@ class Sprite(SpriteParent, TopDownSprite):
         '''
         TODO: continue refactoring imaging capabilities to TopDownSprite
         '''
-        self._draw_entity(shape,size,color)
+        if image:
+            self._draw_avatar_entity(image)
+        else:
+            self._draw_entity(shape,size,color)
         
         # Where is self.orinigal:image defined?
-        TopDownSprite.__init__(self, self.original_image, 0)
+        TopDownSprite.__init__(self, self.original_image, -90)
 
         #If the shape is a circle, ignore rotation angles
-        if shape!='o':
+        if shape!='o' or image:
             self.allow_angles(72)
         else:
             self.allow_angles(1)
@@ -119,5 +124,10 @@ class Sprite(SpriteParent, TopDownSprite):
         elif shape=='s':
             pygame.draw.rect(self.original_image,color,(.5*size,
                                                     .5*size,1.5*size,1.5*size))
+
+    def _draw_avatar_entity(self,image):
+        # Load the sprite
+        self.original_image = pygame.image.load(image).convert()
+                                                    
 ##################################################                
 

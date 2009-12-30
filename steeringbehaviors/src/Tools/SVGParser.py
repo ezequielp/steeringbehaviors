@@ -3,14 +3,21 @@ Created on Tuesday, December 29 2009
 
 @author: Ezequiel N. Pozzo, JuanPi Carbajal
 Last edit: Tuesday, December 29 2009
+
+@brief Contains the SVGParser class, also a PLayer class as example of use.
 '''
 
 from xml.sax.handler import ContentHandler
 from xml.sax import parse
-from re import search
+from re import search as RegSearch
 
 class Dispatcher:
-
+    '''
+    Build method calls for the parser.
+    Based on the pattern given on the book "Beginning Python: From Novice to
+    Professional" by Magnus Lie Hetland, ISBN 1590599829, 9781590599822
+    '''
+    
     def dispatch(self, prefix, name, attrs=None):
         # Build the call to the correspoding method or the default
         
@@ -41,6 +48,15 @@ class Dispatcher:
         self.dispatch('end', name)
 
 class SVGParser(Dispatcher, ContentHandler):
+    '''
+        This parser reads an SVG and stores the retrieved information
+        on the attributes view, model, controller. Note: Maybe is better to avoid
+        references to this classes and just have a dcit called retrieved_data.
+        The file is given when the parse method is called.
+    '''
+
+#    from re import search as RegSearch
+
     def __init__(self):
         ContentHandler.__init__(self)
         self.LAYER='inkscape:groupmode'
@@ -52,9 +68,12 @@ class SVGParser(Dispatcher, ContentHandler):
         self.view=dict()
         self.model=dict()
         self.controller=dict()
-        
-        #self.layers_count = 0
-    
+
+# Doesn't work    
+#     from xml.sax import parse as SAXparse
+#    def parse(self,filename): 
+#        self.SAXparse(filename,self)
+            
     # Group Elements ##################
     def startG(self,name, attrs):
         '''
@@ -106,7 +125,8 @@ class SVGParser(Dispatcher, ContentHandler):
         if self.__current['parent'][-1]=="Physics":
             print "Reading physics text data"        
             regexp=r'([a-zA-Z]*)(?:\s|=)*([-+]?\d*\.?\d+(?:[eE][-+]?\d+)?)\s*([a-zA-Z]*)'
-            number=search(regexp,txt)
+            print regexp
+            number=RegSearch(regexp,txt)
             if number:
                 self.model[number.group(1).lower()] = \
                                        (float(number.group(2)), number.group(3))
@@ -203,7 +223,7 @@ class Player(object):
                     sys.exit()
     
 if __name__ == '__main__':
-    test=Player('Player_demo.svg') 
+    test=Player('/home/juanpi/Projects/Eze/steeringbehaviors/steeringbehaviors/src/GameData/Player_demo.svg') 
     test.draw()
    
 
