@@ -27,7 +27,8 @@ class SVGTestApp():
         
         # SVG Parser
         self.SVGdata=SVGParser()
-        player_file=os.path.join('GameData','Player_demo.svg')
+        filepath, filename = os.path.split(os.path.abspath(os.path.dirname(__file__)) )
+        player_file=os.path.join(filepath,'GameData','Player_demo.svg')
         parse(player_file,self.SVGdata)
         
         # Add circling entity
