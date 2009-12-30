@@ -127,7 +127,7 @@ class Sprite(SpriteParent, TopDownSprite):
 
     def _draw_avatar_entity(self,image):
         # Load the sprite
-        self.original_image = pygame.image.load(image).convert()
+        self.original_image = pygame.image.load(image).convert_alpha()
                                                     
 ##################################################                
 
