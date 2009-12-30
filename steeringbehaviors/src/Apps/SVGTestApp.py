@@ -27,7 +27,7 @@ class SVGTestApp():
         
         # SVG Parser
         self.SVGdata=SVGParser()
-        player_file='/home/juanpi/Projects/Eze/steeringbehaviors/steeringbehaviors/src/GameData/Player_demo.svg'
+        player_file='GameData/Player_demo.svg'
         parse(player_file,self.SVGdata)
         
         # Add circling entity
