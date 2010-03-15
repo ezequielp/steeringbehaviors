@@ -361,6 +361,7 @@ class PhysicsModel(Model):
         return len(self.entities) -1
 
     def on_damage(self, event):
+        #DEPRECATED?
         entity_id=event['Damaged entity']
         self.grab_entity(entity_id)
 
@@ -488,10 +489,13 @@ class PhysicsModel(Model):
             
             # Update vel(t+1/2) and position pos(t+1/2)
             v_2 = ent.velocity + force*dt_2/ent.mass
-            p_2 = ent.position + v_2*dt_2
+            
             
             w_2 = ent.angspeed + torque*dt_2/ent.inertia_moment
-            a_2 = ent.ang + w_2*dt_2
+            
+            # Commented out. Used when forces depend on position and angle explicitly. Not programmed yet.
+            # p_2 = ent.position + v_2*dt_2
+            # a_2 = ent.ang + w_2*dt_2
                 
             # Update forces
 #            ang = ent.ang = vector2angle(v_2)
