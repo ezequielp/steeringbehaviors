@@ -3,6 +3,7 @@ from Model.Model import PhysicsModel
 from Controller.MouseController import PygameMouseController
 from Mediator.EventManager import EventManager
 from Controller.MiscControllers import PygCPUSpinner
+from Controller.KeyboardController import PygameKeyboardController
 
 FPS=30 #Same FPS for all for the moment
 
@@ -61,12 +62,13 @@ class DragAndDropApp():
 	
 if __name__ == '__main__':
 	event_handler=EventManager()
-	world=PhysicsModel()
+	world=PhysicsModel(event_handler)
 	screen=PygameViewer(world)
 	mouse=PygameMouseController(event_handler)
 	spinner=PygCPUSpinner(FPS, event_handler)	
+	keyboard=PygameKeyboardController(event_handler)
 	
-	python_app=DragAndDropApp(event_handler, world, screen, mouse, spinner)	
+	python_app=DragAndDropApp(event_handler, world, screen, mouse, spinner, keyboard)	
 	python_app.run()
 			
 		

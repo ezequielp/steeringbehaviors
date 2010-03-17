@@ -632,4 +632,3 @@ class PhysicsModel(Model):
         self._neighbours[ent_id]=in_range
 
 
-
